@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">My App Portifolio</string>
+    <string name="action_settings">Settings</string>
+
+    <!--Main Activity-->
+    <string name="main_app_title">My Nanodegree Apps</string>
+    <string name="main_app_movie">Popular movies</string>
+    <string name="main_app_stock">Stock Hawk</string>
+    <string name="main_app_bigger">Build it bigger</string>
+    <string name="main_app_material">Make your app Material</string>
+    <string name="main_app_ubiquitous">Go Ubiquitous</string>
+    <string name="main_app_capstone">Capstone</string>
+
+    <string name="msg_open_movie_app">This button will lunch my Popular Movies app</string>
+    <string name="msg_open_stock_app">This button will lunch my Stock Hawk app</string>
+    <string name="msg_open_bigger_app">This button will lunch my Build it Bigger app</string>
+    <string name="msg_open_material_app">This button will lunch my Make Your App Material app</string>
+    <string name="msg_open_ubiquitous_app">This button will lunch my Go Ubiquitous app</string>
+    <string name="msg_open_capstone_app">This button will lunch my Capstone app</string>
+
+</resources>

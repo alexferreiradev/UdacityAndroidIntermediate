@@ -1,0 +1,100 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivityFragment">
+
+    <TextView
+        style="@style/MainTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/main_app_title"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:dividerPadding="@dimen/main_button_margin"
+        android:measureWithLargestChild="true"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/textView">
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_movie"
+            android:id="@+id/buttonMovie"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/main_button_margin" />
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_stock"
+            android:id="@+id/buttonStock"
+            android:layout_below="@+id/buttonMovie"
+            android:layout_alignLeft="@+id/buttonMovie"
+            android:layout_alignStart="@+id/buttonMovie"
+            android:layout_alignRight="@+id/buttonMovie"
+            android:layout_alignEnd="@+id/buttonMovie"
+            android:layout_marginTop="@dimen/main_button_margin" />
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_bigger"
+            android:id="@+id/buttonBigger"
+            android:layout_below="@+id/buttonStock"
+            android:layout_alignLeft="@+id/buttonStock"
+            android:layout_alignStart="@+id/buttonStock"
+            android:layout_alignRight="@+id/buttonStock"
+            android:layout_alignEnd="@+id/buttonStock"
+            android:layout_marginTop="@dimen/main_button_margin" />
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_material"
+            android:id="@+id/buttonMaterial"
+            android:layout_below="@+id/buttonBigger"
+            android:layout_alignLeft="@+id/buttonBigger"
+            android:layout_alignStart="@+id/buttonBigger"
+            android:layout_marginTop="@dimen/main_button_margin" />
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_ubiquitous"
+            android:id="@+id/buttonUbiquitous"
+            android:layout_centerVertical="true"
+            android:layout_alignLeft="@+id/buttonMaterial"
+            android:layout_alignStart="@+id/buttonMaterial"
+            android:layout_marginTop="@dimen/main_button_margin"
+            />
+
+        <Button
+            style="@style/ButtonAction"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/main_app_capstone"
+            android:id="@+id/buttonCapstone"
+            android:layout_below="@+id/buttonUbiquitous"
+            android:layout_alignLeft="@+id/buttonUbiquitous"
+            android:layout_alignStart="@+id/buttonUbiquitous"
+            android:layout_marginTop="@dimen/main_button_margin"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
