@@ -1,4 +1,4 @@
-package com.alex.udacityportiflio.main;
+package com.alex.udacityportifolio.main;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.alex.udacityportiflio.R;
+import com.alex.udacityportifolio.R;
 
 
 /**
