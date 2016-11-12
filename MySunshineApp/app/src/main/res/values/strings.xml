@@ -2,6 +2,7 @@
     <string name="app_name">Sunshine App</string>
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_setting" >Settings</string>
+    <string name="action_view_map" >My location on map</string>
 
     <!--Preferences-->
     <string name="pref_location_label">Set your ZIP CODE Location</string>
