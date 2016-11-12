@@ -1,9 +1,13 @@
 package com.alex.sunshineapp;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -17,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,35 +46,45 @@ import java.util.List;
 public class ForecastFragment extends Fragment {
 
     private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
-    public static final String POST_CODE = "94043";
-    public static final String DETAIL_INTENT_KEY = "detail";
+    public static final String DEF_POST_CODE_VALUE = "0";
 
     private ForecastListAdapter forecastListAdapter;
     private ListView listView;
-
-    public ForecastFragment() {
-    }
+    private String postcode = DEF_POST_CODE_VALUE;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        if (savedInstanceState != null && savedInstanceState.get(getString(R.string.pref_location_key)) != null){
+            postcode = savedInstanceState.getString(getString(R.string.pref_location_key));
+        }else
+            postcode = DEF_POST_CODE_VALUE;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (postcode == DEF_POST_CODE_VALUE)
+            postcode = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(getString(R.string.pref_location_key), DEF_POST_CODE_VALUE);
+        refreshList();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.main_fragment, container, false);
-        List<String> forecastItems = new ArrayList<>();
-        forecastItems.add("Today - Sunny - 88/90");
-        forecastItems.add("Tomorrow - Foggy - 70/46");
-        forecastItems.add("Weds - Cloudy - 72/63");
-        forecastItems.add("Thurs - Cloudy - 72/63");
-        forecastItems.add("Fri - Rain - 64/51");
+//        List<String> forecastItems = new ArrayList<>();
+//        forecastItems.add("Today - Sunny - 88/90");
+//        forecastItems.add("Tomorrow - Foggy - 70/46");
+//        forecastItems.add("Weds - Cloudy - 72/63");
+//        forecastItems.add("Thurs - Cloudy - 72/63");
+//        forecastItems.add("Fri - Rain - 64/51");
 
         listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setEmptyView(rootView.findViewById(R.id.empty));
-        forecastListAdapter = new ForecastListAdapter(getActivity(), R.layout.list_item_forecast, forecastItems);
+        forecastListAdapter = new ForecastListAdapter(getActivity(), R.layout.list_item_forecast, new ArrayList<String>());
         listView.setAdapter(forecastListAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -79,7 +95,6 @@ public class ForecastFragment extends Fragment {
                 getActivity().startActivity(intent);
             }
         });
-        refreshList();
 
         return rootView;
     }
@@ -89,7 +104,7 @@ public class ForecastFragment extends Fragment {
      */
     public void refreshList(){
         ((TextView)listView.getEmptyView()).setText("Carregando dados");
-        new FetchWeatherTask().execute(POST_CODE);
+        new FetchWeatherTask().execute(postcode);
     }
 
     @Override
@@ -103,6 +118,10 @@ public class ForecastFragment extends Fragment {
             case R.id.refresh_op:
                 refreshList();
                 return true;
+            case R.id.action_setting:
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                getActivity().startActivity(intent);
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -110,23 +129,24 @@ public class ForecastFragment extends Fragment {
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
-        public static final String QUERY_KEY_PARAM = "q";
+        public static final String QUERY_KEY_PARAM = "zip";
         public static final String UNITS_KEY_PARAM = "units";
         public static final String CNT_KEY_PARAM = "cnt";
         public static final String APPID_KEY_PARAM = "appid";
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
         private final String HTTP_API_OPENWEATHERMAP_DAILY_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily";
 
+        private boolean connectionError = false;
         @Override
         protected String[] doInBackground(String... params) {
             if (params.length == 0)
                 return null;
 
             String postcode = params[0];
-            if (postcode == null || postcode.isEmpty() || Integer.valueOf(postcode) == null) {
+            if (postcode == DEF_POST_CODE_VALUE) {
                 String msg = "Parâmetro para task está nulo, vazio ou não é um inteiro";
                 Log.e(LOG_TAG, msg);
-                throw new NullPointerException(msg);
+                throw new InvalidParameterException(msg);
             }
 
             String mode = "json";
@@ -135,7 +155,7 @@ public class ForecastFragment extends Fragment {
             String appID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
             Uri builtUri = Uri.parse(HTTP_API_OPENWEATHERMAP_DAILY_BASE_URL).buildUpon()
-                    .appendQueryParameter(QUERY_KEY_PARAM, postcode)
+                    .appendQueryParameter(QUERY_KEY_PARAM, postcode+","+"bra")
                     .appendQueryParameter(UNITS_KEY_PARAM, units)
                     .appendQueryParameter(CNT_KEY_PARAM, String.valueOf(numberDays))
                     .appendQueryParameter(APPID_KEY_PARAM,appID)
@@ -148,6 +168,14 @@ public class ForecastFragment extends Fragment {
 
             // Will contain the raw JSON response as a string.
             String forecastJsonStr = null;
+
+            ConnectivityManager systemService = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetwork = systemService.getActiveNetworkInfo();
+            if (activeNetwork == null || !activeNetwork.isConnected()){
+                Log.w(LOG_TAG, "Não há conexão");
+                connectionError = true;
+                return null;
+            }
 
             try {
                 // Construct the URL for the OpenWeatherMap query
@@ -217,8 +245,14 @@ public class ForecastFragment extends Fragment {
         /**
          * Prepare the weather high/lows for presentation.
          */
-        private String formatHighLows(double high, double low) {
-            // For presentation, assume the user doesn't care about tenths of a degree.
+        private String formatHighLows(double high, double low, String unitType) {
+            if (unitType.equals(getString(R.string.pref_units_imperial))){
+                high = (high * 1.8) + 32;
+                low = (low * 1.8) + 32;
+            }else if (!unitType.equals(getString(R.string.pref_units_metric))){
+                Log.d(LOG_TAG, "Unit type not found: " + unitType);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
@@ -265,6 +299,8 @@ public class ForecastFragment extends Fragment {
             dayTime = new Time();
 
             String[] resultStrs = new String[numDays];
+            String unitType = PreferenceManager.getDefaultSharedPreferences(getActivity())
+                    .getString(getString(R.string.pref_units_key), getString(R.string.pref_units_default));
             for(int i = 0; i < weatherArray.length(); i++) {
                 // For now, using the format "Day, description, hi/low"
                 String day;
@@ -292,7 +328,7 @@ public class ForecastFragment extends Fragment {
                 double high = temperatureObject.getDouble(OWM_MAX);
                 double low = temperatureObject.getDouble(OWM_MIN);
 
-                highAndLow = formatHighLows(high, low);
+                highAndLow = formatHighLows(high, low, unitType);
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
@@ -308,7 +344,11 @@ public class ForecastFragment extends Fragment {
             super.onPostExecute(results);
 
             if (results == null || results.length == 0){
+                if (connectionError){
+                    Toast.makeText(getActivity(), getString(R.string.connection_error),Toast.LENGTH_LONG).show();
+                }
                 TextView emptyView = (TextView) listView.getEmptyView();
+                forecastListAdapter.clear();
                 String msg = "Não foi encontrado nenhum resultado";
                 emptyView.setText(msg);
                 return ;
