@@ -19,8 +19,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.alex.sunshineapp.data.WeatherContract.LocationEntry;
-import com.alex.sunshineapp.data.WeatherContract.WeatherEntry;
+import com.alex.sunshineapp.data.WeatherContractSunshine.LocationEntry;
+import com.alex.sunshineapp.data.WeatherContractSunshine.WeatherEntry;
 
 /**
  * Manages a local database for weather data.
@@ -30,7 +30,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
     // If you change the database schema, you must increment the database version.
     private static final int DATABASE_VERSION = 3;
 
-    static final String DATABASE_NAME = "weather.db";
+    public static final String DATABASE_NAME = "weather.db";
 
     public WeatherDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

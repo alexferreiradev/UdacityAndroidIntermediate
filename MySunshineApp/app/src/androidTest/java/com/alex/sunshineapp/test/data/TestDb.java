@@ -13,14 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.alex.sunshineapp.data;
+package com.alex.sunshineapp.test.data;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
-import com.alex.sunshineapp.data.WeatherContract.LocationEntry;
+import com.alex.sunshineapp.data.WeatherContractSunshine;
+import com.alex.sunshineapp.data.WeatherContractSunshine.LocationEntry;
+import com.alex.sunshineapp.data.WeatherDbHelper;
 
 import java.util.HashSet;
 
@@ -56,7 +58,7 @@ public class TestDb extends AndroidTestCase {
         // Android metadata (db version information)
         final HashSet<String> tableNameHashSet = new HashSet<String>();
         tableNameHashSet.add(LocationEntry.TABLE_NAME);
-        tableNameHashSet.add(WeatherContract.WeatherEntry.TABLE_NAME);
+        tableNameHashSet.add(WeatherContractSunshine.WeatherEntry.TABLE_NAME);
 
         mContext.deleteDatabase(WeatherDbHelper.DATABASE_NAME);
         SQLiteDatabase db = new WeatherDbHelper(
@@ -163,10 +165,10 @@ public class TestDb extends AndroidTestCase {
         // (you can use the createWeatherValues TestUtilities function if you wish)
         ContentValues weatherValues = TestUtilities.createWeatherValues(id);
         // Insert ContentValues into database and get a row ID back
-        long weatherId = db.insert(WeatherContract.WeatherEntry.TABLE_NAME, null, weatherValues);
+        long weatherId = db.insert(WeatherContractSunshine.WeatherEntry.TABLE_NAME, null, weatherValues);
         assertNotSame(weatherId, -1);
         // Query the database and receive a Cursor back
-        Cursor cursor = db.query(WeatherContract.WeatherEntry.TABLE_NAME,
+        Cursor cursor = db.query(WeatherContractSunshine.WeatherEntry.TABLE_NAME,
                 null,
                 null,
                 null,
