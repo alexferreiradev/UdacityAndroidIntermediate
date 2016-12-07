@@ -20,7 +20,8 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
-import android.text.format.Time;
+
+import java.util.Calendar;
 
 /**
  * Defines table and column names for the movies database.
@@ -37,9 +38,9 @@ public class MoviesContract {
     public static final class MovieEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "movie";
-//        public static final String COLUMN_ID = TABLE_NAME.concat(_ID);
+        public static final String COLUMN_KEY = TABLE_NAME.concat(_ID);
 
-        public static final String COLUMN_IMG_KEY = ImageEntry._ID;
+        public static final String COLUMN_IMG_KEY = ImageEntry.COLUMN_KEY;
         public static final String COLUMN_IMDB_ID = "imdb_id";
         public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_TITLE = "title";
@@ -66,7 +67,7 @@ public class MoviesContract {
     public static final class ImageEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "image";
-//        public static final String COLUMN_ID = TABLE_NAME.concat(_ID);
+        public static final String COLUMN_KEY = TABLE_NAME.concat(_ID);
 
         public static final String COLUMN_ASPECT_RATIO = "aspect_ratio";
         public static final String COLUMN_FILE_PATH = "file_path";
@@ -88,9 +89,8 @@ public class MoviesContract {
 
     public static long normalizeDate(long startDate) {
         // normalize the start date to the beginning of the (UTC) day
-        Time time = new Time();
-        time.set(startDate);
-        int julianDay = Time.getJulianDay(startDate, time.gmtoff);
-        return time.setJulianDay(julianDay);
+        Calendar calendar = Calendar.getInstance();
+
+        return 0;
     }
 }

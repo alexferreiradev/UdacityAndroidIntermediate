@@ -18,6 +18,7 @@ package com.alex.popularmovies.app.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 
 public class MoviesDbHelper extends SQLiteOpenHelper {
@@ -25,6 +26,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     public static final String DATABASE_NAME = "movies.db";
+    private static final String LOG_TAG = MoviesDbHelper.class.getSimpleName();
 
     public MoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -32,7 +34,7 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MoviesContract.MovieEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_MOVIE_TABLE = "CREATE TABLE " + MoviesContract.MovieEntry.TABLE_NAME + " ( " +
 
                 MoviesContract.MovieEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
@@ -45,18 +47,19 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
                 MoviesContract.MovieEntry.COLUMN_RELEASE_DATE + " INTEGER NOT NULL, " +
                 MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE + " REAL NOT NULL, " +
                 MoviesContract.MovieEntry.COLUMN_POPULARITY + " REAL NOT NULL, " +
+                MoviesContract.MovieEntry.COLUMN_IMG_KEY + " INTEGER, " +
 
-                " FOREIGN KEY (" + MoviesContract.MovieEntry.COLUMN_IMG_KEY + ") REFERENCES " +
-                MoviesContract.ImageEntry.TABLE_NAME + " (" + MoviesContract.ImageEntry._ID + ") );";
+                "FOREIGN KEY (" + MoviesContract.MovieEntry.COLUMN_IMG_KEY + ") REFERENCES " +
+                MoviesContract.ImageEntry.TABLE_NAME + " (" + MoviesContract.ImageEntry._ID + "));";
 
-        final String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " + MoviesContract.ImageEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_IMAGE_TABLE = "CREATE TABLE " + MoviesContract.ImageEntry.TABLE_NAME + " ( " +
 
                 MoviesContract.ImageEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 
                 MoviesContract.ImageEntry.COLUMN_FILE_PATH + " TEXT NOT NULL, " +
                 MoviesContract.ImageEntry.COLUMN_ASPECT_RATIO + " REAL NOT NULL, " +
                 MoviesContract.ImageEntry.COLUMN_WIDTH + " REAL NOT NULL, " +
-                MoviesContract.ImageEntry.COLUMN_HEIGHT + " REAL NOT NULL, " + ");";
+                MoviesContract.ImageEntry.COLUMN_HEIGHT + " REAL NOT NULL " + ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_IMAGE_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
@@ -66,6 +69,8 @@ public class MoviesDbHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MoviesContract.MovieEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MoviesContract.ImageEntry.TABLE_NAME);
+
         onCreate(sqLiteDatabase);
+        Log.i(LOG_TAG, "Update database to "+newVersion);
     }
 }
