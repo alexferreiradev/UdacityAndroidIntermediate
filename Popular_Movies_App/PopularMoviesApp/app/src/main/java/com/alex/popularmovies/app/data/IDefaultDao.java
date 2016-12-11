@@ -1,12 +1,12 @@
 package com.alex.popularmovies.app.data;
 
-import java.util.List;
+import android.database.Cursor;
 
 /**
- * Created by Alex on 09/12/2016.
+ * Created by Alex on 11/12/2016.
  */
 
-public interface IDao<T> {
+public interface IDefaultDao<T> {
 
     /**
      * Salva ou atualiza um objeto
@@ -30,7 +30,7 @@ public interface IDao<T> {
      * @param limit
      * @return
      */
-    public List<T> search(String key, String value, String orderBy, String limit);
+    public Cursor search(String key, String value, String orderBy, String limit);
 
     /**
      * Retorna um objeto
@@ -38,5 +38,7 @@ public interface IDao<T> {
      * @param value
      * @return
      */
-    public T get(String key, String value);
+    public Cursor get(String key, String value);
+
+    public void closeDB();
 }

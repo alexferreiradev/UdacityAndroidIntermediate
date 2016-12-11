@@ -1,8 +1,9 @@
 package com.alex.popularmovies.app.model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
-import java.util.HashMap;
+import com.alex.popularmovies.app.data.MoviesContract;
 
 /**
  * Created by Alex on 09/12/2016.
@@ -15,6 +16,17 @@ public class Image implements IModel<Image> {
     private Double aspectRatio;
     private Double width;
     private Double height;
+
+    public Image() {
+    }
+
+    public Image(Cursor cursor) {
+        setValues(cursor);
+    }
+
+    public Image(ContentValues contentValues) {
+        setValues(contentValues);
+    }
 
     public long getId() {
         return id;
@@ -94,12 +106,58 @@ public class Image implements IModel<Image> {
     }
 
     @Override
-    public ContentValues buildValue(Image obj) {
-        return null;
+    public ContentValues buildValues() {
+
+        /*
+            Dados a serem add
+
+            getId(), getAspectRatio(), getFilePath(), getHeight(), getWidth()
+        */
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(MoviesContract.ImageEntry._ID, id);
+        contentValues.put(MoviesContract.ImageEntry.COLUMN_ASPECT_RATIO, aspectRatio);
+        contentValues.put(MoviesContract.ImageEntry.COLUMN_FILE_PATH, filePath);
+        contentValues.put(MoviesContract.ImageEntry.COLUMN_HEIGHT, height);
+        contentValues.put(MoviesContract.ImageEntry.COLUMN_WIDTH, width);
+        return contentValues;
     }
 
     @Override
-    public Image valueOf(HashMap<String, String> values) {
-        return null;
+    public Image setValues(Cursor cursor) {
+        if (cursor == null)
+            return null;
+
+        int columnIndex = cursor.getColumnIndex(MoviesContract.ImageEntry._ID);
+        if (columnIndex >= 0)
+            id = cursor.getInt(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.ImageEntry.COLUMN_FILE_PATH);
+        if (columnIndex >= 0)
+            filePath = cursor.getString(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.ImageEntry.COLUMN_HEIGHT);
+        if (columnIndex >= 0)
+            height = cursor.getDouble(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.ImageEntry.COLUMN_WIDTH);
+        if (columnIndex >= 0)
+            width = cursor.getDouble(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.ImageEntry.COLUMN_ASPECT_RATIO);
+        if (columnIndex >= 0)
+            aspectRatio = cursor.getDouble(columnIndex);
+
+        return this;
+    }
+
+    @Override
+    public Image setValues(ContentValues values) {
+        if (values.containsKey(MoviesContract.ImageEntry._ID))
+            id = values.getAsLong(MoviesContract.ImageEntry._ID);
+        if (values.containsKey(MoviesContract.ImageEntry.COLUMN_FILE_PATH))
+            filePath = values.getAsString(MoviesContract.ImageEntry.COLUMN_FILE_PATH);
+        if (values.containsKey(MoviesContract.ImageEntry.COLUMN_WIDTH))
+            width = values.getAsDouble(MoviesContract.ImageEntry.COLUMN_WIDTH);
+        if (values.containsKey(MoviesContract.ImageEntry.COLUMN_HEIGHT))
+            height = values.getAsDouble(MoviesContract.ImageEntry.COLUMN_HEIGHT);
+        if (values.containsKey(MoviesContract.ImageEntry.COLUMN_ASPECT_RATIO))
+            aspectRatio = values.getAsDouble(MoviesContract.ImageEntry.COLUMN_ASPECT_RATIO);
+        return this;
     }
 }

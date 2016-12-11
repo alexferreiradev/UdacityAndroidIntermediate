@@ -1,9 +1,12 @@
 package com.alex.popularmovies.app.model;
 
 import android.content.ContentValues;
+import android.database.Cursor;
+
+import com.alex.popularmovies.app.data.MoviesContract;
+import com.alex.popularmovies.app.util.MoviesUtil;
 
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by Alex on 09/12/2016.
@@ -22,6 +25,19 @@ public class Movie implements IModel<Movie> {
     private double popularity;
     private Date releaseDate;
     private Image image;
+
+    public Movie() {
+        id = -1;
+        imbdId = -1;
+    }
+
+    public Movie(Cursor cursor) {
+        setValues(cursor);
+    }
+
+    public Movie(ContentValues values) {
+        setValues(values);
+    }
 
     public long getId() {
         return id;
@@ -173,13 +189,94 @@ public class Movie implements IModel<Movie> {
     }
 
     @Override
-    public ContentValues buildValue(Movie obj) {
+    public ContentValues buildValues() {
+        /*
+            Dados a serem empacotados
 
-        return null;
+            getTitle(), getImage(), getBackdropPath(), getImbdId(), getOverview()
+            , getPopularity(), getReleaseDate()
+            getVoteAverage(), getVoteCount()
+        */
+
+        ContentValues values = new ContentValues();
+        values.put(MoviesContract.MovieEntry._ID, id);
+        values.put(MoviesContract.MovieEntry.COLUMN_TITLE, title);
+        values.put(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE, originalTitle);
+        if (image != null && image.getId() != -1)
+            values.put(MoviesContract.MovieEntry.COLUMN_IMG_KEY, image.getId());
+        values.put(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
+        values.put(MoviesContract.MovieEntry.COLUMN_IMDB_ID, imbdId);
+        values.put(MoviesContract.MovieEntry.COLUMN_OVERVIEW, overview);
+        values.put(MoviesContract.MovieEntry.COLUMN_POPULARITY, popularity);
+        values.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, MoviesUtil.formatDate(releaseDate));
+        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
+        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT, voteCount);
+
+        return values;
     }
 
     @Override
-    public Movie valueOf(HashMap<String, String> values) {
-        return null;
+    public Movie setValues(Cursor cursor) {
+        if (cursor == null)
+            return null;
+
+        int columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry._ID);
+        if (columnIndex >= 0)
+            id = cursor.getLong(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_TITLE);
+        if (columnIndex >= 0)
+            title = cursor.getString(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+        if (columnIndex >= 0)
+            originalTitle = cursor.getString(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH);
+        if (columnIndex >= 0)
+            backdropPath = cursor.getString(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_IMDB_ID);
+        if (columnIndex >= 0)
+            imbdId = cursor.getLong(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_OVERVIEW);
+        if (columnIndex >= 0)
+            overview = cursor.getString(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_POPULARITY);
+        if (columnIndex >= 0)
+            popularity = cursor.getDouble(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE);
+        if (columnIndex >= 0)
+            releaseDate = MoviesUtil.convertToDate(cursor.getString(columnIndex));
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE);
+        if (columnIndex >= 0)
+            voteAverage = cursor.getDouble(columnIndex);
+        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT);
+        if (columnIndex >= 0)
+            voteCount = cursor.getDouble(columnIndex);
+
+        return this;
+    }
+
+    @Override
+    public Movie setValues(ContentValues values) {
+        if (values.containsKey(MoviesContract.MovieEntry._ID))
+            id = values.getAsLong(MoviesContract.MovieEntry._ID);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_TITLE))
+            title = values.getAsString(MoviesContract.MovieEntry.COLUMN_TITLE);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE))
+            originalTitle = values.getAsString(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH))
+            backdropPath = values.getAsString(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_IMDB_ID))
+            imbdId = values.getAsLong(MoviesContract.MovieEntry.COLUMN_IMDB_ID);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_OVERVIEW))
+            overview = values.getAsString(MoviesContract.MovieEntry.COLUMN_OVERVIEW);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_POPULARITY))
+            popularity = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_POPULARITY);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE))
+            releaseDate = MoviesUtil.convertToDate(values.getAsString(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE));
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE))
+            voteAverage = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE);
+        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT))
+            voteCount = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT);
+
+        return this;
     }
 }
