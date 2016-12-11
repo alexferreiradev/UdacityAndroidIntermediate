@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
+import com.alex.popularmovies.app.util.MoviesUtil;
+
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -67,7 +70,7 @@ public class TestUtilities extends AndroidTestCase {
         contentValues.put(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE, "title original");
         contentValues.put(MoviesContract.MovieEntry.COLUMN_TITLE, "title");
         contentValues.put(MoviesContract.MovieEntry.COLUMN_OVERVIEW, "over");
-        contentValues.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, 1234456789);
+        contentValues.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, MoviesUtil.formatDate(new Date()));
         contentValues.put(MoviesContract.MovieEntry.COLUMN_POPULARITY, 2.5);
         contentValues.put(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE, 2.4);
         contentValues.put(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT, 2);
