@@ -3,7 +3,7 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.alex.popularmovies.app.model.BaseModel;
+import com.alex.popularmovies.app.model.Movie;
 
 import java.util.List;
 
@@ -11,19 +11,20 @@ import java.util.List;
  * Created by Alex on 23/03/2017.
  */
 
-public class MoviesPresenter extends BaseListPresenter {
+public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Movie> {
 
-    protected MoviesPresenter(BaseListContract.View mView, Context context, Bundle savedInstanceState) {
+
+    protected MoviesPresenter(View mView, Context context, Bundle savedInstanceState) {
         super(mView, context, savedInstanceState);
     }
 
     @Override
-    public void selectItemClicked(BaseModel item) {
+    public void selectItemClicked(Movie item) {
 
     }
 
     @Override
-    public void showAddOrEditView(BaseModel data) {
+    public void showAddOrEditView(Movie data) {
 
     }
 
@@ -33,32 +34,32 @@ public class MoviesPresenter extends BaseListPresenter {
     }
 
     @Override
-    protected List loadDataFromSource(int offset, int loadItemsLimit) {
+    protected List<Movie> loadDataFromSource(int offset, int loadItemsLimit) {
         return null;
     }
 
     @Override
-    protected int updateDataFromSource(BaseModel data) {
+    protected int updateDataFromSource(Movie data) {
         return 0;
     }
 
     @Override
-    protected boolean removeDataFromSource(BaseModel data) {
+    protected boolean removeDataFromSource(Movie data) {
         return false;
     }
 
     @Override
-    protected Long saveDataFromSource(BaseModel data) {
+    protected Long saveDataFromSource(Movie data) {
         return null;
     }
 
     @Override
-    protected List applyFilterFromAdapter() {
+    protected List<Movie> applyFilterFromAdapter() {
         return null;
     }
 
     @Override
-    protected List applyFilterFromSource() {
+    protected List<Movie> applyFilterFromSource() {
         return null;
     }
 
@@ -89,6 +90,10 @@ public class MoviesPresenter extends BaseListPresenter {
 
     @Override
     protected void showDataNotSavedError() {
+
+    }
+
+    public interface View extends BaseListContract.View<Movie> {
 
     }
 }

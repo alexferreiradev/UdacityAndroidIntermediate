@@ -1,45 +1,96 @@
 package com.alex.popularmovies.app.ui.view;
 
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.model.BaseModel;
 import com.alex.popularmovies.app.ui.presenter.BasePresenter;
 
 /**
- * Created by Alex on 23/03/2017.
+ * Created by Alex on 16/03/2017.
  */
 
-public class BaseActivity extends AppCompatActivity implements BasePresenter.View{
+public abstract class BaseActivity<ModelType extends BaseModel,
+        ViewType extends BasePresenter.View,
+        PresenterType extends BasePresenter>
+        extends AppCompatActivity
+        implements BasePresenter.View<ModelType>{
+
+    protected BasePresenter.TaskType mTaskType;
+    protected ModelType mData;
+    protected PresenterType mPresenter;
+    protected ProgressBar mProgressBar;
 
 
     @Override
-    public void toggleProgressBar() {
-
+    protected void onStart() {
+        super.onStart();
+        mPresenter.startPresenterView();
     }
 
     @Override
     public void initializeWidgets(Bundle savedInstanceState) {
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.myToolBar);
+        setSupportActionBar(mToolbar);
 
-    }
+        getSupportActionBar().setTitle("");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
+        drawable.setBounds(24,24,24,24);
+        getSupportActionBar().setHomeAsUpIndicator(drawable);
 
-    @Override
-    public void initializeArgumentsFromIntent() {
-
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        if (mProgressBar == null)
+            throw new NullPointerException("A Activity não tem progressBar no layout.");
     }
 
     @Override
     public void showErrorMsg(String msg) {
-
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void showSuccessMsg(String msg) {
-
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void startBackgroundThread(BaseModel data, BasePresenter.TaskType taskType) {
+    public void toggleProgressBar() {
+        if (mProgressBar.getVisibility() == View.VISIBLE)
+            mProgressBar.setVisibility(View.GONE);
+        else
+            mProgressBar.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void startBackgroundThread(ModelType data, BasePresenter.TaskType taskType) {
+        mTaskType = taskType;
+        mData = data;
+        new BackgroundTask().execute();
+    }
+
+    private final class BackgroundTask extends AsyncTask<String, Integer, Object>{
+        @Override
+        protected Object doInBackground(String... params) {
+            if (mPresenter == null)
+                return null;
+
+            return mPresenter.taskFromSource(mData, mTaskType);
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+            super.onPostExecute(result);
+            if (mPresenter != null){
+                mPresenter.analiseBackgroundThreadResult(result, mTaskType);
+            }
+        }
     }
 }
