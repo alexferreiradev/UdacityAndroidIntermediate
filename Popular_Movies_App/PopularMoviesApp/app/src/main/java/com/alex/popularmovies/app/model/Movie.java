@@ -1,10 +1,6 @@
 package com.alex.popularmovies.app.model;
 
 import android.content.ContentValues;
-import android.database.Cursor;
-
-import com.alex.popularmovies.app.data.MoviesContract;
-import com.alex.popularmovies.app.util.MoviesUtil;
 
 import java.util.Date;
 
@@ -12,39 +8,27 @@ import java.util.Date;
  * Created by Alex on 09/12/2016.
  */
 
-public class Movie implements IModel<Movie> {
+public class Movie extends BaseModel<Movie> {
 
-    private long id;
-    private String title;
-    private String originalTitle;
-    private String overview;
-    private String backdropPath;
-    private long imbdId;
-    private double voteCount;
-    private double voteAverage;
-    private double popularity;
-    private Date releaseDate;
-    private Image image;
+    /**
+     * filme
+     id
+     title
+     imageId
+     synopsis
+     totalVotes
+     popularity
+     releaseDate
+     */
+    private String title; // "original_title": "Lock, Stock and Two Smoking Barrels"
+    private String posterPath; // "poster_path": "/qV7QaSf7f7yC2lc985zfyOJIAIN.jpg"
+    private String thumbnailPath; // "backdrop_path": "/kzeR7BA0htJ7BeI6QEUX3PVp39s.jpg"
+    private String synopsis; //  "overview": "A card sharp and his ..."
+    private int totalVotes; // "vote_count": 1377
+    private Date releaseDate; // "release_date": "1998-03-05",
+    private double popularity; // "popularity": 0.811565,
 
     public Movie() {
-        id = -1;
-        imbdId = -1;
-    }
-
-    public Movie(Cursor cursor) {
-        setValues(cursor);
-    }
-
-    public Movie(ContentValues values) {
-        setValues(values);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {
@@ -55,60 +39,36 @@ public class Movie implements IModel<Movie> {
         this.title = title;
     }
 
-    public String getOriginalTitle() {
-        return originalTitle;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
     }
 
-    public String getOverview() {
-        return overview;
+    public String getThumbnailPath() {
+        return thumbnailPath;
     }
 
-    public void setOverview(String overview) {
-        this.overview = overview;
+    public void setThumbnailPath(String thumbnailPath) {
+        this.thumbnailPath = thumbnailPath;
     }
 
-    public String getBackdropPath() {
-        return backdropPath;
+    public String getSynopsis() {
+        return synopsis;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
+    public void setSynopsis(String synopsis) {
+        this.synopsis = synopsis;
     }
 
-    public long getImbdId() {
-        return imbdId;
+    public int getTotalVotes() {
+        return totalVotes;
     }
 
-    public void setImbdId(long imbdId) {
-        this.imbdId = imbdId;
-    }
-
-    public double getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(double voteCount) {
-        this.voteCount = voteCount;
-    }
-
-    public double getVoteAverage() {
-        return voteAverage;
-    }
-
-    public void setVoteAverage(double voteAverage) {
-        this.voteAverage = voteAverage;
-    }
-
-    public double getPopularity() {
-        return popularity;
-    }
-
-    public void setPopularity(double popularity) {
-        this.popularity = popularity;
+    public void setTotalVotes(int totalVotes) {
+        this.totalVotes = totalVotes;
     }
 
     public Date getReleaseDate() {
@@ -119,12 +79,12 @@ public class Movie implements IModel<Movie> {
         this.releaseDate = releaseDate;
     }
 
-    public Image getImage() {
-        return image;
+    public double getPopularity() {
+        return popularity;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
     }
 
     @Override
@@ -134,19 +94,16 @@ public class Movie implements IModel<Movie> {
 
         Movie movie = (Movie) o;
 
-        if (id != movie.id) return false;
-        if (imbdId != movie.imbdId) return false;
-        if (Double.compare(movie.voteCount, voteCount) != 0) return false;
-        if (Double.compare(movie.voteAverage, voteAverage) != 0) return false;
+        if (totalVotes != movie.totalVotes) return false;
         if (Double.compare(movie.popularity, popularity) != 0) return false;
         if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
-        if (!originalTitle.equals(movie.originalTitle)) return false;
-        if (!overview.equals(movie.overview)) return false;
-        if (backdropPath != null ? !backdropPath.equals(movie.backdropPath) : movie.backdropPath != null)
+        if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null)
             return false;
-        if (releaseDate != null ? !releaseDate.equals(movie.releaseDate) : movie.releaseDate != null)
+        if (thumbnailPath != null ? !thumbnailPath.equals(movie.thumbnailPath) : movie.thumbnailPath != null)
             return false;
-        return image != null ? image.equals(movie.image) : movie.image == null;
+        if (synopsis != null ? !synopsis.equals(movie.synopsis) : movie.synopsis != null)
+            return false;
+        return releaseDate != null ? releaseDate.equals(movie.releaseDate) : movie.releaseDate == null;
 
     }
 
@@ -154,129 +111,28 @@ public class Movie implements IModel<Movie> {
     public int hashCode() {
         int result;
         long temp;
-        result = (int) (id ^ (id >>> 32));
-        result = 31 * result + (title != null ? title.hashCode() : 0);
-        result = 31 * result + originalTitle.hashCode();
-        result = 31 * result + overview.hashCode();
-        result = 31 * result + (backdropPath != null ? backdropPath.hashCode() : 0);
-        result = 31 * result + (int) (imbdId ^ (imbdId >>> 32));
-        temp = Double.doubleToLongBits(voteCount);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(voteAverage);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = title != null ? title.hashCode() : 0;
+        result = 31 * result + (posterPath != null ? posterPath.hashCode() : 0);
+        result = 31 * result + (thumbnailPath != null ? thumbnailPath.hashCode() : 0);
+        result = 31 * result + (synopsis != null ? synopsis.hashCode() : 0);
+        result = 31 * result + totalVotes;
+        result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
         temp = Double.doubleToLongBits(popularity);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
-        result = 31 * result + (image != null ? image.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", originalTitle='" + originalTitle + '\'' +
-                ", overview='" + overview + '\'' +
-                ", backdropPath='" + backdropPath + '\'' +
-                ", imbdId=" + imbdId +
-                ", voteCount=" + voteCount +
-                ", voteAverage=" + voteAverage +
+                "title='" + title + '\'' +
+                ", posterPath='" + posterPath + '\'' +
+                ", thumbnailPath='" + thumbnailPath + '\'' +
+                ", synopsis='" + synopsis + '\'' +
+                ", totalVotes='" + totalVotes + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
                 ", popularity=" + popularity +
-                ", releaseDate=" + releaseDate +
-                ", image=" + image +
                 '}';
     }
 
-    @Override
-    public ContentValues buildValues() {
-        /*
-            Dados a serem empacotados
-
-            getTitle(), getImage(), getBackdropPath(), getImbdId(), getOverview()
-            , getPopularity(), getReleaseDate()
-            getVoteAverage(), getVoteCount()
-        */
-
-        ContentValues values = new ContentValues();
-        values.put(MoviesContract.MovieEntry._ID, id);
-        values.put(MoviesContract.MovieEntry.COLUMN_TITLE, title);
-        values.put(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE, originalTitle);
-        if (image != null && image.getId() != -1)
-            values.put(MoviesContract.MovieEntry.COLUMN_IMG_KEY, image.getId());
-        values.put(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH, backdropPath);
-        values.put(MoviesContract.MovieEntry.COLUMN_IMDB_ID, imbdId);
-        values.put(MoviesContract.MovieEntry.COLUMN_OVERVIEW, overview);
-        values.put(MoviesContract.MovieEntry.COLUMN_POPULARITY, popularity);
-        values.put(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE, MoviesUtil.formatDate(releaseDate));
-        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE, voteAverage);
-        values.put(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT, voteCount);
-
-        return values;
-    }
-
-    @Override
-    public Movie setValues(Cursor cursor) {
-        if (cursor == null)
-            return null;
-
-        int columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry._ID);
-        if (columnIndex >= 0)
-            id = cursor.getLong(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_TITLE);
-        if (columnIndex >= 0)
-            title = cursor.getString(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
-        if (columnIndex >= 0)
-            originalTitle = cursor.getString(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH);
-        if (columnIndex >= 0)
-            backdropPath = cursor.getString(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_IMDB_ID);
-        if (columnIndex >= 0)
-            imbdId = cursor.getLong(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_OVERVIEW);
-        if (columnIndex >= 0)
-            overview = cursor.getString(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_POPULARITY);
-        if (columnIndex >= 0)
-            popularity = cursor.getDouble(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE);
-        if (columnIndex >= 0)
-            releaseDate = MoviesUtil.convertToDate(cursor.getString(columnIndex));
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE);
-        if (columnIndex >= 0)
-            voteAverage = cursor.getDouble(columnIndex);
-        columnIndex = cursor.getColumnIndex(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT);
-        if (columnIndex >= 0)
-            voteCount = cursor.getDouble(columnIndex);
-
-        return this;
-    }
-
-    @Override
-    public Movie setValues(ContentValues values) {
-        if (values.containsKey(MoviesContract.MovieEntry._ID))
-            id = values.getAsLong(MoviesContract.MovieEntry._ID);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_TITLE))
-            title = values.getAsString(MoviesContract.MovieEntry.COLUMN_TITLE);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE))
-            originalTitle = values.getAsString(MoviesContract.MovieEntry.COLUMN_ORIGINAL_TITLE);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH))
-            backdropPath = values.getAsString(MoviesContract.MovieEntry.COLUMN_BACKDROP_PATH);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_IMDB_ID))
-            imbdId = values.getAsLong(MoviesContract.MovieEntry.COLUMN_IMDB_ID);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_OVERVIEW))
-            overview = values.getAsString(MoviesContract.MovieEntry.COLUMN_OVERVIEW);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_POPULARITY))
-            popularity = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_POPULARITY);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE))
-            releaseDate = MoviesUtil.convertToDate(values.getAsString(MoviesContract.MovieEntry.COLUMN_RELEASE_DATE));
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE))
-            voteAverage = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_VOTE_AVERAGE);
-        if (values.containsKey(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT))
-            voteCount = values.getAsDouble(MoviesContract.MovieEntry.COLUMN_VOTE_COUNT);
-
-        return this;
-    }
 }
