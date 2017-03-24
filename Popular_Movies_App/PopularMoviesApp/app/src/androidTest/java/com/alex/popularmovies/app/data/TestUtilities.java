@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 
+import com.alex.popularmovies.app.dao.MoviesContract;
 import com.alex.popularmovies.app.util.MoviesUtil;
 
 import java.util.Date;

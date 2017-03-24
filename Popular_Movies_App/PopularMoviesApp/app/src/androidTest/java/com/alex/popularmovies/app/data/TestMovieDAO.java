@@ -3,6 +3,7 @@ package com.alex.popularmovies.app.data;
 import android.content.ContentValues;
 import android.test.AndroidTestCase;
 
+import com.alex.popularmovies.app.dao.MoviesContract;
 import com.alex.popularmovies.app.model.Movie;
 
 import java.util.Date;
