@@ -14,7 +14,7 @@ import java.util.List;
 public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Movie> {
 
 
-    protected MoviesPresenter(View mView, Context context, Bundle savedInstanceState) {
+    public MoviesPresenter(View mView, Context context, Bundle savedInstanceState) {
         super(mView, context, savedInstanceState);
     }
 
