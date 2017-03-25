@@ -21,8 +21,6 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import java.util.Calendar;
-
 /**
  * Defines table and column names for the movies database.
  */
@@ -33,14 +31,12 @@ public class MoviesContract {
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
     public static final String PATH_MOVIE = MovieEntry.TABLE_NAME;
-    public static final String PATH_IMAGE = ImageEntry.TABLE_NAME;
 
     public static final class MovieEntry implements BaseColumns {
 
         public static final String TABLE_NAME = "movie";
         public static final String COLUMN_KEY = TABLE_NAME.concat(_ID);
 
-        public static final String COLUMN_IMG_KEY = ImageEntry.COLUMN_KEY;
         public static final String COLUMN_IMDB_ID = "imdb_id";
         public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
         public static final String COLUMN_TITLE = "title";
@@ -59,38 +55,10 @@ public class MoviesContract {
 
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
+
         public static Uri buildMovieUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
-
-    }
-    public static final class ImageEntry implements BaseColumns {
-
-        public static final String TABLE_NAME = "image";
-        public static final String COLUMN_KEY = TABLE_NAME.concat(_ID);
-
-        public static final String COLUMN_ASPECT_RATIO = "aspect_ratio";
-        public static final String COLUMN_FILE_PATH = "file_path";
-        public static final String COLUMN_HEIGHT = "height";
-        public static final String COLUMN_WIDTH = "width";
-
-        public static final Uri CONTENT_URI =
-                BASE_CONTENT_URI.buildUpon().appendPath(PATH_IMAGE).build();
-
-        public static final String CONTENT_TYPE =
-                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGE;
-
-        public static final String CONTENT_ITEM_TYPE =
-                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_IMAGE;
-        public static Uri buildImageUri(long id) {
-            return ContentUris.withAppendedId(CONTENT_URI, id);
-        }
     }
 
-    public static long normalizeDate(long startDate) {
-        // normalize the start date to the beginning of the (UTC) day
-        Calendar calendar = Calendar.getInstance();
-
-        return 0;
-    }
 }
