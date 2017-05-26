@@ -1,6 +1,4 @@
-package com.alex.popularmovies.app.model;
-
-import android.content.ContentValues;
+package com.alex.popularmovies.app.data.model;
 
 import java.util.Date;
 
@@ -14,21 +12,32 @@ public class Movie extends BaseModel<Movie> {
      * filme
      id
      title
-     imageId
+     posterPath
+     thumbnailPath
      synopsis
-     totalVotes
-     popularity
+     rating
      releaseDate
+     popularity
      */
     private String title; // "original_title": "Lock, Stock and Two Smoking Barrels"
     private String posterPath; // "poster_path": "/qV7QaSf7f7yC2lc985zfyOJIAIN.jpg"
     private String thumbnailPath; // "backdrop_path": "/kzeR7BA0htJ7BeI6QEUX3PVp39s.jpg"
     private String synopsis; //  "overview": "A card sharp and his ..."
-    private int totalVotes; // "vote_count": 1377
+    private int rating; // "vote_count": 1377
     private Date releaseDate; // "release_date": "1998-03-05",
     private double popularity; // "popularity": 0.811565,
 
     public Movie() {
+    }
+
+    public Movie(String title, String posterPath, String thumbnailPath, String synopsis, int rating, Date releaseDate, double popularity) {
+        this.title = title;
+        this.posterPath = posterPath;
+        this.thumbnailPath = thumbnailPath;
+        this.synopsis = synopsis;
+        this.rating = rating;
+        this.releaseDate = releaseDate;
+        this.popularity = popularity;
     }
 
     public String getTitle() {
@@ -63,12 +72,12 @@ public class Movie extends BaseModel<Movie> {
         this.synopsis = synopsis;
     }
 
-    public int getTotalVotes() {
-        return totalVotes;
+    public int getRating() {
+        return rating;
     }
 
-    public void setTotalVotes(int totalVotes) {
-        this.totalVotes = totalVotes;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     public Date getReleaseDate() {
@@ -94,7 +103,7 @@ public class Movie extends BaseModel<Movie> {
 
         Movie movie = (Movie) o;
 
-        if (totalVotes != movie.totalVotes) return false;
+        if (rating != movie.rating) return false;
         if (Double.compare(movie.popularity, popularity) != 0) return false;
         if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
         if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null)
@@ -115,7 +124,7 @@ public class Movie extends BaseModel<Movie> {
         result = 31 * result + (posterPath != null ? posterPath.hashCode() : 0);
         result = 31 * result + (thumbnailPath != null ? thumbnailPath.hashCode() : 0);
         result = 31 * result + (synopsis != null ? synopsis.hashCode() : 0);
-        result = 31 * result + totalVotes;
+        result = 31 * result + rating;
         result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
         temp = Double.doubleToLongBits(popularity);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -129,10 +138,9 @@ public class Movie extends BaseModel<Movie> {
                 ", posterPath='" + posterPath + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +
                 ", synopsis='" + synopsis + '\'' +
-                ", totalVotes='" + totalVotes + '\'' +
-                ", releaseDate='" + releaseDate + '\'' +
+                ", rating=" + rating +
+                ", releaseDate=" + releaseDate +
                 ", popularity=" + popularity +
                 '}';
     }
-
 }
