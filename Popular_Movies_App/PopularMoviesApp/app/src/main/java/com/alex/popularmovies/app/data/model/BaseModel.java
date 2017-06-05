@@ -1,4 +1,4 @@
-package com.alex.popularmovies.app.model;
+package com.alex.popularmovies.app.data.model;
 
 import java.io.Serializable;
 
@@ -8,9 +8,9 @@ import java.io.Serializable;
 
 public abstract class BaseModel<ModelType> implements Serializable {
 
-    protected long id;
+    protected Long id;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

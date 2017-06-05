@@ -6,15 +6,18 @@
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_centerVertical="true" />
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/myToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:title="@string/app_name"
-        android:id="@+id/myToolBar"
-        >
-    </android.support.v7.widget.Toolbar>
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:title="@string/app_name" />
 </RelativeLayout>

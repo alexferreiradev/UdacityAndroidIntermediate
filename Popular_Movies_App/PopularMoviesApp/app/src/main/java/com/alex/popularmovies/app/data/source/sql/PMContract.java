@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.alex.popularmovies.app.dao;
+package com.alex.popularmovies.app.data.source.sql;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -24,7 +24,7 @@ import android.provider.BaseColumns;
 /**
  * Defines table and column names for the movies database.
  */
-public class MoviesContract {
+public class PMContract {
 
     public static final String CONTENT_AUTHORITY = "com.alex.popularmovies.app";
 

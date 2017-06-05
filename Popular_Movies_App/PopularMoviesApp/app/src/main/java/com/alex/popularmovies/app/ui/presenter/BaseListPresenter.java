@@ -2,16 +2,11 @@ package com.alex.popularmovies.app.ui.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.widget.BaseAdapter;
 
-import com.alex.popularmovies.app.model.BaseModel;
+import com.alex.popularmovies.app.data.model.BaseModel;
+import com.alex.popularmovies.app.data.repository.DefaultRepository;
 
 import java.util.List;
-
-import static com.alex.popularmovies.app.ui.presenter.BasePresenter.TaskType.FILTER_FROM_ADAPTER;
-import static com.alex.popularmovies.app.ui.presenter.BasePresenter.TaskType.FILTER_FROM_SOURCE;
-import static com.alex.popularmovies.app.ui.presenter.BasePresenter.TaskType.LOAD;
-
 
 /**
  * Created by Alex on 17/03/2017.
@@ -28,118 +23,44 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View ,
 
     private static final int LIMIT_INITIAL = 50; // 30 pronto para mostrar + 20 esperando no adapter
     public static final int INTERVAL_TO_LOAD_MORE = 20; // 30 já visto, 20 faltando para visualizar
-    private static final int TOTAL_FILTER_FROM_ADAPTER = 200;
+    private static final int TOTAL_FILTER_FROM_ADAPTER = 1000; // Valor que uma CPU básica não irá demorar para filtrar
 
-    private int mLoadItemsLimit;
+    protected int mLoadItemsLimit;
     protected int mOffset;
-    private String filterKey;
-    private String filterValue;
+    protected String mFilterKey;
+    protected String mFilterValue;
 
-    protected BaseListPresenter(ViewType mView, Context context, Bundle savedInstanceState) {
-        super(mView, context, savedInstanceState);
+    public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
+        super(mView, mContext, savedInstanceState, mRepository);
     }
 
+    /** Devem ser implementados */
     protected abstract void setEmptyView();
+    protected abstract void loadDataFromSource();
 
-    protected abstract List<ModelType> loadDataFromSource(int offset, int loadItemsLimit);
+    /** Crud Funcoes */
+    protected void updateDataInSource(ModelType data){}
+    protected void removeDataInSource(ModelType data){}
+    protected void saveDataInSource(ModelType data){}
 
-    protected abstract int updateDataFromSource(ModelType data);
+    /** Filtros */
+    protected void applyFilterFromAdapter(){}
+    protected void applyFilterFromSource(){}
 
-    protected abstract boolean removeDataFromSource(ModelType data);
-
-    protected abstract Long saveDataFromSource(ModelType data);
-
-    protected abstract List<ModelType> applyFilterFromAdapter();
-
-    protected abstract List<ModelType> applyFilterFromSource();
-
-
-    protected abstract void showDataNotEditedError();
-
-    protected abstract void showDataEditedSuccess();
-
-    protected abstract void showDataSavedSuccess();
-
-    protected abstract void showDataRemovedError();
-
-    protected abstract void showDataRemovedSuccess();
-
-    protected abstract void showDataNotSavedError();
-
-    protected void showDataFilteredSuccess() {
-        mView.showSuccessMsg("Filtro aplicado com sucesso");
-    }
-
-    @Override
-    public void analiseBackgroundThreadResultData(Object result, TaskType taskType) {
-        switch (taskType){
-            case LOAD:
-                List list = (List) result;
-                if (list == null || list.isEmpty()) {
-                    if (isNewAdapter()) {
-                        mView.destroyListAdapter();
-                    }
-                    return;
-                }
-                if (isNewAdapter())
-                    mView.createListAdapter(list);
-                else
-                    mView.addAdapterData(list);
-                break;
-            case SAVE:
-                Long dataId = (Long) result;
-                if (dataId <= 0){
-                    showDataNotSavedError();
-                }else {
-                    showDataSavedSuccess();
-                    reCreateAdapter();
-                }
-                break;
-            case REMOVE:
-                Boolean deleted = (Boolean) result;
-                if (!deleted){
-                    showDataRemovedError();
-                }else {
-                    showDataRemovedSuccess();
-                    reCreateAdapter();
-                }
-                break;
-            case EDIT:
-                Integer rowsUpdated = (Integer) result;
-                if (rowsUpdated <= 0){
-                    showDataNotEditedError();
-                }else {
-                    showDataEditedSuccess();
-                    reCreateAdapter();
-                }
-                break;
-            case FILTER_FROM_ADAPTER:
-            case FILTER_FROM_SOURCE:
-                list = (List) result;
-                if (list == null || list.isEmpty())
-                    return;
-                else{
-                    showDataFilteredSuccess();
-                    mView.createListAdapter(list);
-                }
-                break;
-
-        }
-    }
+    public void selectItemClicked(ModelType item){}
+    public void showAddOrEditView(ModelType data){}
 
     @Override
     public void applyFilter(String filterKey, String filterValue) {
-        this.filterKey = filterKey;
-        this.filterValue = filterValue;
-        BaseAdapter adapter = mView.getAdapter();
-        if (adapter != null && adapter.getCount() <= TOTAL_FILTER_FROM_ADAPTER){
-            startBackgroundThread(null, FILTER_FROM_ADAPTER);
-        }else
-            startBackgroundThread(null, FILTER_FROM_SOURCE);
+        this.mFilterKey = filterKey;
+        this.mFilterValue = filterValue;
+        if (!isNewAdapter())
+            applyFilterFromAdapter();
     }
 
+    @Override
     public void populateAdapter(List<ModelType> result){
-        if (result != null && !result.isEmpty() && mOffset <= 0){
+        if (result != null && !result.isEmpty() && isNewAdapter()){
             mView.createListAdapter(result);
         }else if (result != null){
             mView.addAdapterData(result);
@@ -151,17 +72,19 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View ,
      * duas verificacoes: 1- se precisa de carregar mais (ultimo visivel perto de total carregado);
      * 2 - se não foi feito uma requisicao de carregamento antes (offset > total carregado);
      *
-     * Deve alterar o limit de acordo com o total de linhas visiveis e o offset com adição do limit.
+     * Deve alterar o mLimit de acordo com o total de linhas visiveis e o offset com adição do mLimit. Uma
+     * alteração para considerar diferentes tipos de dispositivos.
      *
      * @param firstVisibleItem - posição do primeiro item visível
      * @param visibleItemCount - total de linhas que são visíveis
      * @param adapterTotalItems - total de itens no adapter
      */
+    @Override
     public synchronized void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems){
         int lastItemVisiblePosition = firstVisibleItem + visibleItemCount;
         if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE){
             if (mOffset <= adapterTotalItems){
-                startBackgroundThread(null, LOAD);
+                loadDataFromSource();
             }
         }
 
@@ -169,31 +92,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View ,
             mLoadItemsLimit = visibleItemCount + INTERVAL_TO_LOAD_MORE;
     }
 
-
-
     @Override
-    public synchronized Object taskFromSource(ModelType data, TaskType taskType) {
-        switch (taskType){
-            case EDIT:
-                return updateDataFromSource(data);
-            case SAVE:
-                return saveDataFromSource(data);
-            case REMOVE:
-                return removeDataFromSource(data);
-            case LOAD:
-                List<ModelType> modelTypes = loadDataFromSource(mOffset, mLoadItemsLimit);
-                mOffset = mOffset + mLoadItemsLimit;
-                return modelTypes;
-            case FILTER_FROM_SOURCE:
-                return applyFilterFromSource();
-            case FILTER_FROM_ADAPTER:
-                return applyFilterFromAdapter();
-        }
-        return null;
-    }
-
-
-
     public void reCreateAdapter(){
         mView.destroyListAdapter();
         initialize();

@@ -1,17 +1,19 @@
 package com.alex.popularmovies.app.ui.view;
 
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alex.popularmovies.app.R;
-import com.alex.popularmovies.app.model.BaseModel;
+import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.ui.presenter.BasePresenter;
+
+import static com.alex.popularmovies.app.R.id.myToolBar;
 
 /**
  * Created by Alex on 16/03/2017.
@@ -23,7 +25,6 @@ public abstract class BaseActivity<ModelType extends BaseModel,
         extends AppCompatActivity
         implements BasePresenter.View<ModelType>{
 
-    protected BasePresenter.TaskType mTaskType;
     protected ModelType mData;
     protected PresenterType mPresenter;
     protected ProgressBar mProgressBar;
@@ -37,7 +38,9 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 
     @Override
     public void initializeWidgets(Bundle savedInstanceState) {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.myToolBar);
+        Toolbar mToolbar = (Toolbar) findViewById(myToolBar);
+        if (mToolbar == null)
+            throw new NullPointerException("A Activity não tem myToolBar no layout.");
         setSupportActionBar(mToolbar);
 
         getSupportActionBar().setTitle("");
@@ -67,30 +70,5 @@ public abstract class BaseActivity<ModelType extends BaseModel,
             mProgressBar.setVisibility(View.GONE);
         else
             mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void startBackgroundThread(ModelType data, BasePresenter.TaskType taskType) {
-        mTaskType = taskType;
-        mData = data;
-        new BackgroundTask().execute();
-    }
-
-    private final class BackgroundTask extends AsyncTask<String, Integer, Object>{
-        @Override
-        protected Object doInBackground(String... params) {
-            if (mPresenter == null)
-                return null;
-
-            return mPresenter.taskFromSource(mData, mTaskType);
-        }
-
-        @Override
-        protected void onPostExecute(Object result) {
-            super.onPostExecute(result);
-            if (mPresenter != null){
-                mPresenter.analiseBackgroundThreadResult(result, mTaskType);
-            }
-        }
     }
 }

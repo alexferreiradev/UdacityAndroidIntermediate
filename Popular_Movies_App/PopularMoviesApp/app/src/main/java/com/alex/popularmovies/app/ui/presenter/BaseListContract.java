@@ -3,7 +3,7 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 
-import com.alex.popularmovies.app.model.BaseModel;
+import com.alex.popularmovies.app.data.model.BaseModel;
 
 import java.util.List;
 
@@ -31,10 +31,7 @@ public interface BaseListContract {
 
         public void showDataView(ModelType data);
 
-
         public void setEmptyView(String text);
-
-        public void toggleEmptyView();
 
     }
 
@@ -42,13 +39,11 @@ public interface BaseListContract {
 
         public void loadMoreData( int firstVisibleItem, int visibleItemCount, int adapterTotalItems);
 
-
         public void applyFilter(String filterKey, String filterValue);
 
-        public abstract void selectItemClicked(ModelType item);
+        public void populateAdapter(List<ModelType> result);
 
-
-        public abstract void showAddOrEditView(ModelType data);
+        public void reCreateAdapter();
 
     }
 }

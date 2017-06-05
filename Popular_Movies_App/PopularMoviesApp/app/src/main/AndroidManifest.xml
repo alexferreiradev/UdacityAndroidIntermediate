@@ -15,7 +15,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.view.DetailsActivity"></activity>
+        <activity android:name=".ui.view.DetailsActivity" />
+
+        <provider
+            android:name=".data.source.sql.PMProvider"
+            android:authorities="com.alex.popularmovies"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>

@@ -3,9 +3,8 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.alex.popularmovies.app.model.BaseModel;
-
-import java.security.InvalidParameterException;
+import com.alex.popularmovies.app.data.model.BaseModel;
+import com.alex.popularmovies.app.data.repository.DefaultRepository;
 
 /**
  * Created by Alex on 16/03/2017.
@@ -16,12 +15,12 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
     protected Context mContext;
     protected ViewType mView;
-//    protected StudentSource mSource;
+    protected DefaultRepository mRepository;
 
-    protected BasePresenter(ViewType mView, Context mContext, Bundle savedInstanceState) {
+    protected BasePresenter(ViewType mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
         this.mContext = mContext;
         this.mView = mView;
-//        this.mSource = new StudentSource(mContext);
+        this.mRepository = mRepository;
         initializeWidgets(savedInstanceState);
     }
 
@@ -37,43 +36,12 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
     protected abstract void initialize();
 
-    public abstract Object taskFromSource(ModelType data, TaskType taskType);
-
-    public void analiseBackgroundThreadResult(Object result, TaskType taskType){
-        mView.toggleProgressBar();
-        if (taskType == null )
-            throw new NullPointerException("Tipo de task está nulo");
-
-        analiseBackgroundThreadResultData(result, taskType);
-    }
-
-    protected abstract void analiseBackgroundThreadResultData(Object result, TaskType taskType);
-
-    public synchronized void startSaveOrEditDataInSource(ModelType data) {
-        if (data != null && data.getId() > 0)
-            startBackgroundThread(data, TaskType.EDIT);
-        else
-            startBackgroundThread(data, TaskType.SAVE);
-    }
-
-    public synchronized void startRemoveDataInSource(ModelType data){
-        if (data != null && data.getId() > 0)
-            startBackgroundThread(data, TaskType.REMOVE);
-        else
-            throw new InvalidParameterException("Tentando remover um objeto nulo ou sem id");
-    }
-
     /**
      * Chamado para fazer bind entre view e atributos da activity.
      * @param savedInstanceState -
      */
     protected void initializeWidgets(Bundle savedInstanceState) {
         mView.initializeWidgets(savedInstanceState);
-    }
-
-    protected synchronized void startBackgroundThread(ModelType data, TaskType taskType){
-        mView.toggleProgressBar();
-        mView.startBackgroundThread(data, taskType);
     }
 
     /**
@@ -101,16 +69,5 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
         public void showSuccessMsg(String msg);
 
-        public void startBackgroundThread(ModelType data, TaskType taskType);
-
-    }
-
-    public enum TaskType{
-        SAVE,
-        EDIT,
-        REMOVE,
-        LOAD,
-        FILTER_FROM_ADAPTER,
-        FILTER_FROM_SOURCE,
     }
 }
