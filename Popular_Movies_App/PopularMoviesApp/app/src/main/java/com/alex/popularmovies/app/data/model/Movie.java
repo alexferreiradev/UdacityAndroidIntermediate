@@ -26,11 +26,12 @@ public class Movie extends BaseModel<Movie> {
     private int rating; // "vote_count": 1377
     private Date releaseDate; // "release_date": "1998-03-05",
     private double popularity; // "popularity": 0.811565,
+    private boolean favorite;
 
     public Movie() {
     }
 
-    public Movie(String title, String posterPath, String thumbnailPath, String synopsis, int rating, Date releaseDate, double popularity) {
+    public Movie(String title, String posterPath, String thumbnailPath, String synopsis, int rating, Date releaseDate, double popularity, boolean favorite) {
         this.title = title;
         this.posterPath = posterPath;
         this.thumbnailPath = thumbnailPath;
@@ -38,6 +39,7 @@ public class Movie extends BaseModel<Movie> {
         this.rating = rating;
         this.releaseDate = releaseDate;
         this.popularity = popularity;
+        this.favorite = favorite;
     }
 
     public String getTitle() {
@@ -96,6 +98,14 @@ public class Movie extends BaseModel<Movie> {
         this.popularity = popularity;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -105,6 +115,7 @@ public class Movie extends BaseModel<Movie> {
 
         if (rating != movie.rating) return false;
         if (Double.compare(movie.popularity, popularity) != 0) return false;
+        if (favorite != movie.favorite) return false;
         if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
         if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null)
             return false;
@@ -128,6 +139,7 @@ public class Movie extends BaseModel<Movie> {
         result = 31 * result + (releaseDate != null ? releaseDate.hashCode() : 0);
         temp = Double.doubleToLongBits(popularity);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (favorite ? 1 : 0);
         return result;
     }
 
@@ -141,6 +153,7 @@ public class Movie extends BaseModel<Movie> {
                 ", rating=" + rating +
                 ", releaseDate=" + releaseDate +
                 ", popularity=" + popularity +
+                ", favorite=" + favorite +
                 '}';
     }
 }
