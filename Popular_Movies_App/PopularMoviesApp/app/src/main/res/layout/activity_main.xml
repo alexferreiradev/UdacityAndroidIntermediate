@@ -28,5 +28,5 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/includedLayout"
         android:layout_centerHorizontal="true"
-        android:text="TextView fasd fasd fasdfasdfasdfasdf" />
+        android:text="@string/empty_text" />
 </RelativeLayout>

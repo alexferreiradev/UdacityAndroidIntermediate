@@ -12,4 +12,6 @@
     <string name="detail_action_fav">Mark as favorite</string>
     <string name="detail_mark_fav_on">\@string/detail_action_fav</string>
     <string name="detail_mark_fav_off">Unfavorite</string>
+    <string name="empty_text">Nenhum filme a listar</string>
+    <string name="max_rating">10</string>
 </resources>
