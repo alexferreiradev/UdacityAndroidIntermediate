@@ -149,14 +149,14 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
         InputStream stream = null;
         HttpsURLConnection connection = null;
         String movieJsonString = null;
-        // https://api.themoviedb.org/3/movie/550?api_key=f5b67b7b14a052e2b3e1cbfe2aa78f75
         Uri.Builder builder = new Uri.Builder();
+        String api_key = ""; // todo colocar API carregada de config - olhar udacity projects
         builder.scheme("https")
                 .authority("api.themoviedb.org")
                 .path("3")
                 .appendPath("movie")
                 .appendPath("popular") // todo adicionar troca para mais votado
-                .appendQueryParameter("api_key", "f5b67b7b14a052e2b3e1cbfe2aa78f75");
+                .appendQueryParameter("api_key", api_key);
 
         String apiUrl = builder.build().toString();
         URL url = null;
