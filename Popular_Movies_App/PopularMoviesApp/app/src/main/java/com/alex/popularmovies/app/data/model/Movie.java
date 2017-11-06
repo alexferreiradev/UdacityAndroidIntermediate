@@ -146,6 +146,7 @@ public class Movie extends BaseModel<Movie> {
     @Override
     public String toString() {
         return "Movie{" +
+                "id='" + id +
                 "title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +

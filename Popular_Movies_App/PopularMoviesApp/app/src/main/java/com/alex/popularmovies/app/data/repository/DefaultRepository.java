@@ -13,11 +13,25 @@ import java.util.List;
 
 public interface DefaultRepository<ModelType extends BaseModel> {
 
-    public abstract long insert(Uri uri, ContentValues values);
-    public abstract int delete(Uri uri, String selection, String[] selectionArgs);
-    public abstract int update(Uri uri, ContentValues values, String selection,
+    long insert(Uri uri, ContentValues values);
+
+    int delete(Uri uri, String selection, String[] selectionArgs);
+
+    int update(Uri uri, ContentValues values, String selection,
                                String[] selectionArgs);
-    public abstract List<ModelType> query(Uri uri, String[] projection, String selection,
+
+    /**
+     * Recupera lista de filmes. Poderá utilizar diferentes fontes de dados.
+     *
+     * @param uri
+     * @param projection
+     * @param selection
+     * @param selectionArgs
+     * @param sortOrder
+     * @return lista vazia caso ocorra erro ou lista com filmes carregados
+     */
+    List<ModelType> query(Uri uri, String[] projection, String selection,
                                           String[] selectionArgs, String sortOrder);
-    abstract ModelType get(Long dataId);
+
+    ModelType get(Long dataId);
 }

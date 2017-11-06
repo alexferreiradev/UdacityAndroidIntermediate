@@ -7,6 +7,7 @@ import android.net.Uri;
 
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
+import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.GetAllMovies;
 
 import java.util.List;
@@ -72,5 +73,10 @@ public class MovieSql extends BaseSqlSource<Movie>{
         }
 
         return createListModelFromCursor(cursor);
+    }
+
+    @Override
+    public List<Movie> list(String sortOrderType) throws SourceException {
+        return null;
     }
 }

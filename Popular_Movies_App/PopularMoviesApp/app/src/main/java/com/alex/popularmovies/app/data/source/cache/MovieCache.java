@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.data.source.cache;
 
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
+import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.GetAllMovies;
 
 import java.util.ArrayList;
@@ -43,13 +44,13 @@ public class MovieCache extends BaseCache<Movie> {
     }
 
     @Override
-    protected void createCache() {
-        mCache = new ArrayList<Movie>();
+    public List<Movie> list(String sortOrderType) throws SourceException {
+        return null;
     }
 
     @Override
-    protected void destroyCache() {
-        mCache = null;
+    protected void createCache() {
+        mCache = new ArrayList<Movie>();
     }
 
     @Override

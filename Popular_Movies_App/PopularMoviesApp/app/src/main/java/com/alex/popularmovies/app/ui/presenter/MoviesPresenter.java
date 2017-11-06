@@ -32,6 +32,12 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
         new AsyncTask<String, Integer, List<Movie>>(){
 
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                mView.toggleProgressBar();
+            }
+
+            @Override
             protected List<Movie> doInBackground(String... params) {
                 mOffset = mOffset + mLoadItemsLimit;
                 return mRepository.query(null, null, null, null, null);
@@ -39,6 +45,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
 
             @Override
             protected void onPostExecute(List<Movie> movies) {
+                mView.toggleProgressBar();
                 if (movies == null || movies.isEmpty()) {
                     if (isNewAdapter()) {
                         mView.destroyListAdapter();
