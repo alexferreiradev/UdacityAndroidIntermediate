@@ -1,5 +1,6 @@
 package com.alex.popularmovies.app.data.source.remote;
 
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -7,6 +8,7 @@ import android.util.Log;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -43,6 +45,9 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     private static final String MOVIE_JSON_KEY_OVERVIEW = "overview";
     private static final String MOVIE_JSON_KEY_POPULARITY = "popularity";
     private static final String MOVIE_JSON_KEY_VOTE_COUNT = "vote_count";
+    public static final String IMAGE_LENGTH_W_185 = "w185";
+    private static final String IMAGE_LENGTH_W_92 = "w92";
+    public static final String MOVIE_DB_BASE_IMAGE_PATH = "http://image.tmdb.org/t/p/";
 
     public RemoteMovie(HttpURLConnection mHttpURLConnection) {
         super(mHttpURLConnection);
@@ -179,6 +184,7 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
                 throw new IOException("HTTP error code: " + responseCode);
             }
 
+
             stream = connection.getInputStream();
             if (stream != null) {
                 movieJsonString = readStream(stream);
@@ -186,12 +192,14 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
                     movies.addAll(getMoviesFromJsonResults(movieJsonString));
                 }
             }
+
+            addImagesInMovies(movies);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new SourceException("Erro de URL mal formada ao tentar abrir conexão.", e);
         } catch (IOException e) {
             e.printStackTrace();
-            throw new SourceException("Erro de IO ao tentar abrir conexão.", e);
+            throw new SourceException("Erro de IO ao tentar abrir conexão ou carregar imagens.", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -199,6 +207,20 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
         }
 
         return movies;
+    }
+
+    private void addImagesInMovies(List<Movie> movies) throws IOException {
+        for (Movie movie : movies) {
+            Bitmap bitmap = getBitmapFromPicasa(movie.getPosterPath(), IMAGE_LENGTH_W_185);
+            movie.setPoster(bitmap);
+
+            bitmap = getBitmapFromPicasa(movie.getThumbnailPath(), IMAGE_LENGTH_W_92);
+            movie.setThumbnail(bitmap);
+        }
+    }
+
+    private Bitmap getBitmapFromPicasa(String imagePath, String length) throws IOException {
+        return Picasso.with(null).load(MOVIE_DB_BASE_IMAGE_PATH + length + "/" + imagePath).get();
     }
 
     private List<Movie> getMoviesFromJsonResults(String movieJsonString) {

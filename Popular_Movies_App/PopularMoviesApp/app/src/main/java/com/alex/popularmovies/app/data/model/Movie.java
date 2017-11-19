@@ -1,5 +1,7 @@
 package com.alex.popularmovies.app.data.model;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 /**
@@ -27,11 +29,13 @@ public class Movie extends BaseModel<Movie> {
     private Date releaseDate; // "release_date": "1998-03-05",
     private double popularity; // "popularity": 0.811565,
     private boolean favorite;
+    private Bitmap poster; // Imagem de poster
+    private Bitmap thumbnail; // Imagem de poster
 
     public Movie() {
     }
 
-    public Movie(String title, String posterPath, String thumbnailPath, String synopsis, int rating, Date releaseDate, double popularity, boolean favorite) {
+    public Movie(String title, String posterPath, String thumbnailPath, String synopsis, int rating, Date releaseDate, double popularity, boolean favorite, Bitmap poster, Bitmap thumbnail) {
         this.title = title;
         this.posterPath = posterPath;
         this.thumbnailPath = thumbnailPath;
@@ -40,6 +44,8 @@ public class Movie extends BaseModel<Movie> {
         this.releaseDate = releaseDate;
         this.popularity = popularity;
         this.favorite = favorite;
+        this.poster = poster;
+        this.thumbnail = thumbnail;
     }
 
     public String getTitle() {
@@ -127,6 +133,22 @@ public class Movie extends BaseModel<Movie> {
 
     }
 
+    public Bitmap getPoster() {
+        return poster;
+    }
+
+    public void setPoster(Bitmap poster) {
+        this.poster = poster;
+    }
+
+    public Bitmap getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(Bitmap thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
     @Override
     public int hashCode() {
         int result;
@@ -140,14 +162,16 @@ public class Movie extends BaseModel<Movie> {
         temp = Double.doubleToLongBits(popularity);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (favorite ? 1 : 0);
+        result = 31 * result + (poster != null ? poster.hashCode() : 0);
+        result = 31 * result + (thumbnail != null ? thumbnail.hashCode() : 0);
         return result;
     }
 
     @Override
     public String toString() {
         return "Movie{" +
-                "id='" + id +
-                "title='" + title + '\'' +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", posterPath='" + posterPath + '\'' +
                 ", thumbnailPath='" + thumbnailPath + '\'' +
                 ", synopsis='" + synopsis + '\'' +
@@ -155,6 +179,8 @@ public class Movie extends BaseModel<Movie> {
                 ", releaseDate=" + releaseDate +
                 ", popularity=" + popularity +
                 ", favorite=" + favorite +
+                ", poster=" + poster +
+                ", thumbnail=" + thumbnail +
                 '}';
     }
 }
