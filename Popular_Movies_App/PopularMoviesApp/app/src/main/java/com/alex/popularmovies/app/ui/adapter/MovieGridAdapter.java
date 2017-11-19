@@ -1,7 +1,6 @@
 package com.alex.popularmovies.app.ui.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,9 @@ public class MovieGridAdapter extends BaseAdapter {
 
         ImageView moviePosterIV = (ImageView) convertView.findViewById(R.id.moviePosterIV);
         Movie movie = movies.get(position);
-        moviePosterIV.setImageURI(Uri.parse(movie.getPosterPath()));
+//        moviePosterIV.setImageURI(movie.getPosterPath());
+        moviePosterIV.setContentDescription("Imagem: " + movie.getPosterPath());
+
 
         return convertView;
     }

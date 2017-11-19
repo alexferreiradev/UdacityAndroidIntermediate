@@ -16,10 +16,10 @@ public abstract class BaseCache<ModelType extends BaseModel> implements DefaultS
 
     protected BaseCache() {
         createCache();
-        isDirty = false;
+        isDirty = true;
     }
 
-    public Boolean getDirty() {
+    public Boolean isDirty() {
         return isDirty;
     }
 
@@ -27,8 +27,12 @@ public abstract class BaseCache<ModelType extends BaseModel> implements DefaultS
         isDirty = dirty;
     }
 
+    public void updateCache(List<ModelType> newValues) {
+        createCache();
+        addCache(newValues);
+    }
+
     protected abstract void createCache();
-    protected abstract void destroyCache();
     protected abstract void addCache(List<ModelType> data);
     protected abstract void removeCache(List<ModelType> data);
 

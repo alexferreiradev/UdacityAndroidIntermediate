@@ -77,7 +77,7 @@ public class MovieRepositoryTest {
     @Test
     public void testUpdateCache() throws Exception {
         movieRepository.updateCache(Arrays.<Movie>asList(new Movie()));
-        Assert.assertTrue(movieRepository.mCacheSource.getDirty());
+        Assert.assertTrue(movieRepository.mCacheSource.isDirty());
     }
 }
 

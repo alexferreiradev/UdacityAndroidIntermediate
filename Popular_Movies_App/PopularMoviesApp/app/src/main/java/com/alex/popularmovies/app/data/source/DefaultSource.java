@@ -1,6 +1,7 @@
 package com.alex.popularmovies.app.data.source;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
+import com.alex.popularmovies.app.data.source.exception.SourceException;
 
 import java.util.List;
 
@@ -10,8 +11,13 @@ import java.util.List;
 
 public interface DefaultSource<ModelType extends BaseModel> {
 
-    public ModelType insert(ModelType data);
-    public void update(ModelType data);
-    public void delete(ModelType data);
-    public List<ModelType> query(BaseQuerySpecification specification);
+    public ModelType insert(ModelType data) throws SourceException;
+
+    public void update(ModelType data) throws SourceException;
+
+    public void delete(ModelType data) throws SourceException;
+
+    public List<ModelType> query(BaseQuerySpecification specification) throws SourceException;
+
+    List<ModelType> list(String sortOrderType) throws SourceException;
 }

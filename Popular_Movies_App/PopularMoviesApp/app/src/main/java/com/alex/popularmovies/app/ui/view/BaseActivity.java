@@ -6,14 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.ui.presenter.BasePresenter;
-
-import static com.alex.popularmovies.app.R.id.myToolBar;
 
 /**
  * Created by Alex on 16/03/2017.
@@ -38,7 +35,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 
     @Override
     public void initializeWidgets(Bundle savedInstanceState) {
-        Toolbar mToolbar = (Toolbar) findViewById(myToolBar);
+        Toolbar mToolbar = (Toolbar) findViewById(R.id.myToolBar);
         if (mToolbar == null)
             throw new NullPointerException("A Activity não tem myToolBar no layout.");
         setSupportActionBar(mToolbar);

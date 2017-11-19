@@ -3,13 +3,16 @@ package com.alex.popularmovies.app.data.repository;
 import android.content.ContentValues;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
+import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovie;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +46,22 @@ public class MovieRepository extends BaseRepository<Movie> {
 
     @Override
     public List<Movie> query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        List<Movie> movies = new ArrayList<>();
+
+        try {
+            if (mCacheSource.isDirty()) {
+                movies = mRemoteSource.list(null);
+                mCacheSource.updateCache(movies);
+                mCacheSource.setDirty(false);
+            } else {
+                movies = mCacheSource.list(null);
+                // todo disparar testar se ocorreu atualizacao de dados no remoto
+            }
+        } catch (SourceException e) {
+            Log.e("repo", e.getMessage());
+        }
+
+        return movies;
     }
 
     @Override

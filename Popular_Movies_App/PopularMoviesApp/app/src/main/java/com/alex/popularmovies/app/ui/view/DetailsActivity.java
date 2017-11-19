@@ -20,7 +20,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     private Movie mMovie;
 
     public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
-    private long movieId;
+    private long movieId = -1;
     private ToggleButton tbFavorite;
     private Movie movie;
 
@@ -44,6 +44,14 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        if (movieId != -1 && mPresenter != null) {
+            mPresenter.startPresenterView();
+        }
+    }
+
+    @Override
     public void initializeArgumentsFromIntent() {
         if (getIntent() != null && getIntent().hasExtra(EXTRA_PARAM_MOVIE_ID)){
             movieId = getIntent().getExtras().getLong(EXTRA_PARAM_MOVIE_ID);
@@ -61,7 +69,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     public void bindMovieViewData(Movie movie) {
         this.movie = movie;
         tvName.setText(movie.getTitle());
-        tvRating.setText(movie.getRating()+"/10");
+        tvRating.setText(movie.getRating() + "/" + getString(R.string.max_rating));
         ivMovieImage.setImageURI(Uri.parse(movie.getThumbnailPath()));
         tbFavorite.setChecked(movie.isFavorite());
     }
