@@ -29,7 +29,7 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
             @Override
             protected void onPostExecute(Movie movie) {
                 if (movie == null) {
-                    mView.showErrorMsg("Filme não encontrado.");
+                    mView.showErrorMsg("Nenhum filme encontrado.");
                 }else{
                     mView.bindMovieViewData(movie);
                 }
