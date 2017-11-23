@@ -20,7 +20,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
         ViewType extends BasePresenter.View,
         PresenterType extends BasePresenter>
         extends AppCompatActivity
-        implements BasePresenter.View<ModelType>{
+        implements BasePresenter.View<ModelType> {
 
     protected ModelType mData;
     protected PresenterType mPresenter;
@@ -43,7 +43,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
-        drawable.setBounds(24,24,24,24);
+        drawable.setBounds(24, 24, 24, 24);
         getSupportActionBar().setHomeAsUpIndicator(drawable);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
@@ -62,10 +62,11 @@ public abstract class BaseActivity<ModelType extends BaseModel,
     }
 
     @Override
-    public void toggleProgressBar() {
-        if (mProgressBar.getVisibility() == View.VISIBLE)
-            mProgressBar.setVisibility(View.GONE);
-        else
+    public void setLoadProgressBarVisibility(boolean toVisible) {
+        if (toVisible) {
             mProgressBar.setVisibility(View.VISIBLE);
+        } else {
+            mProgressBar.setVisibility(View.GONE);
+        }
     }
 }

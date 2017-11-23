@@ -1,5 +1,7 @@
 package com.alex.popularmovies.app.data.source.cache;
 
+import android.util.Log;
+
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
@@ -13,6 +15,8 @@ import java.util.List;
  */
 
 public class MovieCache extends BaseCache<Movie> {
+
+    private static final String TAG = MovieCache.class.getSimpleName();
 
     public MovieCache(List<Movie> data) {
         super();
@@ -37,7 +41,7 @@ public class MovieCache extends BaseCache<Movie> {
 
     @Override
     public List<Movie> query(BaseQuerySpecification specification) {
-        if (specification instanceof GetAllMovies){
+        if (specification instanceof GetAllMovies) {
             return mCache;
         }
         return null;
@@ -45,6 +49,26 @@ public class MovieCache extends BaseCache<Movie> {
 
     @Override
     public List<Movie> list(String sortOrderType) throws SourceException {
+        return null;
+    }
+
+    @Override
+    public Movie get(Long id) throws SourceException {
+        if (id == null || id < 0) {
+            throw new SourceException("Id inválido, nulo ou negativo");
+        }
+
+        if (mCache == null) {
+            Log.w(TAG, "Tentando busca em cache que não possui dados.");
+            return null;
+        }
+
+        for (Movie movie : mCache) {
+            if (movie.getId().equals(id)) {
+                return movie;
+            }
+        }
+
         return null;
     }
 

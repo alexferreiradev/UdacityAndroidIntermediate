@@ -20,4 +20,6 @@ public interface DefaultSource<ModelType extends BaseModel> {
     public List<ModelType> query(BaseQuerySpecification specification) throws SourceException;
 
     List<ModelType> list(String sortOrderType) throws SourceException;
+
+    ModelType get(Long id) throws SourceException;
 }

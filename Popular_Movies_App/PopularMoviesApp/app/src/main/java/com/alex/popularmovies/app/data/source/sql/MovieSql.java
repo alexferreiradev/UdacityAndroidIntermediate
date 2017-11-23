@@ -16,7 +16,7 @@ import java.util.List;
  * Created by Alex on 02/04/2017.
  */
 
-public class MovieSql extends BaseSqlSource<Movie>{
+public class MovieSql extends BaseSqlSource<Movie> {
 
 
     public MovieSql(Context context) {
@@ -68,7 +68,7 @@ public class MovieSql extends BaseSqlSource<Movie>{
         String[] selArg = null;
         String sort = null;
         Cursor cursor = null;
-        if (specification instanceof GetAllMovies){
+        if (specification instanceof GetAllMovies) {
             cursor = mResolver.query(PMContract.MovieEntry.CONTENT_URI, proj, sel, selArg, sort);
         }
 
@@ -78,5 +78,10 @@ public class MovieSql extends BaseSqlSource<Movie>{
     @Override
     public List<Movie> list(String sortOrderType) throws SourceException {
         return null;
+    }
+
+    @Override
+    public Movie get(Long id) throws SourceException {
+        throw new SourceException("Este método não está implementado");
     }
 }

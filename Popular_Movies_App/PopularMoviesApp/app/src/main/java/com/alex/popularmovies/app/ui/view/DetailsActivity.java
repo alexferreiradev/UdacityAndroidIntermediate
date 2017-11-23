@@ -14,12 +14,11 @@ import com.alex.popularmovies.app.ui.presenter.DetailPresenter;
 
 public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailPresenter.View {
 
+    public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
     private TextView tvName;
     private TextView tvRating;
     private ImageView ivMovieImage;
     private Movie mMovie;
-
-    public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
     private long movieId = -1;
     private ToggleButton tbFavorite;
     private Movie movie;
@@ -53,11 +52,19 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 
     @Override
     public void initializeArgumentsFromIntent() {
-        if (getIntent() != null && getIntent().hasExtra(EXTRA_PARAM_MOVIE_ID)){
-            movieId = getIntent().getExtras().getLong(EXTRA_PARAM_MOVIE_ID);
-            mPresenter.startPresenterView();
-        }else
-            throw new NullPointerException("Não foi passado id do filme");
+        IllegalArgumentException illegalArgumentException = new IllegalArgumentException("Não foi passado id do filme");
+        if (getIntent() != null && getIntent().hasExtra(EXTRA_PARAM_MOVIE_ID)) {
+            Bundle extras = getIntent().getExtras();
+            if (extras == null) {
+                throw illegalArgumentException;
+            }
+            movieId = extras.getLong(EXTRA_PARAM_MOVIE_ID);
+            if (movieId < 0) {
+                throw illegalArgumentException;
+            }
+        } else {
+            throw illegalArgumentException;
+        }
     }
 
     @Override
@@ -85,8 +92,13 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     }
 
     @Override
+    public void closeAndShowMovieGrid() {
+        finish();
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.tbFavorite:
                 mPresenter.markAsFavorite(this.movie);
                 break;

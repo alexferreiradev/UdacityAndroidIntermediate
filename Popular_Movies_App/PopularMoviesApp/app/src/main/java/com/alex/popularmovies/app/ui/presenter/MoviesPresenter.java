@@ -29,12 +29,12 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
 
     @Override
     protected void loadDataFromSource() {
-        new AsyncTask<String, Integer, List<Movie>>(){
+        final AsyncTask<String, Integer, List<Movie>> execute = new AsyncTask<String, Integer, List<Movie>>() {
 
             @Override
             protected void onPreExecute() {
                 super.onPreExecute();
-                mView.toggleProgressBar();
+                mView.setLoadProgressBarVisibility(true);
             }
 
             @Override
@@ -45,7 +45,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
 
             @Override
             protected void onPostExecute(List<Movie> movies) {
-                mView.toggleProgressBar();
+                mView.setLoadProgressBarVisibility(false);
                 if (movies == null || movies.isEmpty()) {
                     if (isNewAdapter()) {
                         mView.destroyListAdapter();
@@ -57,12 +57,19 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
                 else
                     mView.addAdapterData(movies);
             }
-        }.execute();
+        };
+
+        execute.execute();
+    }
+
+    @Override
+    public void selectItemClicked(Movie item) {
+        mView.showDataView(item);
     }
 
     @Override
     protected void applyFilterFromAdapter() {
-        new AsyncTask<String, Integer, List<Movie>>(){
+        new AsyncTask<String, Integer, List<Movie>>() {
 
             @Override
             protected List<Movie> doInBackground(String... params) {
@@ -73,7 +80,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
                     filterType = MovieFilterType.TITLE;
 
                 for (int i = 0; i < mView.getAdapter().getCount(); i++) {
-                    switch (filterType){
+                    switch (filterType) {
                         case NAME:
                             Movie movie = (Movie) mView.getAdapter().getItem(i);
                             String filterKey = movie.getTitle();
@@ -98,11 +105,11 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
         }.execute();
     }
 
-    public interface View extends BaseListContract.View<Movie> {
-
+    public enum MovieFilterType {
+        NAME, TITLE
     }
 
-    public enum MovieFilterType{
-        NAME, TITLE
+    public interface View extends BaseListContract.View<Movie> {
+
     }
 }
