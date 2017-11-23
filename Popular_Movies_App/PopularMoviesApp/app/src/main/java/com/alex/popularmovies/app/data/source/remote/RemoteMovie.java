@@ -1,14 +1,13 @@
 package com.alex.popularmovies.app.data.source.remote;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.alex.popularmovies.app.BuildConfig;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,9 +31,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 public class RemoteMovie extends BaseRemoteSource<Movie> {
 
+    public static final String API_V3 = "3";
+    public static final String API_MOVIE_PATH = "movie";
+    public static final String API_PARAM_APIKEY = "api_key";
     private static final String API_AUTHORITY = "api.themoviedb.org";
-    private static final String API_VERSION = "3";
-    private static final String API_MOVIE_PATH = "movie";
     private static final String API_SCHEME = "http";
     private static final String TAG_NAME = RemoteMovie.class.getSimpleName();
 
@@ -45,9 +45,6 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     private static final String MOVIE_JSON_KEY_OVERVIEW = "overview";
     private static final String MOVIE_JSON_KEY_POPULARITY = "popularity";
     private static final String MOVIE_JSON_KEY_VOTE_COUNT = "vote_count";
-    public static final String IMAGE_LENGTH_W_185 = "w185";
-    private static final String IMAGE_LENGTH_W_92 = "w92";
-    public static final String MOVIE_DB_BASE_IMAGE_PATH = "http://image.tmdb.org/t/p/";
 
     public RemoteMovie(HttpURLConnection mHttpURLConnection) {
         super(mHttpURLConnection);
@@ -89,7 +86,7 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     public List<Movie> query(BaseQuerySpecification specification) throws SourceException {
         List<Movie> movies = new ArrayList<Movie>();
         InputStream stream = null;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         String movieJsonString = null;
         try {
             String movieId = specification.getmSelectionArgs()[0];
@@ -98,12 +95,13 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
                 return movies;
             }
             Uri.Builder builder = new Uri.Builder();
+            String apiKeyFromBuildConfig = BuildConfig.OPEN_MOVIE_API_KEY;
             builder.scheme(API_SCHEME)
                     .authority(API_AUTHORITY)
-                    .path(API_VERSION)
+                    .path(API_V3)
                     .appendPath(API_MOVIE_PATH)
                     .appendPath(movieId)
-                    .appendQueryParameter("api_key", "APIkey-config"); // todo adicionar api_key em properties e ver no sunshine como recuperar config
+                    .appendQueryParameter(API_PARAM_APIKEY, apiKeyFromBuildConfig);
 
             String apiUrl = builder.build().toString();
             URL url = new URL(apiUrl);
@@ -152,22 +150,22 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     public List<Movie> list(String sortOrderType) throws SourceException {
         List<Movie> movies = new ArrayList<Movie>();
         InputStream stream = null;
-        HttpsURLConnection connection = null;
+        HttpURLConnection connection = null;
         String movieJsonString = null;
         Uri.Builder builder = new Uri.Builder();
-        String api_key = ""; // todo colocar API carregada de config - olhar udacity projects
-        builder.scheme("https")
-                .authority("api.themoviedb.org")
-                .path("3")
-                .appendPath("movie")
+        String api_key = BuildConfig.OPEN_MOVIE_API_KEY;
+        builder.scheme(API_SCHEME)
+                .authority(API_AUTHORITY)
+                .path(API_V3)
+                .appendPath(API_MOVIE_PATH)
                 .appendPath("popular") // todo adicionar troca para mais votado
-                .appendQueryParameter("api_key", api_key);
+                .appendQueryParameter(API_PARAM_APIKEY, api_key);
 
         String apiUrl = builder.build().toString();
         URL url = null;
         try {
             url = new URL(apiUrl);
-            connection = (HttpsURLConnection) url.openConnection();
+            connection = (HttpURLConnection) url.openConnection();
             if (connection == null) {
                 throw new SourceException("Conexão não pode ser iniciada.");
             }
@@ -192,8 +190,6 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
                     movies.addAll(getMoviesFromJsonResults(movieJsonString));
                 }
             }
-
-            addImagesInMovies(movies);
         } catch (MalformedURLException e) {
             e.printStackTrace();
             throw new SourceException("Erro de URL mal formada ao tentar abrir conexão.", e);
@@ -207,20 +203,6 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
         }
 
         return movies;
-    }
-
-    private void addImagesInMovies(List<Movie> movies) throws IOException {
-        for (Movie movie : movies) {
-            Bitmap bitmap = getBitmapFromPicasa(movie.getPosterPath(), IMAGE_LENGTH_W_185);
-            movie.setPoster(bitmap);
-
-            bitmap = getBitmapFromPicasa(movie.getThumbnailPath(), IMAGE_LENGTH_W_92);
-            movie.setThumbnail(bitmap);
-        }
-    }
-
-    private Bitmap getBitmapFromPicasa(String imagePath, String length) throws IOException {
-        return Picasso.with(null).load(MOVIE_DB_BASE_IMAGE_PATH + length + "/" + imagePath).get();
     }
 
     private List<Movie> getMoviesFromJsonResults(String movieJsonString) {
