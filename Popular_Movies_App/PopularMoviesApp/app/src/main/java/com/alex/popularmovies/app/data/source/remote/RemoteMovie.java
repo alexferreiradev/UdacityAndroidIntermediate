@@ -205,6 +205,11 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
         return movies;
     }
 
+    @Override
+    public Movie get(Long id) throws SourceException {
+        throw new SourceException("Este método não está implementado");
+    }
+
     private List<Movie> getMoviesFromJsonResults(String movieJsonString) {
         List<Movie> movies = new ArrayList<>();
 

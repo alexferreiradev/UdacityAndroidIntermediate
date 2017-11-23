@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class MovieRepository extends BaseRepository<Movie> {
-
+    private static final String TAG = MovieRepository.class.getSimpleName();
 
     public MovieRepository(Context context) {
         mCacheSource = new MovieCache(null);
@@ -66,7 +66,22 @@ public class MovieRepository extends BaseRepository<Movie> {
 
     @Override
     public Movie get(Long dataId) {
-        return null;
+        if (dataId == null || dataId < 0) {
+            return null;
+        }
+
+        try {
+            Movie movie = mCacheSource.get(dataId);
+            if (movie == null) {
+                Log.d(TAG, "Não foi encontrado o filme no cache, marcando o cache como desatualizado");
+                mCacheSource.setDirty(true);
+            }
+
+            return movie;
+        } catch (SourceException e) {
+            Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
+            return null;
+        }
     }
 
     @Override

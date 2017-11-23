@@ -19,7 +19,12 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
 
     @Override
     protected void initialize() {
-        new AsyncTask<String, Integer, Movie>(){
+        new AsyncTask<String, Integer, Movie>() {
+
+            @Override
+            protected void onPreExecute() {
+                mView.setLoadProgressBarVisibility(false);
+            }
 
             @Override
             protected Movie doInBackground(String... params) {
@@ -28,9 +33,10 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
 
             @Override
             protected void onPostExecute(Movie movie) {
+                mView.setLoadProgressBarVisibility(false);
                 if (movie == null) {
-                    mView.showErrorMsg("Nenhum filme encontrado.");
-                }else{
+                    mView.closeAndShowMovieGrid();
+                } else {
                     mView.bindMovieViewData(movie);
                 }
             }
@@ -38,10 +44,10 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
     }
 
     public void markAsFavorite(Movie movie) {
-        if (movie.isFavorite()){
+        if (movie.isFavorite()) {
             mView.setFavOff();
             movie.setFavorite(false);
-        } else{
+        } else {
             mView.setFavOn();
             movie.setFavorite(true);
         }
@@ -49,7 +55,7 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
         setFavoriteOnRepository(movie);
     }
 
-    private void setFavoriteOnRepository(Movie movie){
+    private void setFavoriteOnRepository(Movie movie) {
         // todo mRepository.update()
     }
 
@@ -61,5 +67,7 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
         void setFavOn();
 
         void setFavOff();
+
+        void closeAndShowMovieGrid();
     }
 }

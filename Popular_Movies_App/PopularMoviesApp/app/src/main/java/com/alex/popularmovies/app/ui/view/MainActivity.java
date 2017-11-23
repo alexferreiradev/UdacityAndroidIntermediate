@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     @Override
     protected void onStart() {
         super.onStart();
-        if (mPresenter != null){
+        if (mPresenter != null) {
             mPresenter.startPresenterView();
         }
     }
@@ -44,6 +44,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
         gvMovies = (GridView) findViewById(R.id.gvMovies);
         tvEmpty = (TextView) findViewById(R.id.tvEmpty);
         gvMovies.setEmptyView(tvEmpty);
+        gvMovies.setOnItemClickListener(this);
     }
 
     @Override

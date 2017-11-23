@@ -26,7 +26,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
     /**
      * Deve ser chamado depois de instanciar o presenter.
-     *
+     * <p>
      * Realiza funções necessárias para view iniciar: carrega argumentos, carrega lista.
      */
     public void startPresenterView() {
@@ -38,6 +38,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
     /**
      * Chamado para fazer bind entre view e atributos da activity.
+     *
      * @param savedInstanceState -
      */
     protected void initializeWidgets(Bundle savedInstanceState) {
@@ -52,22 +53,22 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
         /**
          * Inverte o atributo visible de um progressBar
          */
-        public void toggleProgressBar();
+        void setLoadProgressBarVisibility(boolean toVisible);
 
         /**
          * Faz bind entre view e atributos da activity.
-         *
+         * <p>
          * O presenter neste momento ainda não foi instanciado.
          *
          * @param savedInstanceState - dados da instancia salvos
          */
-        public void initializeWidgets(Bundle savedInstanceState);
+        void initializeWidgets(Bundle savedInstanceState);
 
-        public void initializeArgumentsFromIntent();
+        void initializeArgumentsFromIntent();
 
-        public void showErrorMsg(String msg);
+        void showErrorMsg(String msg);
 
-        public void showSuccessMsg(String msg);
+        void showSuccessMsg(String msg);
 
     }
 }
