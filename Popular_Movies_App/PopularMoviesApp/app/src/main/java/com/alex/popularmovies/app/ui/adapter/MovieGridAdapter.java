@@ -59,7 +59,7 @@ public class MovieGridAdapter extends BaseAdapter {
         Movie movie = movies.get(position);
         ImageView moviePosterIV = convertView.findViewById(R.id.moviePosterIV);
         moviePosterIV.setContentDescription("Imagem: " + movie.getPosterPath());
-        Picasso.with(context).load(MOVIE_DB_BASE_IMAGE_PATH + IMAGE_LENGTH_W_92 + "/" + movie.getPosterPath()).into(moviePosterIV);
+        Picasso.with(context).load(MOVIE_DB_BASE_IMAGE_PATH + IMAGE_LENGTH_W_185 + movie.getPosterPath()).into(moviePosterIV);
 
         return convertView;
     }

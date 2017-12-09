@@ -4,24 +4,23 @@
     android:id="@+id/moviesGV"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:layout_gravity="center"
+    android:gravity="center"
     tools:context="com.alex.popularmovies.app.ui.view.MainActivity">
 
-    <include layout="@layout/default_layout"
-        android:layout_height="wrap_content"
+    <include
+        android:id="@+id/includedLayout"
+        layout="@layout/default_layout"
         android:layout_width="wrap_content"
-        android:id="@+id/includedLayout" />
+        android:layout_height="wrap_content" />
 
     <GridView
         android:id="@+id/gvMovies"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        style="@style/main.movieGrid" />
 
     <TextView
         android:id="@+id/tvEmpty"
+        style="@style/main.emptyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
