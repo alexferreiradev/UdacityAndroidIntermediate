@@ -18,8 +18,20 @@ public class MovieCache extends BaseCache<Movie> {
 
     private static final String TAG = MovieCache.class.getSimpleName();
 
-    public MovieCache(List<Movie> data) {
+    public MovieCache() {
         super();
+    }
+
+    /**
+     * @param data
+     * @throws IllegalArgumentException - caso passe uma lista nula ou vazia.
+     */
+    public MovieCache(List<Movie> data) throws IllegalArgumentException {
+        this();
+
+        if (data == null || data.isEmpty()) {
+            throw new IllegalArgumentException("Não pode ser criado um cache com uma lista nula ou vazia.");
+        }
         mCache = data;
     }
 
@@ -49,7 +61,7 @@ public class MovieCache extends BaseCache<Movie> {
 
     @Override
     public List<Movie> list(String sortOrderType) throws SourceException {
-        return null;
+        return mCache;
     }
 
     @Override

@@ -21,12 +21,30 @@ import java.util.List;
 
 public class MovieRepository extends BaseRepository<Movie> {
     private static final String TAG = MovieRepository.class.getSimpleName();
+    private static MovieRepository mInstance;
 
-    public MovieRepository(Context context) {
-        mCacheSource = new MovieCache(null);
+    private MovieRepository(Context context) {
+        mCacheSource = new MovieCache();
         mLocalSource = new MovieSql(context);
         HttpURLConnection http = null;
         mRemoteSource = new RemoteMovie(http);
+    }
+
+    public static MovieRepository getInstance(Context context) {
+        synchronized (context) {
+            if (mInstance == null) {
+                mInstance = new MovieRepository(context);
+            }
+
+            return mInstance;
+        }
+    }
+
+    @Override
+    public MovieRepository reCreateInstance(Context context) {
+        synchronized (context) {
+            return mInstance = new MovieRepository(context);
+        }
     }
 
     @Override
@@ -75,6 +93,14 @@ public class MovieRepository extends BaseRepository<Movie> {
             if (movie == null) {
                 Log.d(TAG, "Não foi encontrado o filme no cache, marcando o cache como desatualizado");
                 mCacheSource.setDirty(true);
+            }
+
+            if (mCacheSource.isDirty()) {
+                Log.d(TAG, "Buscando filme em fonte remota.");
+                movie = mRemoteSource.get(dataId);
+                if (movie == null) {
+                    Log.w(TAG, "Filme com id: " + dataId + " não existe em nenhuma fonte disponível.");
+                }
             }
 
             return movie;

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
-import com.squareup.picasso.Picasso;
+import com.alex.popularmovies.app.util.MovieImageUtil;
 
 import java.util.List;
 
@@ -18,11 +18,6 @@ import java.util.List;
  */
 
 public class MovieGridAdapter extends BaseAdapter {
-
-    private static final String IMAGE_LENGTH_W_185 = "w185";
-    private static final String MOVIE_DB_BASE_IMAGE_PATH = "http://image.tmdb.org/t/p/";
-    private static final String IMAGE_LENGTH_W_92 = "w92";
-
     private List<Movie> movies;
     private Context context;
 
@@ -59,7 +54,7 @@ public class MovieGridAdapter extends BaseAdapter {
         Movie movie = movies.get(position);
         ImageView moviePosterIV = convertView.findViewById(R.id.moviePosterIV);
         moviePosterIV.setContentDescription("Imagem: " + movie.getPosterPath());
-        Picasso.with(context).load(MOVIE_DB_BASE_IMAGE_PATH + IMAGE_LENGTH_W_92 + "/" + movie.getPosterPath()).into(moviePosterIV);
+        MovieImageUtil.setImageViewWithPicasso(moviePosterIV, context, movie, MovieImageUtil.IMAGE_LENGTH_W_185);
 
         return convertView;
     }
