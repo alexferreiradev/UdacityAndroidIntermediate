@@ -1,4 +1,4 @@
-package com.alex.vestlist.ui.util;
+package com.alex.popularmovies.app.ui.util;
 
 import android.content.Context;
 import android.widget.Toast;

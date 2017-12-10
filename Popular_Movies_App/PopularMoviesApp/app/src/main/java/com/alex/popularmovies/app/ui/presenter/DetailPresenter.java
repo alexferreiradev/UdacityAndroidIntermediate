@@ -3,6 +3,7 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
@@ -12,6 +13,8 @@ import com.alex.popularmovies.app.data.repository.DefaultRepository;
  */
 
 public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> {
+
+    private static final String TAG = DetailPresenter.class.getSimpleName();
 
     public DetailPresenter(View mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
@@ -35,6 +38,8 @@ public class DetailPresenter extends BasePresenter<DetailPresenter.View, Movie> 
             protected void onPostExecute(Movie movie) {
                 mView.setLoadProgressBarVisibility(false);
                 if (movie == null) {
+                    Log.w(TAG, "Nenhum filme encontrado no repositório. Mostrando lista de filmes.");
+                    mView.showErrorMsg("Nenhum filme encontrado");
                     mView.closeAndShowMovieGrid();
                 } else {
                     mView.bindMovieViewData(movie);
