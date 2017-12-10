@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorAccent">
 
     <ImageView
         android:id="@+id/moviePosterIV"
-        android:layout_width="92dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
+        style="@style/main.gridItem"
+        android:layout_height="match_parent"
         app:srcCompat="@android:drawable/btn_dialog" />
 
 </FrameLayout>

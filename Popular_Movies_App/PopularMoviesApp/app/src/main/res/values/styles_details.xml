@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="DetailTheme" parent="MainTheme"></style>
+
+    <style name="detail.movieTitle" parent="DetailTheme">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:text">Nome do Filme</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">24dp</item>
+        <item name="android:paddingBottom">24dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="detail.movieImage" parent="DetailTheme">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:layout_width">100dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:contentDescription">Poster não encontrado</item>
+    </style>
+
+    <style name="detail.movieFavoriteButton" parent="DetailTheme">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:text">@string/detail_action_fav</item>
+    </style>
+
+    <style name="detail.textDetailsLabel" parent="DetailTheme">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="detail.textDetails" parent="DetailTheme">
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginTop">@dimen/activity_horizontal_margin</item>
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+</resources>
