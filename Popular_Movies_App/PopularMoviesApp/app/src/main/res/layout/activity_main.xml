@@ -16,6 +16,7 @@
 
     <GridView
         android:id="@+id/gvMovies"
+        android:layout_below="@+id/includedLayout"
         style="@style/main.movieGrid" />
 
     <TextView
