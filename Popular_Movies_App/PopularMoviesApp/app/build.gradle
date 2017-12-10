@@ -26,7 +26,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+
+    // Specifies two flavor dimensions.
+    flavorDimensions "tier"
+
     productFlavors {
+        free {
+            // Assigns this product flavor to the "tier" flavor dimension. Specifying
+            // this property is optional if you are using only one dimension.
+            dimension "tier"
+        }
     }
     testOptions {
         unitTests.returnDefaultValues = true
