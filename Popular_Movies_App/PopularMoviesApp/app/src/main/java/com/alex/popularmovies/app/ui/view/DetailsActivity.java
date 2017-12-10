@@ -1,7 +1,7 @@
 package com.alex.popularmovies.app.ui.view;
 
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -11,10 +11,12 @@ import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.MovieRepository;
 import com.alex.popularmovies.app.ui.presenter.DetailPresenter;
+import com.alex.popularmovies.app.util.MovieImageUtil;
 
 public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailPresenter.View {
 
     public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
+    private static final String TAG = DetailsActivity.class.getSimpleName();
     private TextView tvName;
     private TextView tvRating;
     private ImageView ivMovieImage;
@@ -28,7 +30,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mPresenter = new DetailPresenter(this, this, savedInstanceState, new MovieRepository(this));
+        mPresenter = new DetailPresenter(this, this, savedInstanceState, MovieRepository.getInstance(this));
     }
 
     @Override
@@ -58,7 +60,9 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
             if (extras == null) {
                 throw illegalArgumentException;
             }
+
             movieId = extras.getLong(EXTRA_PARAM_MOVIE_ID);
+            Log.d(TAG, "Argumento filme id: " + movieId);
             if (movieId < 0) {
                 throw illegalArgumentException;
             }
@@ -77,7 +81,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         this.movie = movie;
         tvName.setText(movie.getTitle());
         tvRating.setText(movie.getRating() + "/" + getString(R.string.max_rating));
-        ivMovieImage.setImageURI(Uri.parse(movie.getThumbnailPath()));
+        MovieImageUtil.setImageViewWithPicasso(ivMovieImage, this, movie, MovieImageUtil.IMAGE_LENGTH_W_92);
         tbFavorite.setChecked(movie.isFavorite());
     }
 

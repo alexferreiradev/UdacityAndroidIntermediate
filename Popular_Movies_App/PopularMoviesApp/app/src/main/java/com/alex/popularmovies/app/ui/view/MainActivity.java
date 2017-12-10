@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.ui.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -19,6 +20,7 @@ import java.util.List;
 
 public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, MoviesPresenter> implements MoviesPresenter.View {
 
+    public static final String TAG = MainActivity.class.getSimpleName();
     private GridView gvMovies;
     private MovieGridAdapter mAdapter;
     private TextView tvEmpty;
@@ -27,7 +29,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(this));
+        mPresenter = new MoviesPresenter(this, this, savedInstanceState, MovieRepository.getInstance(this));
     }
 
     @Override
@@ -104,6 +106,12 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        StringBuilder stringBuild = new StringBuilder("Item selecionado,");
+        stringBuild
+                .append(" posicao: ").append(position)
+                .append(", id: ").append(id);
+
+        Log.d(TAG, stringBuild.toString());
         mPresenter.selectItemClicked((Movie) mAdapter.getItem(position));
     }
 }

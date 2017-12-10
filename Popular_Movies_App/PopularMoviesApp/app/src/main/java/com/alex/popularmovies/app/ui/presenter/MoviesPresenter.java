@@ -3,6 +3,7 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
@@ -17,6 +18,8 @@ import java.util.List;
 
 public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Movie> {
 
+
+    private static final String TAG = MoviesPresenter.class.getSimpleName();
 
     public MoviesPresenter(View mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
@@ -64,6 +67,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesPresenter.View, Mov
 
     @Override
     public void selectItemClicked(Movie item) {
+        Log.i(TAG, "Filme selecionado: " + item);
         mView.showDataView(item);
     }
 
