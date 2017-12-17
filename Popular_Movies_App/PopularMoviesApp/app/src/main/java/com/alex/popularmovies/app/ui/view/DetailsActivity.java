@@ -32,7 +32,10 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     private ToggleButton tbFavorite;
 
     private long movieId = -1;
-    private Movie mMovie;
+
+    DetailsActivity() {
+        super("Filme selecionado");
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
                 throw illegalArgumentException;
             }
 
-            movieId = extras.getLong(EXTRA_PARAM_MOVIE_ID);
+            movieId = extras.getLong(EXTRA_PARAM_MOVIE_ID, -1L);
             Log.d(TAG, "Argumento filme id: " + movieId);
             if (movieId < 0) {
                 throw illegalArgumentException;
@@ -83,7 +86,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 
     @Override
     public void bindMovieViewData(Movie movie) {
-        this.mMovie = movie;
+        this.mData = movie;
         Log.d(TAG, "Fazendo bind de filme: " + movie);
 
         tvName.setText(movie.getTitle());

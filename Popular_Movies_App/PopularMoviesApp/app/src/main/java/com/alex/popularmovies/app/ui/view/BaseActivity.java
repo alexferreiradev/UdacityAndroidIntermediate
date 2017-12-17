@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.ui.view;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -25,7 +26,12 @@ public abstract class BaseActivity<ModelType extends BaseModel,
     protected ModelType mData;
     protected PresenterType mPresenter;
     protected ProgressBar mProgressBar;
+    protected Toolbar mToolbar;
+    protected String mTitle;
 
+    BaseActivity(String mTitle) {
+        this.mTitle = mTitle;
+    }
 
     @Override
     protected void onStart() {
@@ -37,20 +43,33 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 
     @Override
     public void initializeWidgets(Bundle savedInstanceState) {
-        Toolbar mToolbar = (Toolbar) findViewById(R.id.myToolBar);
-        if (mToolbar == null)
-            throw new NullPointerException("A Activity não tem myToolBar no layout.");
-        setSupportActionBar(mToolbar);
-
-        getSupportActionBar().setTitle("");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
-        drawable.setBounds(24, 24, 24, 24);
-        getSupportActionBar().setHomeAsUpIndicator(drawable);
-
+        mToolbar = (Toolbar) findViewById(R.id.myToolBar);
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
-        if (mProgressBar == null)
+        if (mProgressBar == null) {
             throw new NullPointerException("A Activity não tem progressBar no layout.");
+        }
+        if (mToolbar == null) {
+            throw new NullPointerException("A Activity não tem myToolBar no layout.");
+        }
+
+        configureSupportActionBar();
+    }
+
+    private void configureSupportActionBar() {
+        setSupportActionBar(mToolbar);
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            if (mTitle != null) {
+                supportActionBar.setTitle(mTitle);
+            }
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+
+            Drawable drawable = getResources().getDrawable(R.drawable.ic_local_movies_black);
+            drawable.setBounds(24, 24, 24, 24);
+            supportActionBar.setHomeAsUpIndicator(drawable);
+        } else {
+            throw new RuntimeException("Não foi possivel configurar a action bar para suporte a versoes antigas");
+        }
     }
 
     @Override

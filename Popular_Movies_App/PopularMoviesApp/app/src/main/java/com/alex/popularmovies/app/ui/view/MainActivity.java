@@ -30,6 +30,10 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     private MovieGridAdapter mAdapter;
     private TextView tvEmpty;
 
+    MainActivity() {
+        super(null);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
