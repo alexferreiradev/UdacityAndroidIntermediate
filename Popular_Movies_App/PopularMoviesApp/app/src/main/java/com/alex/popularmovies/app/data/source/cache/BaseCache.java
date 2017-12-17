@@ -14,7 +14,7 @@ public abstract class BaseCache<ModelType extends BaseModel> implements DefaultS
     protected Boolean isDirty;
     protected List<ModelType> mCache;
 
-    protected BaseCache() {
+    BaseCache() {
         createCache();
         isDirty = true;
     }

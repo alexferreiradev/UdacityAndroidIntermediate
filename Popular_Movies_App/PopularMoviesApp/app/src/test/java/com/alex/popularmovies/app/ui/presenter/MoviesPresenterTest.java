@@ -5,6 +5,7 @@ import android.widget.BaseAdapter;
 
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
+import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 
 import org.junit.Before;
 import org.junit.Test;

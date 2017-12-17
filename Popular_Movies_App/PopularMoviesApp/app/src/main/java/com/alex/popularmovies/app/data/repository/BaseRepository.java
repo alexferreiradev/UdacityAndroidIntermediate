@@ -1,7 +1,5 @@
 package com.alex.popularmovies.app.data.repository;
 
-import android.content.Context;
-
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
@@ -18,9 +16,16 @@ public abstract class BaseRepository<ModelType extends BaseModel> implements Def
     protected DefaultSource<ModelType> mLocalSource;
     protected DefaultSource<ModelType> mRemoteSource;
 
-    public abstract MovieRepository reCreateInstance(Context context);
+    public BaseRepository(BaseCache<ModelType> mCacheSource, DefaultSource<ModelType> mLocalSource, DefaultSource<ModelType> mRemoteSource) {
+        this.mCacheSource = mCacheSource;
+        this.mLocalSource = mLocalSource;
+        this.mRemoteSource = mRemoteSource;
+    }
+
     protected abstract void createCache(List<ModelType> data);
+
     protected abstract void destroyCache(List<ModelType> data);
+
     protected abstract void updateCache(List<ModelType> data);
 
 }

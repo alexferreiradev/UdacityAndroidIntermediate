@@ -3,9 +3,8 @@ package com.alex.popularmovies.app.data.source.cache;
 import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.Movie;
-import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
-import com.alex.popularmovies.app.data.source.queryspec.GetAllMovies;
+import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,64 +14,41 @@ import java.util.List;
  */
 
 public class MovieCache extends BaseCache<Movie> {
-
     private static final String TAG = MovieCache.class.getSimpleName();
+    private static MovieCache mInstance;
 
-    public MovieCache() {
+    /**
+     * Utilize o MovieCache.getInstance()
+     */
+    private MovieCache() {
         super();
     }
 
     /**
-     * @param data
-     * @throws IllegalArgumentException - caso passe uma lista nula ou vazia.
+     * Cria uma instancia de cache para filmes.
      */
-    public MovieCache(List<Movie> data) throws IllegalArgumentException {
-        this();
-
-        if (data == null || data.isEmpty()) {
-            throw new IllegalArgumentException("Não pode ser criado um cache com uma lista nula ou vazia.");
+    public synchronized static MovieCache getInstance() {
+        if (mInstance == null) {
+            mInstance = new MovieCache();
         }
-        mCache = data;
+
+        return mInstance;
     }
 
     @Override
-    public Movie insert(Movie data) {
-        mCache.add(data);
-        return data;
+    public Movie create(Movie model) throws SourceException {
+        throw new SourceException("Cache não suporta este método.");
     }
 
     @Override
-    public void update(Movie data) {
-        throw new UnsupportedOperationException("Cache não suporta update");
-    }
-
-    @Override
-    public void delete(Movie data) {
-        mCache.remove(mCache.indexOf(data));
-    }
-
-    @Override
-    public List<Movie> query(BaseQuerySpecification specification) {
-        if (specification instanceof GetAllMovies) {
-            return mCache;
-        }
-        return null;
-    }
-
-    @Override
-    public List<Movie> list(String sortOrderType) throws SourceException {
-        return mCache;
-    }
-
-    @Override
-    public Movie get(Long id) throws SourceException {
+    public Movie recover(Long id) throws SourceException {
         if (id == null || id < 0) {
             throw new SourceException("Id inválido, nulo ou negativo");
         }
 
         if (mCache == null) {
             Log.w(TAG, "Tentando busca em cache que não possui dados.");
-            return null;
+            throw new SourceException("Cache não inicializado");
         }
 
         for (Movie movie : mCache) {
@@ -81,7 +57,22 @@ public class MovieCache extends BaseCache<Movie> {
             }
         }
 
-        return null;
+        throw new SourceException("Id não encontrado");
+    }
+
+    @Override
+    public List<Movie> recover(QuerySpecification specification) throws SourceException {
+        return mCache;
+    }
+
+    @Override
+    public Movie update(Movie model) throws SourceException {
+        throw new SourceException("Cache não suporta este método nesta versao.");
+    }
+
+    @Override
+    public Movie delete(Movie model) throws SourceException {
+        return mCache.remove(mCache.indexOf(model));
     }
 
     @Override
