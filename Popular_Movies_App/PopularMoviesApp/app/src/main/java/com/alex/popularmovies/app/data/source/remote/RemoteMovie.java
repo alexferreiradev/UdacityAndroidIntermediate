@@ -1,13 +1,13 @@
 package com.alex.popularmovies.app.data.source.remote;
 
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.alex.popularmovies.app.BuildConfig;
 import com.alex.popularmovies.app.data.model.Movie;
-import com.alex.popularmovies.app.data.source.BaseQuerySpecification;
+import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
+import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
+import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -18,7 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +28,7 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by Alex on 02/04/2017.
  */
 
-public class RemoteMovie extends BaseRemoteSource<Movie> {
-
-    public static final String API_V3 = "3";
-    public static final String API_MOVIE_PATH = "movie";
-    public static final String API_PARAM_APIKEY = "api_key";
-    private static final String API_AUTHORITY = "api.themoviedb.org";
-    private static final String API_SCHEME = "http";
+public class RemoteMovie implements DefaultSource<Movie> {
     private static final String TAG_NAME = RemoteMovie.class.getSimpleName();
 
     private static final String MOVIE_JSON_KEY_RESULTS = "results";
@@ -46,15 +39,8 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     private static final String MOVIE_JSON_KEY_POPULARITY = "popularity";
     private static final String MOVIE_JSON_KEY_VOTE_COUNT = "vote_count";
 
-    public RemoteMovie(HttpURLConnection mHttpURLConnection) {
-        super(mHttpURLConnection);
-    }
 
-    /**
-     * Converts the contents of an InputStream to a String.
-     */
-    private static String readStream(InputStream stream)
-            throws IOException {
+    private static String readStream(InputStream stream) throws Exception {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "utf-8"));
         StringBuilder stringBuilder = new StringBuilder();
         do {
@@ -68,103 +54,29 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     }
 
     @Override
-    public Movie insert(Movie data) throws SourceException {
-        return null;
+    public Movie create(Movie model) throws SourceException {
+        throw new SourceException("Método não disponível para esta versao.");
     }
 
     @Override
-    public void update(Movie data) throws SourceException {
-
-    }
-
-    @Override
-    public void delete(Movie data) throws SourceException {
-
-    }
-
-    @Override
-    public List<Movie> query(BaseQuerySpecification specification) throws SourceException {
-        List<Movie> movies = new ArrayList<Movie>();
-        InputStream stream = null;
-        HttpURLConnection connection = null;
-        String movieJsonString = null;
-        try {
-            String movieId = specification.getmSelectionArgs()[0];
-            if (movieId == null || movieId.isEmpty()) {
-                Log.e(TAG_NAME, "Id passado para query é inválido.");
-                return movies;
-            }
-            Uri.Builder builder = new Uri.Builder();
-            String apiKeyFromBuildConfig = BuildConfig.OPEN_MOVIE_API_KEY;
-            builder.scheme(API_SCHEME)
-                    .authority(API_AUTHORITY)
-                    .path(API_V3)
-                    .appendPath(API_MOVIE_PATH)
-                    .appendPath(movieId)
-                    .appendQueryParameter(API_PARAM_APIKEY, apiKeyFromBuildConfig);
-
-            String apiUrl = builder.build().toString();
-            URL url = new URL(apiUrl);
-            connection = (HttpsURLConnection) url.openConnection();
-            if (connection == null) {
-                throw new IOException("Conexão não iniciada.");
-            }
-
-            connection.setReadTimeout(3000);
-            connection.setConnectTimeout(3000);
-            connection.setRequestMethod("GET");
-            // Already true by default but setting just in case; needs to be true since this request
-            // is carrying an input (response) body.
-            connection.setDoInput(true);
-            connection.connect();
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
-            }
-
-            stream = connection.getInputStream();
-            if (stream != null) {
-                movieJsonString = readStream(stream);
-            }
-        } catch (ProtocolException e) {
-            Log.e(TAG_NAME, "Erro de protocolo.");
-        } catch (IOException e) {
-            Log.e(TAG_NAME, "Erro de IO.");
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    Log.e(TAG_NAME, "Erro de IO ao tentar fechar stream.");
-                }
-            }
-            if (connection != null) {
-                connection.disconnect();
-            }
+    public Movie recover(Long id) throws SourceException {
+        List<Movie> movies = recover(new MoviesRemoteQuery(1, 0, String.valueOf(id)));
+        if (movies.isEmpty()) {
+            throw new SourceException("Não existe filme com este id: " + id);
         }
 
-        return movies;
+        return movies.get(0);
     }
 
     @Override
-    public List<Movie> list(String sortOrderType) throws SourceException {
-        List<Movie> movies = new ArrayList<Movie>();
-        InputStream stream = null;
+    public List<Movie> recover(QuerySpecification specification) throws SourceException {
+        List<Movie> movies = new ArrayList<>();
+        InputStream stream;
+        String movieJsonString;
         HttpURLConnection connection = null;
-        String movieJsonString = null;
-        Uri.Builder builder = new Uri.Builder();
-        String api_key = BuildConfig.OPEN_MOVIE_API_KEY;
-        builder.scheme(API_SCHEME)
-                .authority(API_AUTHORITY)
-                .path(API_V3)
-                .appendPath(API_MOVIE_PATH)
-                .appendPath("popular") // todo adicionar troca para mais votado
-                .appendQueryParameter(API_PARAM_APIKEY, api_key);
 
-        String apiUrl = builder.build().toString();
-        URL url = null;
         try {
-            url = new URL(apiUrl);
+            URL url = (URL) specification.getQuery();
             connection = (HttpURLConnection) url.openConnection();
             if (connection == null) {
                 throw new SourceException("Conexão não pode ser iniciada.");
@@ -179,9 +91,8 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
             connection.connect();
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpsURLConnection.HTTP_OK) {
-                throw new IOException("HTTP error code: " + responseCode);
+                throw new SourceException("HTTP error code pela api: " + responseCode);
             }
-
 
             stream = connection.getInputStream();
             if (stream != null) {
@@ -196,6 +107,9 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
         } catch (IOException e) {
             e.printStackTrace();
             throw new SourceException("Erro de IO ao tentar abrir conexão ou carregar imagens.", e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SourceException("Erro desconhecido ao tentar recuperar filmes da api.", e);
         } finally {
             if (connection != null) {
                 connection.disconnect();
@@ -206,8 +120,13 @@ public class RemoteMovie extends BaseRemoteSource<Movie> {
     }
 
     @Override
-    public Movie get(Long id) throws SourceException {
-        throw new SourceException("Este método não está implementado");
+    public Movie update(Movie model) throws SourceException {
+        throw new SourceException("Método não disponível para esta versao.");
+    }
+
+    @Override
+    public Movie delete(Movie model) throws SourceException {
+        throw new SourceException("Método não disponível para esta versao.");
     }
 
     private List<Movie> getMoviesFromJsonResults(String movieJsonString) {

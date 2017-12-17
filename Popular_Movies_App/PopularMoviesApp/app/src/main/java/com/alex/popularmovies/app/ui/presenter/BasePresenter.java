@@ -11,13 +11,14 @@ import com.alex.popularmovies.app.data.repository.DefaultRepository;
  */
 
 public abstract class BasePresenter<ViewType extends BasePresenter.View,
-        ModelType extends BaseModel> {
+        ModelType extends BaseModel,
+        RepoType extends DefaultRepository> {
 
     protected Context mContext;
     protected ViewType mView;
-    protected DefaultRepository mRepository;
+    protected RepoType mRepository;
 
-    protected BasePresenter(ViewType mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
+    protected BasePresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
         this.mContext = mContext;
         this.mView = mView;
         this.mRepository = mRepository;
@@ -35,6 +36,14 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
     }
 
     protected abstract void initialize();
+
+    protected void hideProgressView() {
+        mView.setLoadProgressBarVisibility(false);
+    }
+
+    protected void showProgressView() {
+        mView.setLoadProgressBarVisibility(true);
+    }
 
     /**
      * Chamado para fazer bind entre view e atributos da activity.

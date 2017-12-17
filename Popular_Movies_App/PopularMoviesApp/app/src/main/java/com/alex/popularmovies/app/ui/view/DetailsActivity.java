@@ -2,20 +2,25 @@ package com.alex.popularmovies.app.ui.view;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
-import com.alex.popularmovies.app.data.repository.MovieRepository;
-import com.alex.popularmovies.app.ui.presenter.DetailPresenter;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
+import com.alex.popularmovies.app.data.source.cache.BaseCache;
+import com.alex.popularmovies.app.data.source.cache.MovieCache;
+import com.alex.popularmovies.app.data.source.remote.RemoteMovie;
+import com.alex.popularmovies.app.data.source.sql.MovieSql;
+import com.alex.popularmovies.app.ui.presenter.detail.DetailContract;
+import com.alex.popularmovies.app.ui.presenter.detail.DetailPresenter;
 import com.alex.popularmovies.app.util.MovieImageUtil;
 
 import java.text.DecimalFormat;
 
-public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailPresenter.View {
+public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailContract.View {
     public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private TextView tvName;
@@ -34,7 +39,9 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
 
-        mPresenter = new DetailPresenter(this, this, savedInstanceState, MovieRepository.getInstance(this));
+        BaseCache<Movie> movieCache = MovieCache.getInstance();
+        MovieRepositoryContract movieRepository = new MovieRepository(movieCache, new MovieSql(this), new RemoteMovie());
+        mPresenter = new DetailPresenter(this, this, savedInstanceState, movieRepository);
     }
 
     @Override
@@ -48,15 +55,6 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         tvYear = findViewById(R.id.tvMovieYear);
         tvSynopsis = findViewById(R.id.tvMovieSynopsis);
         tvTime = findViewById(R.id.tvMovieTime);
-        tbFavorite.setOnClickListener(this);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (movieId != -1 && mPresenter != null) {
-            mPresenter.startPresenterView();
-        }
     }
 
     @Override
@@ -115,12 +113,4 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         finish();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tbFavorite:
-                mPresenter.markAsFavorite(this.mMovie);
-                break;
-        }
-    }
 }

@@ -30,7 +30,9 @@ public abstract class BaseActivity<ModelType extends BaseModel,
     @Override
     protected void onStart() {
         super.onStart();
-        mPresenter.startPresenterView();
+        if (mPresenter != null) {
+            mPresenter.startPresenterView();
+        }
     }
 
     @Override

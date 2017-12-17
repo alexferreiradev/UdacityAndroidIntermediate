@@ -12,13 +12,18 @@ import android.widget.TextView;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
-import com.alex.popularmovies.app.data.repository.MovieRepository;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
+import com.alex.popularmovies.app.data.source.cache.BaseCache;
+import com.alex.popularmovies.app.data.source.cache.MovieCache;
+import com.alex.popularmovies.app.data.source.remote.RemoteMovie;
+import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
-import com.alex.popularmovies.app.ui.presenter.MoviesPresenter;
+import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
+import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, MoviesPresenter> implements MoviesPresenter.View {
+public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, MoviesPresenter> implements MoviesContract.View {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private GridView gvMovies;
@@ -29,15 +34,9 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mPresenter = new MoviesPresenter(this, this, savedInstanceState, MovieRepository.getInstance(this));
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mPresenter != null) {
-            mPresenter.startPresenterView();
-        }
+        BaseCache<Movie> movieCache = MovieCache.getInstance();
+        mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovie()));
     }
 
     @Override
