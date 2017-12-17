@@ -17,8 +17,8 @@ import java.util.List;
  * @param <ViewType> - Interface
  * @param <ModelType> - Tipo de model
  */
-public abstract class BaseListPresenter<ViewType extends BaseListContract.View , ModelType extends BaseModel>
-        extends BasePresenter<ViewType, ModelType>
+public abstract class BaseListPresenter<ViewType extends BaseListContract.View, ModelType extends BaseModel, RepoType extends DefaultRepository>
+        extends BasePresenter<ViewType, ModelType, RepoType>
         implements BaseListContract.Presenter<ModelType>{
 
     private static final int LIMIT_INITIAL = 50; // 30 pronto para mostrar + 20 esperando no adapter
@@ -30,7 +30,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View ,
     protected String mFilterKey;
     protected String mFilterValue;
 
-    public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, DefaultRepository mRepository) {
+    public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
     }
 
