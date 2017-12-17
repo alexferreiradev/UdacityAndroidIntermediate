@@ -11,14 +11,21 @@
 
     <style name="progressBar" parent="Widget.AppCompat.ProgressBar">
         <item name="android:layout_centerHorizontal">true</item>
-        <item name="android:layout_centerInParent">true</item>
-        <item name="android:layout_centerVertical">true</item>
+        <item name="android:padding">4dp</item>
+        <item name="android:visibility">visible</item>
+    </style>
+
+    <style name="includedSupportActionBar" parent="AppTheme">
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="toobarActionBar" parent="AppTheme">
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:padding">4dp</item>
-        <item name="android:title">@string/app_name</item>
     </style>
 
 </resources>

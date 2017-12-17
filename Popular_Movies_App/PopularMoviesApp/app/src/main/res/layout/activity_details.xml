@@ -9,8 +9,7 @@
     <include
         android:id="@+id/includedLayout"
         layout="@layout/default_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        style="@style/includedSupportActionBar" />
 
     <TextView
         android:id="@+id/tvMovieName"
