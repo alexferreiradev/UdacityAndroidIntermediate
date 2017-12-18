@@ -3,6 +3,7 @@ package com.alex.popularmovies.app.data.repository;
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
+import com.alex.popularmovies.app.data.source.cache.MemoryCache;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public abstract class BaseRepository<ModelType extends BaseModel> implements DefaultRepository<ModelType> {
 
-    protected BaseCache<ModelType> mCacheSource;
+    protected MemoryCache<ModelType> mCacheSource;
     protected DefaultSource<ModelType> mLocalSource;
     protected DefaultSource<ModelType> mRemoteSource;
 
@@ -26,6 +27,6 @@ public abstract class BaseRepository<ModelType extends BaseModel> implements Def
 
     protected abstract void destroyCache(List<ModelType> data);
 
-    protected abstract void updateCache(List<ModelType> data);
+    protected abstract void updateCache(List<ModelType> data, int offset);
 
 }

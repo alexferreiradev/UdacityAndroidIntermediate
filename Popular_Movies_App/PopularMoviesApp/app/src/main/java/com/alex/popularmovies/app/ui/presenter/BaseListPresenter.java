@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.ui.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
@@ -82,14 +83,14 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     @Override
     public synchronized void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems){
         int lastItemVisiblePosition = firstVisibleItem + visibleItemCount;
+        Log.d("teste", "total items carregados: " + adapterTotalItems + "lastVisi: " + lastItemVisiblePosition);
         if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE){
-            if (mOffset <= adapterTotalItems){
-                loadDataFromSource();
-            }
+            loadDataFromSource();
         }
 
-        if (mLoadItemsLimit < visibleItemCount + INTERVAL_TO_LOAD_MORE)
+        if (mLoadItemsLimit < visibleItemCount + INTERVAL_TO_LOAD_MORE) {
             mLoadItemsLimit = visibleItemCount + INTERVAL_TO_LOAD_MORE;
+        }
     }
 
     @Override
@@ -112,7 +113,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     }
 
     protected boolean isNewAdapter() {
-        return mView.getAdapter() == null || mView.getAdapter().isEmpty() ? true : false;
+        return mView.getAdapter() == null || mView.getAdapter().isEmpty();
     }
 
     private void resetPaginationCounter(){

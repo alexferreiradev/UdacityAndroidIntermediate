@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.alex.popularmovies.app.R;
@@ -17,6 +17,7 @@ import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovie;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
+import com.alex.popularmovies.app.ui.adapter.ListViewAdaper;
 import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
@@ -27,7 +28,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private GridView gvMovies;
-    private MovieGridAdapter mAdapter;
+    private ListViewAdaper<Movie> mAdapter;
     private TextView tvEmpty;
 
     MainActivity() {
@@ -50,6 +51,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
         tvEmpty = (TextView) findViewById(R.id.tvEmpty);
         gvMovies.setEmptyView(tvEmpty);
         gvMovies.setOnItemClickListener(this);
+        gvMovies.setOnScrollListener(this);
     }
 
     @Override
@@ -64,14 +66,16 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     @Override
     public void addAdapterData(List<Movie> result) {
+        mAdapter.addAllModel(result);
     }
 
     @Override
     public void removeAdapterData(List<Movie> result) {
+        mAdapter.removeAllModel(result);
     }
 
     @Override
-    public BaseAdapter getAdapter() {
+    public ListAdapter getAdapter() {
         return mAdapter;
     }
 
@@ -99,12 +103,13 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
-
     }
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+        if (mPresenter != null) {
+            mPresenter.loadMoreData(firstVisibleItem, visibleItemCount, totalItemCount);
+        }
     }
 
     @Override

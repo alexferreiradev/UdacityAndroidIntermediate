@@ -1,7 +1,7 @@
 package com.alex.popularmovies.app.ui.presenter;
 
 import android.widget.AbsListView;
-import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
 
@@ -22,7 +22,7 @@ public interface BaseListContract {
 
         public void removeAdapterData(List<ModelType> result);
 
-        public BaseAdapter getAdapter();
+        public ListAdapter getAdapter();
 
         public void destroyListAdapter();
 

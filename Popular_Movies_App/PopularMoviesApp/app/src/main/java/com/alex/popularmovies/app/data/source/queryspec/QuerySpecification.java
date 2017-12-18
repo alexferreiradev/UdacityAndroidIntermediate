@@ -8,4 +8,8 @@ public interface QuerySpecification<ReturnType> {
 
     ReturnType getQuery();
 
+    int getOffset();
+
+    int getLimit();
+
 }
