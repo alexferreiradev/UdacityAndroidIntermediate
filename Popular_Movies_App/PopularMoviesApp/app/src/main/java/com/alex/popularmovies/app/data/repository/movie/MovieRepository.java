@@ -27,7 +27,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
     @Override
     protected void createCache(List<Movie> data) {
-        updateCache(data);
+        updateCache(data, 0);
     }
 
     @Override
@@ -36,10 +36,12 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
     }
 
     @Override
-    protected void updateCache(List<Movie> data) {
-        mCacheSource.updateCache(data);
-        mCacheSource.setDirty(false);
-        ;
+    protected void updateCache(List<Movie> data, int offset) {
+        if (mCacheSource.isNewCache() || offset == 0) {
+            mCacheSource.updateCacheTo(data);
+        } else {
+            mCacheSource.addAllCache(data, offset);
+        }
     }
 
     @Override
@@ -105,7 +107,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
         try {
             movies = mRemoteSource.recover(remoteQuery);
-            createCache(movies);
+            updateCache(movies, remoteQuery.getOffset());
         } catch (SourceException e) {
             Log.e(TAG, e.getMessage());
         } catch (Exception e) {

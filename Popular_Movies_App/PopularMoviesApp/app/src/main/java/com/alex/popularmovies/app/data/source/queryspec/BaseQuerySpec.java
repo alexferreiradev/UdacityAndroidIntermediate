@@ -13,4 +13,12 @@ public abstract class BaseQuerySpec<ReturnType> implements QuerySpecification<Re
         this.mLimit = mLimit;
         this.mOffset = mOffset;
     }
+
+    public int getLimit() {
+        return mLimit;
+    }
+
+    public int getOffset() {
+        return mOffset;
+    }
 }

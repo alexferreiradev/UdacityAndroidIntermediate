@@ -53,19 +53,17 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
         hideProgressView();
         if (movies == null) {
             mView.showErrorMsg("Erro ao tentar listar filmes.");
-        } else if (movies.isEmpty()) {
-            mView.destroyListAdapter();
-        } else {
+        } else if (!movies.isEmpty()) {
             if (isNewAdapter()) {
                 mView.createListAdapter(movies);
             } else {
                 mView.addAdapterData(movies);
             }
+            mOffset = mView.getAdapter().getCount();
         }
     }
 
     private List<Movie> getMoviesFromRepository(String key) {
-        mOffset = mOffset + mLoadItemsLimit;
         try {
             switch (key) {
                 case ListMovieByKey.POPULAR_KEY:

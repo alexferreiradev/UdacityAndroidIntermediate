@@ -17,7 +17,7 @@ import java.util.List;
  * Created by Alex on 25/03/2017.
  */
 
-public class MovieGridAdapter extends BaseAdapter {
+public class MovieGridAdapter extends BaseAdapter implements ListViewAdaper<Movie> {
     private List<Movie> movies;
     private Context context;
 
@@ -57,5 +57,15 @@ public class MovieGridAdapter extends BaseAdapter {
         MovieImageUtil.setImageViewWithPicasso(moviePosterIV, context, movie, MovieImageUtil.IMAGE_LENGTH_W_185);
 
         return convertView;
+    }
+
+    @Override
+    public void addAllModel(List<Movie> models) {
+        movies.addAll(models);
+    }
+
+    @Override
+    public void removeAllModel(List<Movie> models) {
+        movies.removeAll(models);
     }
 }
