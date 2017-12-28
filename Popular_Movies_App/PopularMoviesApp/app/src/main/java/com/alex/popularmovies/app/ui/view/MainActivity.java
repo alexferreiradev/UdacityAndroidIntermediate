@@ -3,6 +3,9 @@ package com.alex.popularmovies.app.ui.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
@@ -24,7 +28,7 @@ import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, MoviesPresenter> implements MoviesContract.View {
+public class MainActivity extends BaseActivity<Movie, MoviesContract.View, MoviesPresenter> implements MoviesContract.View {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private GridView gvMovies;
@@ -45,6 +49,35 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.listType:
+                SubMenu subMenu = item.getSubMenu();
+                if (subMenu == null) {
+                    Log.w(TAG, "Sub menu nao encontrado");
+                }
+                MenuItem subMenuItem = subMenu.getItem();
+                if (subMenuItem.getItemId() == R.id.mostPopular) {
+                    Log.d(TAG, "Selecionado mostPopular para listagem.");
+                    mPresenter.setListType(MoviesType.MOST_POPULAR);
+                } else {
+                    Log.d(TAG, "Selecionado topVoted para listagem.");
+                    mPresenter.setListType(MoviesType.TOP_VOTED);
+                }
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+    @Override
     public void initializeWidgets(Bundle savedInstanceState) {
         super.initializeWidgets(savedInstanceState);
         gvMovies = (GridView) findViewById(R.id.gvMovies);
@@ -59,7 +92,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     }
 
     @Override
-    public void createListAdapter(List results) {
+    public void createListAdapter(List<Movie> results) {
         mAdapter = new MovieGridAdapter(this, results);
         gvMovies.setAdapter(mAdapter);
     }
@@ -114,12 +147,9 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        StringBuilder stringBuild = new StringBuilder("Item selecionado,");
-        stringBuild
-                .append(" posicao: ").append(position)
-                .append(", id: ").append(id);
+        String logMsg = "Item selecionado, posicao: " + position + ", id: " + id;
+        Log.d(TAG, logMsg);
 
-        Log.d(TAG, stringBuild.toString());
         mPresenter.selectItemClicked((Movie) mAdapter.getItem(position));
     }
 }
