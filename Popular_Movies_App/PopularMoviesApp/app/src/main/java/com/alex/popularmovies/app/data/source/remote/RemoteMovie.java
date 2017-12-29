@@ -19,8 +19,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -36,8 +39,8 @@ public class RemoteMovie implements DefaultSource<Movie> {
     private static final String MOVIE_JSON_KEY_ID = "id";
     private static final String MOVIE_JSON_KEY_POSTER_PATH = "poster_path";
     private static final String MOVIE_JSON_KEY_OVERVIEW = "overview";
-    private static final String MOVIE_JSON_KEY_POPULARITY = "popularity";
-    private static final String MOVIE_JSON_KEY_VOTE_COUNT = "vote_count";
+    private static final String MOVIE_JSON_KEY_RELEASE_DATE = "release_date";
+    private static final String MOVIE_JSON_KEY_VOTE_AVERAGE = "vote_average";
 
 
     private static String readStream(InputStream stream) throws Exception {
@@ -150,12 +153,15 @@ public class RemoteMovie implements DefaultSource<Movie> {
     @NonNull
     private Movie parseJSONToMovie(JSONObject movieJsonObject) throws Exception {
         Movie movie = new Movie();
-        movie.setTitle(movieJsonObject.getString(MOVIE_JSON_KEY_TITLE));
         movie.setId(movieJsonObject.getInt(MOVIE_JSON_KEY_ID));
+        movie.setTitle(movieJsonObject.getString(MOVIE_JSON_KEY_TITLE));
         movie.setPosterPath(movieJsonObject.getString(MOVIE_JSON_KEY_POSTER_PATH));
+        movie.setRating(movieJsonObject.getDouble(MOVIE_JSON_KEY_VOTE_AVERAGE));
         movie.setSynopsis(movieJsonObject.getString(MOVIE_JSON_KEY_OVERVIEW));
-        movie.setPopularity(movieJsonObject.getDouble(MOVIE_JSON_KEY_POPULARITY));
-        movie.setRating(movieJsonObject.getInt(MOVIE_JSON_KEY_VOTE_COUNT));
+
+        String releaseStringDate = movieJsonObject.getString(MOVIE_JSON_KEY_RELEASE_DATE);
+        Date releaseDateParsed = new SimpleDateFormat("yyyy-MM-dd", Locale.US).parse(releaseStringDate);
+        movie.setReleaseDate(releaseDateParsed);
 
         return movie;
     }

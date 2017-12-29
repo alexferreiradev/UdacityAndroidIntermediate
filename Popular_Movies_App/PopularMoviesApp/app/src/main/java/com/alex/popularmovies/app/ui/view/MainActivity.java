@@ -37,7 +37,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     private TextView tvEmpty;
     private Map<Integer, MenuItem> menuItems;
 
-    MainActivity() {
+    public MainActivity() {
         super(null);
         menuItems = new HashMap<>();
     }

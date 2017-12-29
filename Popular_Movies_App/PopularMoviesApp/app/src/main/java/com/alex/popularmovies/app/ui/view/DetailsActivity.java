@@ -18,20 +18,20 @@ import com.alex.popularmovies.app.ui.presenter.detail.DetailPresenter;
 import com.alex.popularmovies.app.util.MovieImageUtil;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 
 public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailContract.View {
     public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
     private static final String TAG = DetailsActivity.class.getSimpleName();
     private TextView tvName;
     private TextView tvYear;
-    private TextView tvTime;
     private TextView tvRating;
     private TextView tvSynopsis;
     private ImageView ivMovieImage;
 
     private long movieId = -1;
 
-    DetailsActivity() {
+    public DetailsActivity() {
         super("Filme selecionado");
     }
 
@@ -54,7 +54,6 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         ivMovieImage = findViewById(R.id.ivMovieImage);
         tvYear = findViewById(R.id.tvMovieYear);
         tvSynopsis = findViewById(R.id.tvMovieSynopsis);
-        tvTime = findViewById(R.id.tvMovieTime);
     }
 
     @Override
@@ -87,13 +86,14 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         Log.d(TAG, "Fazendo bind de filme: " + movie);
 
         tvName.setText(movie.getTitle());
-        String popularityFormated = new DecimalFormat("#.##").format(movie.getPopularity() * 10);
+        String popularityFormated = new DecimalFormat("#.#").format(movie.getRating());
         String ratingFormatted = popularityFormated + "/" + getString(R.string.max_rating);
         tvRating.setText(ratingFormatted);
         MovieImageUtil.setImageViewWithPicasso(ivMovieImage, this, movie, MovieImageUtil.IMAGE_LENGTH_W_185);
-        tvTime.setText("nao encontrado na API");
         tvSynopsis.setText(movie.getSynopsis());
-        tvYear.setText("nao encontrado na API");
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(movie.getReleaseDate());
+        tvYear.setText(String.valueOf(instance.get(Calendar.YEAR)));
     }
 
     @Override
