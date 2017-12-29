@@ -27,6 +27,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
+        moviesType = MoviesType.MOST_POPULAR;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     @Override
     public void toogleMenuMovies() {
         View menuPopular = findViewById(R.id.popular_movies);
-        View menuTopvoted = findViewById(R.id.top_voted_movies);
+        View menuTopvoted =
 
         if (menuPopular.getVisibility() == View.VISIBLE) {
             menuPopular.setVisibility(View.GONE);
