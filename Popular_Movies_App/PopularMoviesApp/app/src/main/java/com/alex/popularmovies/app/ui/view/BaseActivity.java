@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.ui.presenter.BasePresenter;
+import com.alex.popularmovies.app.ui.presenter.IPresenter;
 
 /**
  * Created by Alex on 16/03/2017.
@@ -19,7 +20,7 @@ import com.alex.popularmovies.app.ui.presenter.BasePresenter;
 
 public abstract class BaseActivity<ModelType extends BaseModel,
         ViewType extends BasePresenter.View,
-        PresenterType extends BasePresenter>
+        PresenterType extends IPresenter>
         extends AppCompatActivity
         implements BasePresenter.View<ModelType> {
 

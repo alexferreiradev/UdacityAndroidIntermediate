@@ -3,6 +3,8 @@ package com.alex.popularmovies.app.ui.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -12,6 +14,7 @@ import android.widget.TextView;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
@@ -22,17 +25,21 @@ import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, MoviesPresenter> implements MoviesContract.View {
+public class MainActivity extends BaseActivity<Movie, MoviesContract.View, MoviesPresenter> implements MoviesContract.View {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private GridView gvMovies;
     private ListViewAdaper<Movie> mAdapter;
     private TextView tvEmpty;
+    private Map<Integer, MenuItem> menuItems;
 
     MainActivity() {
         super(null);
+        menuItems = new HashMap<>();
     }
 
     @Override
@@ -42,6 +49,50 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
         BaseCache<Movie> movieCache = MovieCache.getInstance();
         mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovie()));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_list, menu);
+        int menuTotal = menu.size();
+        for (int i = 0; i < menuTotal; i++) {
+            MenuItem item = menu.getItem(i);
+            menuItems.put(item.getItemId(), item);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void toogleMenuMovies() {
+        MenuItem menuPopular = menuItems.get(R.id.popular_movies);
+        MenuItem menuTopvoted = menuItems.get(R.id.top_voted_movies);
+
+        if (menuPopular.isVisible()) {
+            menuPopular.setVisible(false);
+            menuTopvoted.setVisible(true);
+        } else {
+            menuPopular.setVisible(true);
+            menuTopvoted.setVisible(false);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.top_voted_movies:
+                Log.d(TAG, "Top voted menu selecionado");
+                mPresenter.setListType(MoviesType.TOP_VOTED);
+                break;
+            case R.id.popular_movies:
+                Log.d(TAG, "Popular menu selecionado");
+                mPresenter.setListType(MoviesType.MOST_POPULAR);
+                break;
+            default:
+                return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -59,7 +110,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
     }
 
     @Override
-    public void createListAdapter(List results) {
+    public void createListAdapter(List<Movie> results) {
         mAdapter = new MovieGridAdapter(this, results);
         gvMovies.setAdapter(mAdapter);
     }
@@ -114,12 +165,9 @@ public class MainActivity extends BaseActivity<Movie, MoviesPresenter.View, Movi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        StringBuilder stringBuild = new StringBuilder("Item selecionado,");
-        stringBuild
-                .append(" posicao: ").append(position)
-                .append(", id: ").append(id);
+        String logMsg = "Item selecionado, posicao: " + position + ", id: " + id;
+        Log.d(TAG, logMsg);
 
-        Log.d(TAG, stringBuild.toString());
         mPresenter.selectItemClicked((Movie) mAdapter.getItem(position));
     }
 }

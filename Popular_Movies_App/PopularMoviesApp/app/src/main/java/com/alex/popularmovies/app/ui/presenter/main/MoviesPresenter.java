@@ -8,6 +8,7 @@ import android.util.Log;
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
 import com.alex.popularmovies.app.ui.presenter.BaseListPresenter;
 
@@ -20,10 +21,13 @@ import java.util.List;
 public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movie, MovieRepositoryContract> implements MoviesContract.Presenter {
 
     private static final String TAG = MoviesPresenter.class.getSimpleName();
+
     private ListMovieByKey movieByKey;
+    private MoviesType moviesType;
 
     public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
+        moviesType = MoviesType.MOST_POPULAR;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     @Override
     protected void loadDataFromSource() {
-        movieByKey = new ListMovieByKey(ListMovieByKey.POPULAR_KEY, this);
+        movieByKey = new ListMovieByKey(moviesType, this);
         movieByKey.execute();
     }
 
@@ -45,7 +49,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     @Override
     protected void applyFilterFromAdapter() {
-        movieByKey = new ListMovieByKey(ListMovieByKey.POPULAR_KEY, this);
+        movieByKey = new ListMovieByKey(moviesType, this);
         movieByKey.execute();
     }
 
@@ -63,13 +67,20 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
         }
     }
 
-    private List<Movie> getMoviesFromRepository(String key) {
+    @Override
+    public void setListType(MoviesType moviesType) {
+        mView.toogleMenuMovies();
+        this.moviesType = moviesType;
+        initialize();
+    }
+
+    private List<Movie> getMoviesFromRepository(MoviesType key) {
         try {
             switch (key) {
-                case ListMovieByKey.POPULAR_KEY:
+                case MOST_POPULAR:
                     return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
-                case ListMovieByKey.TOP_VOTE_KEY:
-                    mRepository.moviesByTopRate(mLoadItemsLimit, mOffset);
+                case TOP_VOTED:
+                    return mRepository.moviesByTopRate(mLoadItemsLimit, mOffset);
             }
 
             return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
@@ -81,13 +92,10 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
     }
 
     private static class ListMovieByKey extends AsyncTask<String, Integer, List<Movie>> {
-
-        static final String POPULAR_KEY = "popular";
-        static final String TOP_VOTE_KEY = "top_vote";
-        private String key;
+        private MoviesType key;
         private MoviesPresenter presenter;
 
-        ListMovieByKey(String key, MoviesPresenter presenter) {
+        ListMovieByKey(MoviesType key, MoviesPresenter presenter) {
             this.key = key;
             this.presenter = presenter;
         }

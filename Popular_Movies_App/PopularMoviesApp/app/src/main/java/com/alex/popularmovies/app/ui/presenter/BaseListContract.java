@@ -16,7 +16,7 @@ public interface BaseListContract {
     public interface View<ModelType extends BaseModel>
             extends BasePresenter.View<ModelType>, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 
-        public void createListAdapter(List results);
+        public void createListAdapter(List<ModelType> results);
 
         public void addAdapterData(List<ModelType> result);
 

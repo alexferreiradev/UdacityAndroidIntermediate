@@ -12,7 +12,7 @@ import com.alex.popularmovies.app.data.repository.DefaultRepository;
 
 public abstract class BasePresenter<ViewType extends BasePresenter.View,
         ModelType extends BaseModel,
-        RepoType extends DefaultRepository> {
+        RepoType extends DefaultRepository> implements IPresenter {
 
     protected Context mContext;
     protected ViewType mView;
