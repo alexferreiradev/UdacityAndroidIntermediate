@@ -9,6 +9,6 @@
         android:id="@+id/moviePosterIV"
         style="@style/main.gridItem"
         android:layout_height="match_parent"
-        app:srcCompat="@android:drawable/btn_dialog" />
+        app:srcCompat="@android:drawable/stat_sys_download" />
 
 </FrameLayout>
