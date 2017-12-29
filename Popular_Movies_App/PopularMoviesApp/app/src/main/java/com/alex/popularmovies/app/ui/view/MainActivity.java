@@ -70,7 +70,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 
         if (menuPopular.isVisible()) {
             menuPopular.setVisible(false);
-            menuTopvoted.setVisible(false);
+            menuTopvoted.setVisible(true);
         } else {
             menuPopular.setVisible(true);
             menuTopvoted.setVisible(false);

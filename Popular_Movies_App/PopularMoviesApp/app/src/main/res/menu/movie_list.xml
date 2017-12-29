@@ -6,5 +6,6 @@
         android:title="Top Voted Movies" />
     <item
         android:id="@+id/popular_movies"
-        android:title="Popular movies" />
+        android:title="Popular movies"
+        android:visible="false" />
 </menu>
