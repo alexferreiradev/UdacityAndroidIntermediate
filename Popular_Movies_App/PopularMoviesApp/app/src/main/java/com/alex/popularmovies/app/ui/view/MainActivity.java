@@ -25,7 +25,9 @@ import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends BaseActivity<Movie, MoviesContract.View, MoviesPresenter> implements MoviesContract.View {
 
@@ -33,9 +35,11 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     private GridView gvMovies;
     private ListViewAdaper<Movie> mAdapter;
     private TextView tvEmpty;
+    private Map<Integer, MenuItem> menuItems;
 
     MainActivity() {
         super(null);
+        menuItems = new HashMap<>();
     }
 
     @Override
@@ -50,21 +54,26 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.movie_list, menu);
+        int menuTotal = menu.size();
+        for (int i = 0; i < menuTotal; i++) {
+            MenuItem item = menu.getItem(i);
+            menuItems.put(item.getItemId(), item);
+        }
 
         return true;
     }
 
     @Override
     public void toogleMenuMovies() {
-        View menuPopular = findViewById(R.id.popular_movies);
-        View menuTopvoted =
+        MenuItem menuPopular = menuItems.get(R.id.popular_movies);
+        MenuItem menuTopvoted = menuItems.get(R.id.top_voted_movies);
 
-        if (menuPopular.getVisibility() == View.VISIBLE) {
-            menuPopular.setVisibility(View.GONE);
-            menuTopvoted.setVisibility(View.VISIBLE);
+        if (menuPopular.isVisible()) {
+            menuPopular.setVisible(false);
+            menuTopvoted.setVisible(false);
         } else {
-            menuPopular.setVisibility(View.VISIBLE);
-            menuTopvoted.setVisibility(View.GONE);
+            menuPopular.setVisible(true);
+            menuTopvoted.setVisible(false);
         }
     }
 
