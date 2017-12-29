@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
@@ -29,7 +28,6 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     private TextView tvRating;
     private TextView tvSynopsis;
     private ImageView ivMovieImage;
-    private ToggleButton tbFavorite;
 
     private long movieId = -1;
 
@@ -54,7 +52,6 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         tvName = findViewById(R.id.tvMovieName);
         tvRating = findViewById(R.id.tvMovieRating);
         ivMovieImage = findViewById(R.id.ivMovieImage);
-        tbFavorite = findViewById(R.id.tbFavorite);
         tvYear = findViewById(R.id.tvMovieYear);
         tvSynopsis = findViewById(R.id.tvMovieSynopsis);
         tvTime = findViewById(R.id.tvMovieTime);
@@ -94,8 +91,6 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
         String ratingFormatted = popularityFormated + "/" + getString(R.string.max_rating);
         tvRating.setText(ratingFormatted);
         MovieImageUtil.setImageViewWithPicasso(ivMovieImage, this, movie, MovieImageUtil.IMAGE_LENGTH_W_185);
-        tbFavorite.setChecked(movie.isFavorite());
-        tbFavorite.setEnabled(true);
         tvTime.setText("nao encontrado na API");
         tvSynopsis.setText(movie.getSynopsis());
         tvYear.setText("nao encontrado na API");
@@ -103,12 +98,12 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 
     @Override
     public void setFavOn() {
-        tbFavorite.setChecked(true);
+        throw new RuntimeException("Função nao disponivel nesta versao");
     }
 
     @Override
     public void setFavOff() {
-        tbFavorite.setChecked(false);
+        throw new RuntimeException("Função nao disponivel nesta versao");
     }
 
     @Override

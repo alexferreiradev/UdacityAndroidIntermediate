@@ -55,15 +55,6 @@
         style="@style/detail.textDetails"
         android:text="8/10" />
 
-    <ToggleButton
-        android:id="@+id/tbFavorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvMovieRating"
-        android:layout_alignStart="@+id/tvMovieRating"
-        android:layout_below="@+id/tvMovieRating"
-        style="@style/detail.movieFavoriteButton" />
-
     <TextView
         android:id="@+id/tvMovieSynopsis"
         android:layout_width="wrap_content"
