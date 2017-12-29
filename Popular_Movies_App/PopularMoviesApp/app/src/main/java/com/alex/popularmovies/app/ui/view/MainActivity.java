@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -51,29 +50,39 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.movie_list, menu);
+
         return true;
+    }
+
+    @Override
+    public void toogleMenuMovies() {
+        View menuPopular = findViewById(R.id.popular_movies);
+        View menuTopvoted = findViewById(R.id.top_voted_movies);
+
+        if (menuPopular.getVisibility() == View.VISIBLE) {
+            menuPopular.setVisibility(View.GONE);
+            menuTopvoted.setVisibility(View.VISIBLE);
+        } else {
+            menuPopular.setVisibility(View.VISIBLE);
+            menuTopvoted.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.listType:
-                SubMenu subMenu = item.getSubMenu();
-                if (subMenu == null) {
-                    Log.w(TAG, "Sub menu nao encontrado");
-                }
-                MenuItem subMenuItem = subMenu.getItem();
-                if (subMenuItem.getItemId() == R.id.mostPopular) {
-                    Log.d(TAG, "Selecionado mostPopular para listagem.");
-                    mPresenter.setListType(MoviesType.MOST_POPULAR);
-                } else {
-                    Log.d(TAG, "Selecionado topVoted para listagem.");
-                    mPresenter.setListType(MoviesType.TOP_VOTED);
-                }
+            case R.id.top_voted_movies:
+                Log.d(TAG, "Top voted menu selecionado");
+                mPresenter.setListType(MoviesType.TOP_VOTED);
+                break;
+            case R.id.popular_movies:
+                Log.d(TAG, "Popular menu selecionado");
+                mPresenter.setListType(MoviesType.MOST_POPULAR);
                 break;
             default:
                 return false;
         }
+
         return true;
     }
 

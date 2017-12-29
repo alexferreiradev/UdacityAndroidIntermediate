@@ -27,5 +27,7 @@ public interface MoviesContract {
         boolean onOptionsItemSelected(MenuItem item);
 
         boolean onCreateOptionsMenu(Menu menu);
+
+        void toogleMenuMovies();
     }
 }
