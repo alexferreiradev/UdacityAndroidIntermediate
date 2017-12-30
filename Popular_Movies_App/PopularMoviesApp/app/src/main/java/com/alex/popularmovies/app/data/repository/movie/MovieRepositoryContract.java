@@ -15,4 +15,8 @@ public interface MovieRepositoryContract extends DefaultRepository<Movie> {
     List<Movie> moviesByPopularity(int limit, int offset) throws DataException;
 
     List<Movie> moviesByTopRate(int limit, int offset) throws DataException;
+
+    boolean hasCache() throws DataException;
+
+    List<Movie> getCurrentCache() throws DataException;
 }

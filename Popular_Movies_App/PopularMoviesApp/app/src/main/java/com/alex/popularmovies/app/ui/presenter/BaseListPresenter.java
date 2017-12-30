@@ -102,9 +102,11 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 
     @Override
     protected void initialize() {
-        mView.destroyListAdapter();
-        resetPaginationCounter();
-        loadMoreData(0, 0, 0);
+        if (mView.getAdapter() != null) {
+            loadMoreData(0, 0, mView.getAdapter().getCount());
+        } else {
+            loadMoreData(0, 0, 0);
+        }
     }
 
     @Override

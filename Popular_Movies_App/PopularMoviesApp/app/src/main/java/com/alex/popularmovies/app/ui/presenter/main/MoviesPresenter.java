@@ -91,6 +91,21 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
         return null;
     }
 
+    @Override
+    protected void initialize() {
+        try {
+            if (mRepository.hasCache()) {
+                mView.createListAdapter(mRepository.getCurrentCache());
+                mView.setGridPosByLastSelectedFilm();
+                mView.setLoadProgressBarVisibility(false);
+            } else {
+                super.initialize();
+            }
+        } catch (DataException e) {
+            Log.e(TAG, "Erro ao tentar iniciar presenter. Erro ao tentar utilizar repositorio.");
+        }
+    }
+
     private static class ListMovieByKey extends AsyncTask<String, Integer, List<Movie>> {
         private MoviesType key;
         private MoviesPresenter presenter;

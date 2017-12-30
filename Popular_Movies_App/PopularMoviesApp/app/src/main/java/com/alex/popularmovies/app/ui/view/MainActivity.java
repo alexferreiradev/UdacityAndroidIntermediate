@@ -36,6 +36,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     private ListViewAdaper<Movie> mAdapter;
     private TextView tvEmpty;
     private Map<Integer, MenuItem> menuItems;
+    private int lastSelectedPositionFilm;
 
     public MainActivity() {
         super(null);
@@ -75,6 +76,12 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
             menuPopular.setVisible(true);
             menuTopvoted.setVisible(false);
         }
+    }
+
+    @Override
+    public void setGridPosByLastSelectedFilm() {
+        Log.d(TAG, "Selecionando posicao: " + lastSelectedPositionFilm + " para grid scrool.");
+        gvMovies.smoothScrollToPosition(lastSelectedPositionFilm);
     }
 
     @Override
@@ -167,6 +174,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         String logMsg = "Item selecionado, posicao: " + position + ", id: " + id;
         Log.d(TAG, logMsg);
+        lastSelectedPositionFilm = position;
 
         mPresenter.selectItemClicked((Movie) mAdapter.getItem(position));
     }

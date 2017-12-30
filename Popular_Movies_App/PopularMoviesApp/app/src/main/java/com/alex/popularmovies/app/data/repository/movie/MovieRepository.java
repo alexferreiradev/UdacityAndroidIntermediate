@@ -102,6 +102,16 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
         return getMoviesBySpec(querySpec);
     }
 
+    @Override
+    public boolean hasCache() throws DataException {
+        return !mCacheSource.isDirty();
+    }
+
+    @Override
+    public List<Movie> getCurrentCache() throws DataException {
+        return mCacheSource.isDirty() ? new ArrayList<Movie>() : mCacheSource.getCache();
+    }
+
     private List<Movie> getMoviesBySpec(RemoteQuery remoteQuery) throws DataException {
         List<Movie> movies = new ArrayList<>();
 

@@ -29,5 +29,7 @@ public interface MoviesContract {
         boolean onCreateOptionsMenu(Menu menu);
 
         void toogleMenuMovies();
+
+        void setGridPosByLastSelectedFilm();
     }
 }

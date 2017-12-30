@@ -32,6 +32,10 @@ public abstract class BaseCache<ModelType extends BaseModel> implements MemoryCa
         isDirty = false;
     }
 
-    protected abstract void createCache();
+    @Override
+    public List<ModelType> getCache() {
+        return mCache;
+    }
 
+    protected abstract void createCache();
 }
