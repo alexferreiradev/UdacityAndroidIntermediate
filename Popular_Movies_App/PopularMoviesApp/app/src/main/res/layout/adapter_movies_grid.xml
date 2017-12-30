@@ -7,6 +7,6 @@
     <ImageView
         android:id="@+id/moviePosterIV"
         style="@style/main.gridItem"
-        app:srcCompat="@android:drawable/dialog_holo_light_frame" />
+        app:srcCompat="@android:drawable/stat_notify_error" />
 
 </FrameLayout>

@@ -21,6 +21,6 @@ public class MovieImageUtil {
                 .append(imageLength).append("/")
                 .append(movie.getPosterPath()).toString();
 
-        Picasso.with(context).load(path).into(imageView);
+        Picasso.with(context).load(path).error(context.getResources().getDrawable(android.R.drawable.stat_notify_error)).into(imageView);
     }
 }
