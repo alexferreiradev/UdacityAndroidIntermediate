@@ -54,11 +54,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
         mView.initializeWidgets(savedInstanceState);
     }
 
-    /**
-     * Funções que todas mView tem
-     */
     public interface View<ModelType extends BaseModel> {
-
         /**
          * Inverte o atributo visible de um progressBar
          */
@@ -79,5 +75,6 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
         void showSuccessMsg(String msg);
 
+        void setActionBarTitle(String title);
     }
 }

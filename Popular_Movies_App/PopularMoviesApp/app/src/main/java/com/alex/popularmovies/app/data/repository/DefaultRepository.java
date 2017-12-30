@@ -9,4 +9,6 @@ import com.alex.popularmovies.app.data.model.BaseModel;
 
 public interface DefaultRepository<ModelType extends BaseModel> extends CRUD<ModelType> {
 
+    void setCacheToDirty();
+
 }

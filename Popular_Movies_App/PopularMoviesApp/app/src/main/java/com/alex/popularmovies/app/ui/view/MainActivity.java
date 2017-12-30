@@ -78,6 +78,12 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
     }
 
     @Override
+    public void setGridPosByLastSelectedFilm(int position) {
+        Log.d(TAG, "Selecionando posicao: " + position + " para grid scrool.");
+        gvMovies.smoothScrollToPosition(position);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.top_voted_movies:
@@ -158,6 +164,8 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        Log.d(TAG, "scrool chamado = total = " + totalItemCount + " first visible item position: " + firstVisibleItem);
+
         if (mPresenter != null) {
             mPresenter.loadMoreData(firstVisibleItem, visibleItemCount, totalItemCount);
         }
@@ -168,6 +176,6 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
         String logMsg = "Item selecionado, posicao: " + position + ", id: " + id;
         Log.d(TAG, logMsg);
 
-        mPresenter.selectItemClicked((Movie) mAdapter.getItem(position));
+        mPresenter.selectItemClicked((Movie) mAdapter.getItem(position), position);
     }
 }

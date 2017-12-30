@@ -14,4 +14,5 @@
     <string name="detail_mark_fav_off">Unfavorite</string>
     <string name="empty_text">Nenhum filme a listar</string>
     <string name="max_rating">10</string>
+    <string name="n_carregado">não carregado</string>
 </resources>

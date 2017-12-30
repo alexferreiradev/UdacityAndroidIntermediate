@@ -83,7 +83,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
     @Override
     public void bindMovieViewData(Movie movie) {
         this.mData = movie;
-        Log.d(TAG, "Fazendo bind de filme: " + movie);
+        Log.d(TAG, "Fazendo bind de filme: " + movie.getId());
 
         tvName.setText(movie.getTitle());
         String popularityFormated = new DecimalFormat("#.#").format(movie.getRating());

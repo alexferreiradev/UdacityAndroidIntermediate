@@ -91,4 +91,13 @@ public abstract class BaseActivity<ModelType extends BaseModel,
             mProgressBar.setVisibility(View.GONE);
         }
     }
+
+    @Override
+    public void setActionBarTitle(String title) {
+        mTitle = title;
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setTitle(mTitle);
+        }
+    }
 }

@@ -8,8 +8,6 @@ import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.ui.presenter.BaseListContract;
 import com.alex.popularmovies.app.ui.presenter.IPresenter;
 
-import java.util.List;
-
 /**
  * Created by Alex on 17/12/2017.
  */
@@ -17,9 +15,9 @@ import java.util.List;
 public interface MoviesContract {
 
     public interface Presenter extends IPresenter {
-        void setMovieGrid(List<Movie> movies);
 
         void setListType(MoviesType moviesType);
+
     }
 
     public interface View extends BaseListContract.View<Movie> {
@@ -29,5 +27,7 @@ public interface MoviesContract {
         boolean onCreateOptionsMenu(Menu menu);
 
         void toogleMenuMovies();
+
+        void setGridPosByLastSelectedFilm(int position);
     }
 }

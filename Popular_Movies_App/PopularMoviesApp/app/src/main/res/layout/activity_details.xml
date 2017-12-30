@@ -1,64 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.alex.popularmovies.app.ui.view.DetailsActivity">
 
-    <include
-        android:id="@+id/includedLayout"
-        layout="@layout/default_layout"
-        style="@style/includedSupportActionBar" />
-
-    <TextView
-        android:id="@+id/tvMovieName"
-        style="@style/detail.movieTitle"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/includedLayout" />
+        android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/ivMovieImage"
-        style="@style/detail.movieImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/tvMovieName"
-        android:layout_alignBottom="@id/tvMovieRating"
-        app:srcCompat="@android:drawable/stat_sys_download" />
+        <include
+            android:id="@+id/includedLayout"
+            layout="@layout/default_layout"
+            style="@style/includedSupportActionBar" />
 
-    <TextView
-        android:id="@+id/tvMovieYear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvMovieName"
-        android:layout_toRightOf="@+id/ivMovieImage"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="2015"
-        style="@style/detail.textDetailsLabel" />
+        <TextView
+            android:id="@+id/tvMovieName"
+            style="@style/detail.movieTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/includedLayout" />
 
-    <TextView
-        android:id="@+id/tvMovieRating"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tvMovieYear"
-        android:layout_toRightOf="@+id/ivMovieImage"
-        style="@style/detail.textDetailsLabel"
-        android:text="8/10" />
+        <ImageView
+            android:id="@+id/ivMovieImage"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/tvMovieName"
+            app:srcCompat="@mipmap/ic_launcher"
+            style="@style/detail.movieImage" />
 
-    <TextView
-        android:id="@+id/tvMovieSynopsis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/tvMovieRating"
-        style="@style/detail.textDetails"
-        android:text="Sinopse do filme" />
+        <TextView
+            android:id="@+id/tvMovieYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMovieName"
+            android:layout_alignTop="@+id/ivMovieImage"
+            android:layout_toRightOf="@+id/ivMovieImage"
+            android:text="@string/n_carregado"
+            style="@style/detail.textDetailsLabel" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tvMovieRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvMovieYear"
+            android:layout_toRightOf="@+id/ivMovieImage"
+            style="@style/detail.textDetailsLabel"
+            android:text="@string/n_carregado" />
+
+        <TextView
+            android:id="@+id/tvMovieSynopsis"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/ivMovieImage"
+            style="@style/detail.textDetails"
+            android:text="@string/n_carregado" />
+    </RelativeLayout>
+</ScrollView>

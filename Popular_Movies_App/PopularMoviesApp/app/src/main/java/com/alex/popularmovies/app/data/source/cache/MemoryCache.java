@@ -22,4 +22,6 @@ public interface MemoryCache<ModelType extends BaseModel> extends DefaultSource<
     void addAllCache(List<ModelType> models, int offset);
 
     void removeAllCache(List<ModelType> models);
+
+    List<ModelType> getCache();
 }
