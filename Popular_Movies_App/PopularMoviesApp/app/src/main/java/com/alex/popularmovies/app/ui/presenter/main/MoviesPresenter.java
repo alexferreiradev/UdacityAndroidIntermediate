@@ -39,6 +39,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     @Override
     protected void loadDataFromSource() {
+        Log.d(TAG, "Load from source. Offset: " + mOffset);
         movieByKey = new ListMovieByKey(moviesType, this);
         movieByKey.execute();
     }
@@ -67,7 +68,9 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
             } else {
                 mView.addAdapterData(movies);
             }
+
             mOffset = mView.getAdapter().getCount();
+            Log.d(TAG, "Total filmes carregados: " + mOffset);
         }
     }
 
@@ -82,6 +85,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     private List<Movie> getMoviesFromRepository(MoviesType key) {
         try {
+            Log.d(TAG, "Load backgoournd: key: " + key + " offset: " + mOffset);
             switch (key) {
                 case MOST_POPULAR:
                     return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
@@ -120,7 +124,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
     }
 
     private void setLastSelectedGrid() throws DataException {
-        mView.createListAdapter(mRepository.getCurrentCache());
+        Log.d(TAG, "Select grid position: offset: " + mOffset + " lastSolicited: " + lastOffsetSolicited + " ");
         mView.setGridPosByLastSelectedFilm(lastPosSelectedInGrid);
         mView.setLoadProgressBarVisibility(false);
 

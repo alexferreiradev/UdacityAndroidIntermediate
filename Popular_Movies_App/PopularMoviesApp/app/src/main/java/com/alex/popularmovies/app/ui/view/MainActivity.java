@@ -164,6 +164,8 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        Log.d(TAG, "scrool chamado = total = " + totalItemCount + " first visible item position: " + firstVisibleItem);
+
         if (mPresenter != null) {
             mPresenter.loadMoreData(firstVisibleItem, visibleItemCount, totalItemCount);
         }

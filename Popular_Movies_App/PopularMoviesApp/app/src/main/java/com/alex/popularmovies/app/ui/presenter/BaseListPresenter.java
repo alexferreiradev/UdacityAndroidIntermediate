@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.ui.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
@@ -12,12 +13,13 @@ import com.alex.popularmovies.app.data.repository.DefaultRepository;
 
 /**
  * Classe base para criar presenter para activities que tenham listview ou algum container de info.
- * @param <ViewType> - Interface
+ *
+ * @param <ViewType>  - Interface
  * @param <ModelType> - Tipo de model
  */
 public abstract class BaseListPresenter<ViewType extends BaseListContract.View, ModelType extends BaseModel, RepoType extends DefaultRepository>
         extends BasePresenter<ViewType, ModelType, RepoType>
-        implements BaseListContract.Presenter<ModelType>{
+        implements BaseListContract.Presenter<ModelType> {
 
     // Esta configuração deve ser dinamica quando trabalhado com outros tamanhos de dispositivos
     private static final int LIMIT_INITIAL = 80; // 30 pronto para mostrar + "total a carregar" esperando no adapter
@@ -29,23 +31,40 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     protected int mOffset;
     protected String mFilterKey;
     protected String mFilterValue;
+    protected int lastOffsetSolicited;
 
     public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
+        resetPaginationCounter();
     }
 
-    /** Devem ser implementados */
+    /**
+     * Devem ser implementados
+     */
     protected abstract void setEmptyView();
+
     protected abstract void loadDataFromSource();
 
-    /** Crud Funcoes */
-    protected void updateDataInSource(ModelType data){}
-    protected void removeDataInSource(ModelType data){}
-    protected void saveDataInSource(ModelType data){}
+    /**
+     * Crud Funcoes
+     */
+    protected void updateDataInSource(ModelType data) {
+    }
 
-    /** Filtros */
-    protected void applyFilterFromAdapter(){}
-    protected void applyFilterFromSource(){}
+    protected void removeDataInSource(ModelType data) {
+    }
+
+    protected void saveDataInSource(ModelType data) {
+    }
+
+    /**
+     * Filtros
+     */
+    protected void applyFilterFromAdapter() {
+    }
+
+    protected void applyFilterFromSource() {
+    }
 
     @Override
     public void applyFilter(String filterKey, String filterValue) {
@@ -59,29 +78,35 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
      * Verifica se precisa de carregar mais itens ao usuário fazer scroll na lista de itens. São feitas
      * duas verificacoes: 1- se precisa de carregar mais (ultimo visivel perto de total carregado);
      * 2 - se não foi feito uma requisicao de carregamento antes (offset > total carregado);
-     *
+     * <p>
      * Deve alterar o mLimit de acordo com o total de linhas visiveis e o offset com adição do mLimit. Uma
      * alteração para considerar diferentes tipos de dispositivos.
      *
-     * @param firstVisibleItem - posição do primeiro item visível
-     * @param visibleItemCount - total de linhas que são visíveis
+     * @param firstVisibleItem  - posição do primeiro item visível
+     * @param visibleItemCount  - total de linhas que são visíveis
      * @param adapterTotalItems - total de itens no adapter
      */
     @Override
-    public synchronized void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems){
+    public synchronized void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems) {
         int lastItemVisiblePosition = firstVisibleItem + visibleItemCount;
         if (mLoadItemsLimit < visibleItemCount + INTERVAL_TO_LOAD_MORE) {
             mLoadItemsLimit = visibleItemCount + INTERVAL_TO_LOAD_MORE;
         }
 
-//        Log.d(TAG, "Load more com: total items carregados: " + adapterTotalItems + " lastVisi: " + lastItemVisiblePosition);
+        Log.d(TAG, "Load more com: total items carregados: " + adapterTotalItems + " lastVisi: " + lastItemVisiblePosition);
 
         if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE) {
-            loadDataFromSource();
+            Log.d(TAG, "Load more com LastOffset: " + lastOffsetSolicited + " e offset: " + mOffset);
+            if (mOffset > lastOffsetSolicited) {
+                lastOffsetSolicited = mOffset;
+                Log.d(TAG, "Load more solicitando mais dados");
+                loadDataFromSource();
+            }
         }
     }
 
     protected void reCreateAdapter() {
+        Log.d(TAG, "Recriando adapter.");
         mView.destroyListAdapter();
 
         resetPaginationCounter();
@@ -108,8 +133,9 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
         return mView.getAdapter() == null || mView.getAdapter().isEmpty();
     }
 
-    private void resetPaginationCounter(){
+    private void resetPaginationCounter() {
         mLoadItemsLimit = LIMIT_INITIAL;
         mOffset = 0;
+        lastOffsetSolicited = -1;
     }
 }
