@@ -1,4 +1,21 @@
 <resources>
     <string name="app_name">Sunshine App</string>
     <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="action_setting" >Settings</string>
+    <string name="action_view_map" >My location on map</string>
+
+    <!--Preferences-->
+    <string name="pref_location_label">Set your ZIP CODE Location</string>
+    <string name="pref_location_key">zip_code</string>
+    <string name="pref_location_default">74823</string>
+
+    <string name="pref_units_label">Set your temperature unit</string>
+    <string name="pref_units_default">@string/pref_units_metric</string>
+    <string name="pref_units_key">temp_unit</string>
+    <string name="pref_units_metric">metric</string>
+    <string name="pref_units_metric_label">Metric</string>
+    <string name="pref_units_imperial">imperial</string>
+    <string name="pref_units_imperial_label">Imperial</string>
+
+    <string name="connection_error">Conexão não disponível. Conecte a internet e tente novamente</string>
 </resources>

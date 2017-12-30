@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Popular Movies App</string>
+    <string name="save_error">Não foi salvo</string>
+    <string name="save_success">Salvo com sucesso</string>
+    <string name="update_error">Erro ao atualizar</string>
+    <string name="update_success">Atualizado com sucesso</string>
+    <string name="delete_error">Erro ao remover</string>
+    <string name="delete_success">Removido com sucesso</string>
+    <string name="filter_success">Filtro aplicado</string>
+    <string name="filter_error">Nenhum dado com este filtro</string>
+    <string name="none_movie_loaded">Nenhum filme encontrado</string>
+    <string name="detail_action_fav">Mark as favorite</string>
+    <string name="detail_mark_fav_on">\@string/detail_action_fav</string>
+    <string name="detail_mark_fav_off">Unfavorite</string>
+    <string name="empty_text">Nenhum filme a listar</string>
+    <string name="max_rating">10</string>
+    <string name="n_carregado">não carregado</string>
+</resources>

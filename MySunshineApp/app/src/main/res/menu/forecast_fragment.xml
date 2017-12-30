@@ -7,4 +7,8 @@
         android:id="@+id/refresh_op"
         app:showAsAction="never"
         />
+
+    <item android:title="@string/action_setting"
+        android:id="@+id/action_setting"
+        app:showAsAction="never" />
 </menu>
