@@ -22,8 +22,9 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
         extends BasePresenter<ViewType, ModelType, RepoType>
         implements BaseListContract.Presenter<ModelType>{
 
-    private static final int LIMIT_INITIAL = 80; // 30 pronto para mostrar + 20 esperando no adapter
-    public static final int INTERVAL_TO_LOAD_MORE = 50; // 30 já visto, 20 faltando para visualizar
+    // Esta configuração deve ser dinamica quando trabalhado com outros tamanhos de dispositivos
+    private static final int LIMIT_INITIAL = 80; // 30 pronto para mostrar + "total a carregar" esperando no adapter
+    private static final int INTERVAL_TO_LOAD_MORE = 50; // 30 + este valor = total no adapter
     private static final int TOTAL_FILTER_FROM_ADAPTER = 1000; // Valor que uma CPU básica não irá demorar para filtrar
 
     protected int mLoadItemsLimit;
