@@ -2,12 +2,9 @@ package com.alex.popularmovies.app.ui.presenter;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
-
-import java.util.List;
 
 /**
  * Created by Alex on 17/03/2017.
@@ -26,6 +23,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     private static final int LIMIT_INITIAL = 80; // 30 pronto para mostrar + "total a carregar" esperando no adapter
     private static final int INTERVAL_TO_LOAD_MORE = 50; // 30 + este valor = total no adapter
     private static final int TOTAL_FILTER_FROM_ADAPTER = 1000; // Valor que uma CPU básica não irá demorar para filtrar
+    private static final String TAG = BaseListPresenter.class.getSimpleName();
 
     protected int mLoadItemsLimit;
     protected int mOffset;
@@ -49,24 +47,12 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     protected void applyFilterFromAdapter(){}
     protected void applyFilterFromSource(){}
 
-    public void selectItemClicked(ModelType item){}
-    public void showAddOrEditView(ModelType data){}
-
     @Override
     public void applyFilter(String filterKey, String filterValue) {
         this.mFilterKey = filterKey;
         this.mFilterValue = filterValue;
         if (!isNewAdapter())
             applyFilterFromAdapter();
-    }
-
-    @Override
-    public void populateAdapter(List<ModelType> result){
-        if (result != null && !result.isEmpty() && isNewAdapter()){
-            mView.createListAdapter(result);
-        }else if (result != null){
-            mView.addAdapterData(result);
-        }
     }
 
     /**
@@ -84,28 +70,31 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
     @Override
     public synchronized void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems){
         int lastItemVisiblePosition = firstVisibleItem + visibleItemCount;
-        Log.d("teste", "total items carregados: " + adapterTotalItems + "lastVisi: " + lastItemVisiblePosition);
-        if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE){
-            loadDataFromSource();
-        }
-
         if (mLoadItemsLimit < visibleItemCount + INTERVAL_TO_LOAD_MORE) {
             mLoadItemsLimit = visibleItemCount + INTERVAL_TO_LOAD_MORE;
         }
+
+//        Log.d(TAG, "Load more com: total items carregados: " + adapterTotalItems + " lastVisi: " + lastItemVisiblePosition);
+
+        if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE) {
+            loadDataFromSource();
+        }
     }
 
-    @Override
-    public void reCreateAdapter(){
+    protected void reCreateAdapter() {
         mView.destroyListAdapter();
+
+        resetPaginationCounter();
+        mRepository.setCacheToDirty();
         initialize();
     }
 
     @Override
     protected void initialize() {
-        if (mView.getAdapter() != null) {
-            loadMoreData(0, 0, mView.getAdapter().getCount());
-        } else {
+        if (isNewAdapter()) {
             loadMoreData(0, 0, 0);
+        } else {
+            loadMoreData(0, 0, mView.getAdapter().getCount());
         }
     }
 

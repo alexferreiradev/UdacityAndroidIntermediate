@@ -127,4 +127,9 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
         return movies;
     }
+
+    @Override
+    public void setCacheToDirty() {
+        mCacheSource.setDirty(true);
+    }
 }

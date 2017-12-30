@@ -24,10 +24,12 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     private ListMovieByKey movieByKey;
     private MoviesType moviesType;
+    private int lastPosSelectedInGrid;
 
     public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository) {
         super(mView, mContext, savedInstanceState, mRepository);
         moviesType = MoviesType.MOST_POPULAR;
+        setLastPositionInvalid();
     }
 
     @Override
@@ -42,8 +44,10 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
     }
 
     @Override
-    public void selectItemClicked(Movie item) {
+    public void selectItemClicked(Movie item, int pos) {
         Log.i(TAG, "Filme selecionado: " + item);
+        lastPosSelectedInGrid = pos;
+
         mView.showDataView(item);
     }
 
@@ -53,10 +57,10 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
         movieByKey.execute();
     }
 
-    public void setMovieGrid(List<Movie> movies) {
+    private void setMovieGrid(List<Movie> movies) {
         hideProgressView();
         if (movies == null) {
-            mView.showErrorMsg("Erro ao tentar listar filmes.");
+            mView.showErrorMsg("Erro ao tentar buscar filmes.");
         } else if (!movies.isEmpty()) {
             if (isNewAdapter()) {
                 mView.createListAdapter(movies);
@@ -69,9 +73,11 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
     @Override
     public void setListType(MoviesType moviesType) {
-        mView.toogleMenuMovies();
         this.moviesType = moviesType;
-        initialize();
+        reCreateAdapter();
+
+        mView.toogleMenuMovies();
+        mView.setActionBarTitle(moviesType.name().replaceAll("_", " "));
     }
 
     private List<Movie> getMoviesFromRepository(MoviesType key) {
@@ -94,16 +100,35 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
     @Override
     protected void initialize() {
         try {
-            if (mRepository.hasCache()) {
-                mView.createListAdapter(mRepository.getCurrentCache());
-                mView.setGridPosByLastSelectedFilm();
-                mView.setLoadProgressBarVisibility(false);
-            } else {
+            if (hasLastPositionSelectedValid()) {
+                Log.d(TAG, "Init com last pos");
+                setLastSelectedGrid();
+            } else if (isNewAdapter()) {
+                Log.d(TAG, "Init com new adapter");
                 super.initialize();
+            } else {
+                Log.d(TAG, "Init com load more");
+                loadMoreData(0, 0, mView.getAdapter().getCount());
             }
         } catch (DataException e) {
             Log.e(TAG, "Erro ao tentar iniciar presenter. Erro ao tentar utilizar repositorio.");
         }
+    }
+
+    private boolean hasLastPositionSelectedValid() {
+        return lastPosSelectedInGrid >= 0;
+    }
+
+    private void setLastSelectedGrid() throws DataException {
+        mView.createListAdapter(mRepository.getCurrentCache());
+        mView.setGridPosByLastSelectedFilm(lastPosSelectedInGrid);
+        mView.setLoadProgressBarVisibility(false);
+
+        setLastPositionInvalid();
+    }
+
+    private void setLastPositionInvalid() {
+        lastPosSelectedInGrid = -1;
     }
 
     private static class ListMovieByKey extends AsyncTask<String, Integer, List<Movie>> {

@@ -36,13 +36,11 @@ public interface BaseListContract {
 
     public interface Presenter<ModelType extends BaseModel> extends IPresenter {
 
-        public void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems);
+        void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems);
 
-        public void applyFilter(String filterKey, String filterValue);
+        void applyFilter(String filterKey, String filterValue);
 
-        public void populateAdapter(List<ModelType> result);
-
-        public void reCreateAdapter();
+        void selectItemClicked(ModelType item, int pos);
 
     }
 }
