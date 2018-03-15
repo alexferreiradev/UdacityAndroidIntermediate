@@ -14,8 +14,9 @@
 
 # Gradle files
 **/.gradle/
-**/gradle
+**/gradle/
 **/build/
+**/local.properties
 
 # Log Files
 **/*.log
@@ -25,4 +26,4 @@
 **/.idea/
 
 # Keystore files
-*.jks
+**/*.jks
