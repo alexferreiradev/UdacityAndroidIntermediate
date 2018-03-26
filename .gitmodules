@@ -1,3 +1,6 @@
 [submodule "projetos_aulas/ud851-Sunshine"]
 	path = projetos_aulas/ud851-Sunshine
 	url = https://github.com/alexferreiradev/ud851-Sunshine.git
+[submodule "projetos_aulas/ud851-Exercises"]
+	path = projetos_aulas/ud851-Exercises
+	url = git@github.com:alexferreiradev/ud851-Exercises.git

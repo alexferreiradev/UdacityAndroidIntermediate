@@ -1,0 +1,69 @@
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>windows-1252
+===================================================================
+--- gradle/wrapper/gradle-wrapper.properties	(revision 27ca8535ce2addb43994d6945a9f2f6fe5ce47a0)
++++ gradle/wrapper/gradle-wrapper.properties	(revision )
+@@ -3,4 +3,4 @@
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-3.3-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-4.1-all.zip
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision 27ca8535ce2addb43994d6945a9f2f6fe5ce47a0)
++++ build.gradle	(revision )
+@@ -5,7 +5,7 @@
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:2.2.3'
++        classpath 'com.android.tools.build:gradle:3.0.1'
+ 
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 27ca8535ce2addb43994d6945a9f2f6fe5ce47a0)
++++ app/build.gradle	(revision )
+@@ -2,10 +2,10 @@
+ 
+ android {
+     compileSdkVersion 25
+-    buildToolsVersion "25.0.2"
++    buildToolsVersion '27.0.0'
+ 
+     defaultConfig {
+-        applicationId "com.example.android.datafrominternet"
++        applicationId "com.android.example.favoritetoys"
+         minSdkVersion 10
+         targetSdkVersion 25
+         versionCode 1
+@@ -16,12 +16,14 @@
+             minifyEnabled false
+         }
+     }
++    compileOptions {
++        sourceCompatibility JavaVersion.VERSION_1_8
++        targetCompatibility JavaVersion.VERSION_1_8
++    }
+ }
+ 
+ dependencies {
+-    compile fileTree(dir: 'libs', include: ['*.jar'])
++    compile fileTree(include: ['*.jar'], dir: 'libs')
+     compile 'com.android.support:appcompat-v7:25.1.0'
+-
+-    // TODO (32) Remove the ConstraintLayout dependency as we aren't using it for these simple projects
+-    compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
++    // (7) Remove the ConstraintLayout dependency as we aren't using it for these simple projects
+ }
+\ No newline at end of file
