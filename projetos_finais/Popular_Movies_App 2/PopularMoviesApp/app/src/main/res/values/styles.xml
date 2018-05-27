@@ -1,0 +1,31 @@
+<resources>
+
+	<!-- Base application theme. -->
+	<style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+		<!-- Customize your theme here. -->
+		<item name="windowActionBar">false</item>
+		<item name="colorPrimary">@color/colorPrimary</item>
+		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+		<item name="colorAccent">@color/colorAccent</item>
+	</style>
+
+	<style name="progressBar" parent="Widget.AppCompat.ProgressBar">
+		<item name="android:layout_centerHorizontal">true</item>
+		<item name="android:padding">4dp</item>
+		<item name="android:visibility">visible</item>
+	</style>
+
+	<style name="includedSupportActionBar" parent="AppTheme">
+		<item name="android:layout_alignParentTop">true</item>
+		<item name="android:layout_alignParentLeft">true</item>
+		<item name="android:layout_alignParentRight">true</item>
+		<item name="android:layout_width">match_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	</style>
+
+	<style name="toobarActionBar" parent="AppTheme">
+		<item name="android:layout_centerHorizontal">true</item>
+		<item name="android:padding">4dp</item>
+	</style>
+
+</resources>
