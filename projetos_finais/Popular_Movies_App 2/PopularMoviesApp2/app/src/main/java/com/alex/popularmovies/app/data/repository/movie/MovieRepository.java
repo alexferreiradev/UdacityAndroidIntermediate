@@ -6,6 +6,7 @@ import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.BaseRepository;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
+import com.alex.popularmovies.app.data.source.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
@@ -70,6 +71,10 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 
 			return movie;
+		} catch (NullConnectionException e) {
+			Log.e(TAG, "Erro ao tentar buscar abrir conexão com API: " + e.getMessage(), e);
+			// todo Avisar usuario que sem conexao pode utilizar favoritos
+			return null;
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
 			return null;

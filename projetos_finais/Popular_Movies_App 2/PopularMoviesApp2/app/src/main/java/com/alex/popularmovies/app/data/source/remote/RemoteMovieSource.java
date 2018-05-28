@@ -1,9 +1,8 @@
 package com.alex.popularmovies.app.data.source.remote;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 import com.alex.popularmovies.app.data.model.Movie;
-import com.alex.popularmovies.app.data.source.DefaultSource;
+import com.alex.popularmovies.app.data.source.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
@@ -11,10 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -28,8 +25,8 @@ import java.util.Locale;
  * Created by Alex on 02/04/2017.
  */
 
-public class RemoteMovie implements DefaultSource<Movie> {
-	private static final String TAG_NAME = RemoteMovie.class.getSimpleName();
+public class RemoteMovieSource extends BaseRemoteSource<Movie> {
+	private static final String TAG_NAME = RemoteMovieSource.class.getSimpleName();
 
 	private static final String MOVIE_JSON_KEY_RESULTS = "results";
 	private static final String MOVIE_JSON_KEY_TITLE = "original_title";
@@ -39,18 +36,8 @@ public class RemoteMovie implements DefaultSource<Movie> {
 	private static final String MOVIE_JSON_KEY_RELEASE_DATE = "release_date";
 	private static final String MOVIE_JSON_KEY_VOTE_AVERAGE = "vote_average";
 
-
-	private static String readStream(InputStream stream) throws Exception {
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "utf-8"));
-		StringBuilder stringBuilder = new StringBuilder();
-		do {
-			String line = bufferedReader.readLine();
-			if (line == null || !line.isEmpty()) {
-				stringBuilder.append(line);
-			}
-		} while (bufferedReader.ready());
-
-		return stringBuilder.toString();
+	public RemoteMovieSource() {
+		super();
 	}
 
 	@Override
@@ -59,7 +46,7 @@ public class RemoteMovie implements DefaultSource<Movie> {
 	}
 
 	@Override
-	public Movie recover(Long id) throws SourceException {
+	public Movie recover(Long id) throws SourceException, NullConnectionException {
 		List<Movie> movies = recover(new MoviesRemoteQuery(1, 0, String.valueOf(id)));
 		if (movies.isEmpty()) {
 			throw new SourceException("Não existe filme com este id: " + id);
@@ -69,7 +56,7 @@ public class RemoteMovie implements DefaultSource<Movie> {
 	}
 
 	@Override
-	public List<Movie> recover(QuerySpecification specification) throws SourceException {
+	public List<Movie> recover(QuerySpecification specification) throws SourceException, NullConnectionException {
 		List<Movie> movies = new ArrayList<>();
 		InputStream stream;
 		String movieJsonString;
@@ -78,9 +65,7 @@ public class RemoteMovie implements DefaultSource<Movie> {
 		try {
 			URL url = (URL) specification.getQuery();
 			connection = (HttpURLConnection) url.openConnection();
-			if (connection == null) {
-				throw new SourceException("Conexão não pode ser iniciada.");
-			}
+			validateConnection(connection, url);
 
 			connection.setReadTimeout(3000);
 			connection.setConnectTimeout(3000);
@@ -98,7 +83,7 @@ public class RemoteMovie implements DefaultSource<Movie> {
 			if (stream != null) {
 				movieJsonString = readStream(stream);
 				if (!movieJsonString.isEmpty()) {
-					movies.addAll(getMoviesFromJsonResults(movieJsonString));
+					movies.addAll(getModelListFromJsonResults(movieJsonString));
 				}
 			}
 		} catch (MalformedURLException e) {
@@ -129,7 +114,8 @@ public class RemoteMovie implements DefaultSource<Movie> {
 		throw new SourceException("Método não disponível para esta versao.");
 	}
 
-	private List<Movie> getMoviesFromJsonResults(String movieJsonString) {
+	@Override
+	protected List<Movie> getModelListFromJsonResults(String movieJsonString) {
 		List<Movie> movies = new ArrayList<>();
 
 		try {
@@ -137,7 +123,7 @@ public class RemoteMovie implements DefaultSource<Movie> {
 			JSONArray resultArray = jsonObject.getJSONArray(MOVIE_JSON_KEY_RESULTS);
 			for (int i = 0; i < resultArray.length(); i++) {
 				JSONObject movieJsonObject = (JSONObject) resultArray.get(i);
-				Movie movie = parseJSONToMovie(movieJsonObject);
+				Movie movie = parseJSONToModel(movieJsonObject);
 				movies.add(movie);
 			}
 		} catch (Exception e) {
@@ -147,8 +133,8 @@ public class RemoteMovie implements DefaultSource<Movie> {
 		return movies;
 	}
 
-	@NonNull
-	private Movie parseJSONToMovie(JSONObject movieJsonObject) throws Exception {
+	@Override
+	protected Movie parseJSONToModel(JSONObject movieJsonObject) throws Exception {
 		Movie movie = new Movie();
 		movie.setId(movieJsonObject.getInt(MOVIE_JSON_KEY_ID));
 		movie.setTitle(movieJsonObject.getString(MOVIE_JSON_KEY_TITLE));
