@@ -20,6 +20,7 @@ public class Movie extends BaseModel<Movie> {
 	 * synopsis
 	 * rating
 	 * releaseDate
+	 * favorite
 	 * videos
 	 * reviews
 	 */
