@@ -13,7 +13,7 @@ import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
-import com.alex.popularmovies.app.data.source.remote.RemoteMovie;
+import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import com.alex.popularmovies.app.ui.adapter.ListViewAdaper;
 import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
@@ -43,7 +43,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 		setContentView(R.layout.activity_main);
 
 		BaseCache<Movie> movieCache = MovieCache.getInstance();
-		mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovie()));
+		mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovieSource()));
 	}
 
 	@Override
