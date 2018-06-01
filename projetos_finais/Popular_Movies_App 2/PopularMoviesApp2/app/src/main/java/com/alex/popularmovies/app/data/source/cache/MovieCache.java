@@ -61,7 +61,7 @@ public class MovieCache extends BaseCache<Movie> {
 
 	@Override
 	public List<Movie> recover(QuerySpecification specification) throws SourceException {
-		return mCache;
+		throw new SourceException("Cache não suporta este método nesta versao.");
 	}
 
 	@Override

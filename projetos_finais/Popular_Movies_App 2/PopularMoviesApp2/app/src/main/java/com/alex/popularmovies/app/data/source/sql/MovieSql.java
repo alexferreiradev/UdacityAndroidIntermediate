@@ -21,27 +21,27 @@ public class MovieSql extends BaseSqlSource<Movie> {
 
 	@Override
 	public Movie create(Movie model) throws SourceException {
-		throw new RuntimeException("Metodo nao disponivel para esta versao");
+		throw new SourceException("Metodo nao disponivel para esta versao");
 	}
 
 	@Override
 	public Movie recover(Long id) throws SourceException {
-		throw new RuntimeException("Metodo nao disponivel para esta versao");
+		throw new SourceException("Metodo nao disponivel para esta versao");
 	}
 
 	@Override
 	public List<Movie> recover(QuerySpecification specification) throws SourceException {
-		throw new RuntimeException("Metodo nao disponivel para esta versao");
+		throw new SourceException("Metodo nao disponivel para esta versao");
 	}
 
 	@Override
 	public Movie update(Movie model) throws SourceException {
-		throw new RuntimeException("Metodo nao disponivel para esta versao");
+		throw new SourceException("Metodo nao disponivel para esta versao");
 	}
 
 	@Override
 	public Movie delete(Movie model) throws SourceException {
-		throw new RuntimeException("Metodo nao disponivel para esta versao");
+		throw new SourceException("Metodo nao disponivel para esta versao");
 	}
 
 	@Override
