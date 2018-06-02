@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
@@ -46,8 +47,30 @@ public class MoviesPresenterTest {
 		List<Movie> validMovies = new ArrayList<>();
 		when(repository.moviesByPopularity(anyInt(), anyInt())).thenReturn(validMovies);
 		moviesPresenter.loadMoreData(0, 10, 10);
+		// TODO: 02/06/18 testar test multi thread, fazer pesquisa e verificar como testar chamdas de objs em threads diferentes do test
+	}
 
-		verify(view).createListAdapter(validMovies);
+	@Test
+	public void setMovieType() throws Exception {
+		MoviesType moviesType = MoviesType.MOST_POPULAR;
+		String validTitle = moviesType.name().replaceAll("_", " ");
+		List<Movie> validMovies = new ArrayList<>();
+		when(repository.moviesByPopularity(anyInt(), anyInt())).thenReturn(validMovies);
+		moviesPresenter.setListType(moviesType);
+
+		verify(view).destroyListAdapter();
+		verify(repository).setCacheToDirty();
+		verify(view).toogleMenuMovies();
+		verify(view).setActionBarTitle(validTitle);
+	}
+
+	@Test
+	public void selectItem() throws Exception {
+		Movie item = mock(Movie.class);
+		moviesPresenter.selectItemClicked(item, 10);
+
+		verify(item).getId();
+		verify(view).showDataView(item);
 	}
 }
 
