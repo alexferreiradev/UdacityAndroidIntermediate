@@ -2,11 +2,11 @@ package com.alex.popularmovies.app.util;
 
 import org.junit.Test;
 
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Created by alex on 02/06/18.
@@ -43,4 +43,12 @@ public class MoviesUtilTest {
 		assertEquals(1527908400000L, convertToDate.getTime());
 	}
 
+	@Test
+	public void readStream() throws Exception {
+		InputStream stream = getClass().getResourceAsStream("/util/read_stream_example_file");
+		String readFromStream = MoviesUtil.readStream(stream);
+
+		assertNotNull(readFromStream);
+		assertEquals("Teste de string from stream", readFromStream);
+	}
 }

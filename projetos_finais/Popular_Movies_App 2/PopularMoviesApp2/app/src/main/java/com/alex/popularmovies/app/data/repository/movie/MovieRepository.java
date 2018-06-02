@@ -6,10 +6,10 @@ import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.BaseRepository;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
-import com.alex.popularmovies.app.data.source.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
+import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 
 import java.util.ArrayList;
 import java.util.List;

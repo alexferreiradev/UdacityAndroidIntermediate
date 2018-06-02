@@ -1,4 +1,4 @@
-package com.alex.popularmovies.app.data.source.exception;
+package com.alex.popularmovies.app.data.source.remote.network.exception;
 
 /**
  * Created by alex on 28/05/18.

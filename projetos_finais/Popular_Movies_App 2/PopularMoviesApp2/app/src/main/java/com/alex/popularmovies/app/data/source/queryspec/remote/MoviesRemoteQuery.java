@@ -12,13 +12,6 @@ import java.net.URL;
 
 public class MoviesRemoteQuery extends RemoteQuery {
 
-	private static final String API_MOVIE_PATH = "movie";
-	private static final String API_PARAM_APIKEY = "api_key";
-	private static final String REMOTE_API_V3 = "3";
-	private static final String REMOTE_API_AUTHORITY = "api.themoviedb.org";
-	private static final String REMOTE_API_SCHEME = "http";
-	private static final String API_PARAM_PAGE = "page";
-	private static final int REMOTE_API_PAGE_SIZE = 20; // testado
 	private final MovieFilter mFilter;
 
 	public MoviesRemoteQuery(int mLimit, int mOffset, MovieFilter movieFilter) {

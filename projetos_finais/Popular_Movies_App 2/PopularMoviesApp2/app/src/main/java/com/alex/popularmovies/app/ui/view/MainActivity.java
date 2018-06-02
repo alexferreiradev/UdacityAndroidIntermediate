@@ -14,6 +14,7 @@ import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
+import com.alex.popularmovies.app.data.source.remote.network.NetworkResourceManager;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import com.alex.popularmovies.app.ui.adapter.ListViewAdaper;
 import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
@@ -43,7 +44,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 		setContentView(R.layout.activity_main);
 
 		BaseCache<Movie> movieCache = MovieCache.getInstance();
-		mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovieSource()));
+		mPresenter = new MoviesPresenter(this, this, savedInstanceState, new MovieRepository(movieCache, new MovieSql(this), new RemoteMovieSource(new NetworkResourceManager())));
 	}
 
 	@Override
@@ -99,8 +100,8 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
 		super.initializeWidgets(savedInstanceState);
-		gvMovies = (GridView) findViewById(R.id.gvMovies);
-		tvEmpty = (TextView) findViewById(R.id.tvEmpty);
+		gvMovies = findViewById(R.id.gvMovies);
+		tvEmpty = findViewById(R.id.tvEmpty);
 		gvMovies.setEmptyView(tvEmpty);
 		gvMovies.setOnItemClickListener(this);
 		gvMovies.setOnScrollListener(this);
