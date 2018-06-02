@@ -19,11 +19,7 @@ public class MoviesUtil {
 	 * @return
 	 */
 	public static String formatDate(Date date) {
-		if (date == null)
-			return null;
-
-		DateFormat format = SimpleDateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
-		return format.format(date);
+		return formatDate(date, SimpleDateFormat.FULL);
 	}
 
 	/**
@@ -41,11 +37,21 @@ public class MoviesUtil {
 		return format.format(date);
 	}
 
+	/**
+	 * Usa FULL como estilo padrao.
+	 *
+	 * @param dateString
+	 * @return
+	 */
 	public static Date convertToDate(String dateString) {
+		return convertToDate(dateString, SimpleDateFormat.FULL);
+	}
+
+	public static Date convertToDate(String dateString, int dateStyle) {
 		if (dateString == null || dateString.isEmpty())
 			return null;
 
-		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL, Locale.getDefault());
+		DateFormat dateFormat = DateFormat.getDateInstance(dateStyle, Locale.getDefault());
 		try {
 			return dateFormat.parse(dateString);
 		} catch (ParseException e) {
