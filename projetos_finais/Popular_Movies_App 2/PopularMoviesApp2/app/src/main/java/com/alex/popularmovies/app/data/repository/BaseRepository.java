@@ -17,10 +17,10 @@ public abstract class BaseRepository<ModelType extends BaseModel> implements Def
 	protected DefaultSource<ModelType> mLocalSource;
 	protected DefaultSource<ModelType> mRemoteSource;
 
-	public BaseRepository(BaseCache<ModelType> mCacheSource, DefaultSource<ModelType> mLocalSource, DefaultSource<ModelType> mRemoteSource) {
-		this.mCacheSource = mCacheSource;
-		this.mLocalSource = mLocalSource;
-		this.mRemoteSource = mRemoteSource;
+	public BaseRepository(BaseCache<ModelType> cacheSource, DefaultSource<ModelType> localSource, DefaultSource<ModelType> remoteSource) {
+		this.mCacheSource = cacheSource;
+		this.mLocalSource = localSource;
+		this.mRemoteSource = remoteSource;
 	}
 
 	protected abstract void createCache(List<ModelType> data);

@@ -19,11 +19,11 @@ public class MoviesRemoteQuery extends RemoteQuery {
 	private static final String REMOTE_API_SCHEME = "http";
 	private static final String API_PARAM_PAGE = "page";
 	private static final int REMOTE_API_PAGE_SIZE = 20; // testado
-	private final String mKey;
+	private final MovieFilter mFilter;
 
-	public MoviesRemoteQuery(int mLimit, int mOffset, String mKey) {
+	public MoviesRemoteQuery(int mLimit, int mOffset, MovieFilter movieFilter) {
 		super(mLimit, mOffset);
-		this.mKey = mKey;
+		this.mFilter = movieFilter;
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class MoviesRemoteQuery extends RemoteQuery {
 				.authority(REMOTE_API_AUTHORITY)
 				.path(REMOTE_API_V3)
 				.appendPath(API_MOVIE_PATH)
-				.appendPath(mKey)
+				.appendPath(mFilter.name().toLowerCase())
 				.appendQueryParameter(API_PARAM_APIKEY, api_key)
 				.appendQueryParameter(API_PARAM_PAGE, page);
 
@@ -47,5 +47,10 @@ public class MoviesRemoteQuery extends RemoteQuery {
 		}
 
 		return null;
+	}
+
+	public enum MovieFilter {
+		POPULAR,
+		TOP_RATED
 	}
 }

@@ -21,8 +21,8 @@ import java.util.List;
 public class MovieRepository extends BaseRepository<Movie> implements MovieRepositoryContract {
 	private static final String TAG = MovieRepository.class.getSimpleName();
 
-	public MovieRepository(BaseCache<Movie> mCacheSource, DefaultSource<Movie> mLocalSource, DefaultSource<Movie> mRemoteSource) {
-		super(mCacheSource, mLocalSource, mRemoteSource);
+	public MovieRepository(BaseCache<Movie> cacheSource, DefaultSource<Movie> localSource, DefaultSource<Movie> remoteSource) {
+		super(cacheSource, localSource, remoteSource);
 	}
 
 	@Override
@@ -96,14 +96,12 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Movie> moviesByPopularity(int limit, int offset) throws DataException {
-		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, "popular");
-		return getMoviesBySpec(querySpec);
+		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.POPULAR, limit, offset);
 	}
 
 	@Override
 	public List<Movie> moviesByTopRate(int limit, int offset) throws DataException {
-		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, "top_rated");
-		return getMoviesBySpec(querySpec);
+		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.TOP_RATED, limit, offset);
 	}
 
 	@Override
@@ -116,12 +114,13 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		return mCacheSource.isDirty() ? new ArrayList<Movie>() : mCacheSource.getCache();
 	}
 
-	private List<Movie> getMoviesBySpec(RemoteQuery remoteQuery) throws DataException {
+	private List<Movie> getMoviesByFilter(MoviesRemoteQuery.MovieFilter filter, int limit, int offset) throws DataException {
 		List<Movie> movies = new ArrayList<>();
 
 		try {
-			movies = mRemoteSource.recover(remoteQuery);
-			updateCache(movies, remoteQuery.getOffset());
+			RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, filter);
+			movies = mRemoteSource.recover(querySpec);
+			updateCache(movies, querySpec.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (Exception e) {

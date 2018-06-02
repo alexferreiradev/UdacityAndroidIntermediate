@@ -84,7 +84,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	private List<Movie> getMoviesFromRepository(MoviesType key) {
 		try {
-			Log.d(TAG, "Load backgoournd: key: " + key + " offset: " + mOffset);
+			Log.d(TAG, "Load background: key: " + key + " offset: " + mOffset);
 			switch (key) {
 				case MOST_POPULAR:
 					return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);

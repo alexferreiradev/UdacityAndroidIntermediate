@@ -47,7 +47,7 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 
 	@Override
 	public Movie recover(Long id) throws SourceException, NullConnectionException {
-		List<Movie> movies = recover(new MoviesRemoteQuery(1, 0, String.valueOf(id)));
+		List<Movie> movies = recover(new MoviesRemoteQuery(1, 0, MoviesRemoteQuery.MovieFilter.POPULAR));
 		if (movies.isEmpty()) {
 			throw new SourceException("Não existe filme com este id: " + id);
 		}
@@ -67,8 +67,8 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 			connection = (HttpURLConnection) url.openConnection();
 			validateConnection(connection, url);
 
-			connection.setReadTimeout(3000);
-			connection.setConnectTimeout(3000);
+			connection.setReadTimeout(30000);
+			connection.setConnectTimeout(30000);
 			connection.setRequestMethod("GET");
 			// Already true by default but setting just in case; needs to be true since this request
 			// is carrying an input (response) body.
@@ -91,7 +91,7 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 			throw new SourceException("Erro de URL mal formada ao tentar abrir conexão.", e);
 		} catch (IOException e) {
 			e.printStackTrace();
-			throw new SourceException("Erro de IO ao tentar abrir conexão ou carregar imagens.", e);
+			throw new SourceException("Erro de IO ao tentar abrir conexão.", e);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new SourceException("Erro desconhecido ao tentar recuperar filmes da api.", e);
