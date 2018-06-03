@@ -3,14 +3,18 @@ package com.alex.popularmovies.app.data.repository.movie;
 import android.util.Log;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.Review;
 import com.alex.popularmovies.app.data.repository.BaseRepository;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
+import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
+import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +24,11 @@ import java.util.List;
 
 public class MovieRepository extends BaseRepository<Movie> implements MovieRepositoryContract {
 	private static final String TAG = MovieRepository.class.getSimpleName();
+	private DefaultSource<Review> mRemoteReviewSource;
 
-	public MovieRepository(BaseCache<Movie> cacheSource, DefaultSource<Movie> localSource, DefaultSource<Movie> remoteSource) {
+	public MovieRepository(BaseCache<Movie> cacheSource, DefaultSource<Movie> localSource, DefaultSource<Movie> remoteSource, DefaultSource<Review> remoteReviewSource) {
 		super(cacheSource, localSource, remoteSource);
+		mRemoteReviewSource = remoteReviewSource;
 	}
 
 	@Override
@@ -105,13 +111,31 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	}
 
 	@Override
+	public List<Review> reviewByMovie(Long movieId, int limit, int offset) throws DataException {
+		List<Review> reviewList = new ArrayList<>();
+
+		try {
+			QuerySpecification<URL> querySpec = new ReviewRemoteQuery(limit, offset, movieId);
+			reviewList = mRemoteReviewSource.recover(querySpec);
+//			updateCache(reviewList, querySpec.getOffset()); // TODO: 02/06/18 Adicionar metodo update item
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return reviewList;
+	}
+
+	@Override
 	public boolean hasCache() throws DataException {
 		return !mCacheSource.isDirty();
 	}
 
 	@Override
 	public List<Movie> getCurrentCache() throws DataException {
-		return mCacheSource.isDirty() ? new ArrayList<Movie>() : mCacheSource.getCache();
+		return mCacheSource.isDirty() ? new ArrayList<>() : mCacheSource.getCache();
 	}
 
 	private List<Movie> getMoviesByFilter(MoviesRemoteQuery.MovieFilter filter, int limit, int offset) throws DataException {

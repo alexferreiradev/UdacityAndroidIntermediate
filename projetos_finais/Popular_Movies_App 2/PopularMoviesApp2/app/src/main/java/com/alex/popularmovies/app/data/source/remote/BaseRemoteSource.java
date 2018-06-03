@@ -13,13 +13,15 @@ import java.util.List;
 
 public abstract class BaseRemoteSource<ModelType extends BaseModel> implements DefaultSource<ModelType> {
 
+	protected static final String JSON_KEY_RESULTS = "results";
+	protected static final String JSON_KEY_ID = "id";
 	protected NetworkResource mNetworkResource;
 
 	public BaseRemoteSource(NetworkResource networkResource) {
 		mNetworkResource = networkResource;
 	}
 
-	protected abstract List<ModelType> getModelListFromJsonResults(String movieJsonString);
+	protected abstract List<ModelType> getModelListFromJsonResults(String jsonString);
 
-	protected abstract ModelType parseJSONToModel(JSONObject movieJsonObject) throws Exception;
+	protected abstract ModelType parseJSONToModel(JSONObject jsonObject) throws Exception;
 }

@@ -6,9 +6,18 @@ package com.alex.popularmovies.app.data.model;
 
 public class Review extends BaseModel<Review> {
 
+	private String idFromAPI;
 	private String author;
 	private String content;
 	private String url;
+
+	public String getIdFromAPI() {
+		return idFromAPI;
+	}
+
+	public void setIdFromAPI(String idFromAPI) {
+		this.idFromAPI = idFromAPI;
+	}
 
 	public String getAuthor() {
 		return author;
@@ -35,13 +44,14 @@ public class Review extends BaseModel<Review> {
 	}
 
 	@Override
-
 	public boolean equals(Object o) {
+
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
 		Review review = (Review) o;
 
+		if (idFromAPI != null ? !idFromAPI.equals(review.idFromAPI) : review.idFromAPI != null) return false;
 		if (author != null ? !author.equals(review.author) : review.author != null) return false;
 		if (content != null ? !content.equals(review.content) : review.content != null) return false;
 		return url != null ? url.equals(review.url) : review.url == null;
@@ -49,7 +59,8 @@ public class Review extends BaseModel<Review> {
 
 	@Override
 	public int hashCode() {
-		int result = author != null ? author.hashCode() : 0;
+		int result = idFromAPI != null ? idFromAPI.hashCode() : 0;
+		result = 31 * result + (author != null ? author.hashCode() : 0);
 		result = 31 * result + (content != null ? content.hashCode() : 0);
 		result = 31 * result + (url != null ? url.hashCode() : 0);
 		return result;
@@ -58,10 +69,11 @@ public class Review extends BaseModel<Review> {
 	@Override
 	public String toString() {
 		return "Review{" +
-				"author='" + author + '\'' +
+				"idFromAPI='" + idFromAPI + '\'' +
+				", author='" + author + '\'' +
 				", content='" + content + '\'' +
-				", url='" + url + '\'' +
 				", id=" + id +
+				", url='" + url + '\'' +
 				'}';
 	}
 }

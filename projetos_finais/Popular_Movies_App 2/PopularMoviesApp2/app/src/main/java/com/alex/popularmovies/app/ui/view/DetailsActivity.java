@@ -11,6 +11,7 @@ import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
+import com.alex.popularmovies.app.data.source.remote.RemoteReviewSource;
 import com.alex.popularmovies.app.data.source.remote.network.NetworkResourceManager;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import com.alex.popularmovies.app.ui.presenter.detail.DetailContract;
@@ -41,7 +42,7 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 		setContentView(R.layout.activity_details);
 
 		BaseCache<Movie> movieCache = MovieCache.getInstance();
-		MovieRepositoryContract movieRepository = new MovieRepository(movieCache, new MovieSql(this), new RemoteMovieSource(new NetworkResourceManager()));
+		MovieRepositoryContract movieRepository = new MovieRepository(movieCache, new MovieSql(this), new RemoteMovieSource(new NetworkResourceManager()), new RemoteReviewSource(new NetworkResourceManager()));
 		mPresenter = new DetailPresenter(this, this, savedInstanceState, movieRepository);
 	}
 
