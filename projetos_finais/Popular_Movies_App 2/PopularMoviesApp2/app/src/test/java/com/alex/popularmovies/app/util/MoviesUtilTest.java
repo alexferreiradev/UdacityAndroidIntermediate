@@ -6,7 +6,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by alex on 02/06/18.
@@ -14,9 +15,9 @@ import static org.junit.Assert.*;
 public class MoviesUtilTest {
 	@Test
 	public void formatDate() throws Exception {
-		String date = MoviesUtil.formatDate(new Date());
+		String date = MoviesUtil.formatDate(new Date(1528193618346L));
 
-		assertEquals("Sábado, 2 de Junho de 2018", date);
+		assertEquals("Terça-feira, 5 de Junho de 2018", date);
 	}
 
 	@Test
@@ -33,8 +34,6 @@ public class MoviesUtilTest {
 	public void convertToDate() throws Exception {
 		Date convertToDate = MoviesUtil.convertToDate("Sábado, 2 de Junho de 2018");
 		assertEquals(1527908400000L, convertToDate.getTime());
-		convertToDate = MoviesUtil.convertToDate("02/06/18");
-		assertNull(convertToDate);
 		convertToDate = MoviesUtil.convertToDate("02/06/18", SimpleDateFormat.SHORT);
 		assertEquals(1527908400000L, convertToDate.getTime());
 		convertToDate = MoviesUtil.convertToDate("02/06/2018", SimpleDateFormat.MEDIUM);
