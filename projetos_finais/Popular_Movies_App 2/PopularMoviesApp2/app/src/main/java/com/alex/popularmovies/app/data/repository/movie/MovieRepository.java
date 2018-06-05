@@ -4,6 +4,7 @@ import android.util.Log;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.model.Review;
+import com.alex.popularmovies.app.data.model.Video;
 import com.alex.popularmovies.app.data.repository.BaseRepository;
 import com.alex.popularmovies.app.data.source.DefaultSource;
 import com.alex.popularmovies.app.data.source.cache.BaseCache;
@@ -25,10 +26,12 @@ import java.util.List;
 public class MovieRepository extends BaseRepository<Movie> implements MovieRepositoryContract {
 	private static final String TAG = MovieRepository.class.getSimpleName();
 	private DefaultSource<Review> mRemoteReviewSource;
+	private DefaultSource<Video> mRemoteVideoSource;
 
-	public MovieRepository(BaseCache<Movie> cacheSource, DefaultSource<Movie> localSource, DefaultSource<Movie> remoteSource, DefaultSource<Review> remoteReviewSource) {
+	public MovieRepository(BaseCache<Movie> cacheSource, DefaultSource<Movie> localSource, DefaultSource<Movie> remoteSource, DefaultSource<Review> remoteReviewSource, DefaultSource<Video> remoteVideoSource) {
 		super(cacheSource, localSource, remoteSource);
 		mRemoteReviewSource = remoteReviewSource;
+		mRemoteVideoSource = remoteVideoSource;
 	}
 
 	@Override
@@ -111,7 +114,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	}
 
 	@Override
-	public List<Review> reviewByMovie(Long movieId, int limit, int offset) throws DataException {
+	public List<Review> reviewListByMovie(Long movieId, int limit, int offset) throws DataException {
 		List<Review> reviewList = new ArrayList<>();
 
 		try {
@@ -126,6 +129,24 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		}
 
 		return reviewList;
+	}
+
+	@Override
+	public List<Video> videoListByMovie(Long movieId, int limit, int offset) throws DataException {
+		List<Video> videoList = new ArrayList<>();
+
+		try {
+			QuerySpecification<URL> querySpec = new ReviewRemoteQuery(limit, offset, movieId);
+			videoList = mRemoteVideoSource.recover(querySpec);
+//			updateCache(reviewList, querySpec.getOffset()); // TODO: 02/06/18 Adicionar metodo update item
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return videoList;
 	}
 
 	@Override

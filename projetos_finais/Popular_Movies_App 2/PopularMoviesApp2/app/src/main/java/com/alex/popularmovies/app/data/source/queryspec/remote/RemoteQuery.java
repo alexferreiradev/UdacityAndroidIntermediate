@@ -12,6 +12,7 @@ public abstract class RemoteQuery extends BaseQuerySpec<URL> {
 
 	protected static final String API_MOVIE_PATH = "movie";
 	protected static final String API_MOVIE_REVIEW_PATH = "reviews";
+	protected static final String API_MOVIE_VIDEO_PATH = "videos";
 	protected static final String API_PARAM_APIKEY = "api_key";
 
 	protected static final String REMOTE_API_V3 = "3";
