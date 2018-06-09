@@ -48,7 +48,7 @@ public class RemoteVideoSourceTest {
 
 		assertNotNull(videoList);
 		assertFalse(videoList.isEmpty());
-		assertEquals(3, videoList.size());
+		assertEquals(6, videoList.size());
 	}
 
 	@Test(expected = SourceException.class)

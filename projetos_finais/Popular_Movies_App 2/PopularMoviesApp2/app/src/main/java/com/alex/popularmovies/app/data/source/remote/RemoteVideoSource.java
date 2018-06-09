@@ -2,11 +2,11 @@ package com.alex.popularmovies.app.data.source.remote;
 
 import android.util.Log;
 import com.alex.popularmovies.app.data.model.Video;
+import com.alex.popularmovies.app.data.model.VideoType;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.remote.network.NetworkResource;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NetworkResourceException;
-import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -21,7 +21,13 @@ import java.util.List;
 public class RemoteVideoSource extends BaseRemoteSource<Video> {
 	private static final String TAG_NAME = RemoteVideoSource.class.getSimpleName();
 
-	private static final String VIDEO_JSON_KEY_AUTHOR = "author";
+	private static final String VIDEO_JSON_KEY_ISO_6391 = "iso_639_1";
+	private static final String VIDEO_JSON_KEY_ISO_31661 = "iso_3166_1";
+	private static final String VIDEO_JSON_KEY_KEY = "key";
+	private static final String VIDEO_JSON_KEY_NAME = "name";
+	private static final String VIDEO_JSON_KEY_SITE = "site";
+	private static final String VIDEO_JSON_KEY_SIZE = "size";
+	private static final String VIDEO_JSON_KEY_TYPE = "type";
 
 	public RemoteVideoSource(NetworkResource networkResource) {
 		super(networkResource);
@@ -33,7 +39,7 @@ public class RemoteVideoSource extends BaseRemoteSource<Video> {
 	}
 
 	@Override
-	public Video recover(Long id) throws SourceException, NullConnectionException {
+	public Video recover(Long id) throws SourceException {
 		throw new SourceException("Método não disponível para esta versao.");
 	}
 
@@ -91,13 +97,16 @@ public class RemoteVideoSource extends BaseRemoteSource<Video> {
 	@Override
 	protected Video parseJSONToModel(JSONObject jsonObject) throws Exception {
 		Video video = new Video();
-		video.setId(jsonObject.getLong(JSON_KEY_ID));
-//		video.setName(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR)); // TODO: 05/06/18 extrair keys e types from json
-//		video.setSite(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR));
-//		video.setSize(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR));
-//		video.setType(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR));
-//		video.setIso639_1(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR));
-//		video.setIso3166_1(jsonObject.getString(REVIEW_JSON_KEY_AUTHOR));
+		video.setIdApi(jsonObject.getString(JSON_KEY_ID));
+		video.setIso639_1(jsonObject.getString(VIDEO_JSON_KEY_ISO_6391));
+		video.setIso3166_1(jsonObject.getString(VIDEO_JSON_KEY_ISO_31661));
+		video.setKey(jsonObject.getString(VIDEO_JSON_KEY_KEY));
+		video.setName(jsonObject.getString(VIDEO_JSON_KEY_NAME));
+		video.setSite(jsonObject.getString(VIDEO_JSON_KEY_SITE));
+		video.setSize(jsonObject.getString(VIDEO_JSON_KEY_SIZE));
+		String videoTypeFromAPI = jsonObject.getString(VIDEO_JSON_KEY_TYPE);
+		VideoType videoType = VideoType.valueOf(videoTypeFromAPI.toUpperCase());
+		video.setType(videoType);
 
 		return video;
 	}

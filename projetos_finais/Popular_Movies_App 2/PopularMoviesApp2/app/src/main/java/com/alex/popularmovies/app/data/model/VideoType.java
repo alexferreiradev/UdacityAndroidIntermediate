@@ -4,9 +4,9 @@ package com.alex.popularmovies.app.data.model;
  * Created by alex on 27/05/18.
  */
 
-enum VideoType {
+public enum VideoType {
 
-	TRAILLER("Trailer"), TEASER("Teaser"), CLIP("Clip"), FEATURETTE("Featurette");
+	TRAILER("Trailer"), TEASER("Teaser"), CLIP("Clip"), FEATURETTE("Featurette");
 
 	private String key;
 
