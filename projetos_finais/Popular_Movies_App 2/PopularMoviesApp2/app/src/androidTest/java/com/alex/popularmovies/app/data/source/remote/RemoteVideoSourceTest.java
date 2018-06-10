@@ -2,7 +2,7 @@ package com.alex.popularmovies.app.data.source.remote;
 
 import android.support.test.runner.AndroidJUnit4;
 import com.alex.popularmovies.app.R;
-import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.Video;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.remote.network.NetworkResourceManager;
@@ -25,13 +25,13 @@ import static org.mockito.Mockito.*;
  * Created by alex on 31/05/18.
  */
 @RunWith(AndroidJUnit4.class)
-public class RemoteMovieSourceTest {
+public class RemoteVideoSourceTest {
 
 	@Mock(name = "mNetworkResource")
 	private NetworkResourceManager networkResource;
 
 	@InjectMocks
-	private RemoteMovieSource source;
+	private RemoteVideoSource source;
 
 	@Before
 	public void setUp() throws Exception {
@@ -40,15 +40,15 @@ public class RemoteMovieSourceTest {
 
 	@Test
 	public void recover() throws Exception {
-		InputStream fakeStream = getInstrumentation().getTargetContext().getResources().openRawResource(R.raw.movie_json_example);
-		String movieString = MoviesUtil.readStream(fakeStream);
-		when(networkResource.getStringResourceFromURL(any())).thenReturn(movieString);
+		InputStream fakeStream = getInstrumentation().getTargetContext().getResources().openRawResource(R.raw.video_json_example);
+		String videoString = MoviesUtil.readStream(fakeStream);
+		when(networkResource.getStringResourceFromURL(any())).thenReturn(videoString);
 		QuerySpecification querryMocked = mock(QuerySpecification.class);
-		List<Movie> movies = source.recover(querryMocked);
+		List<Video> videoList = source.recover(querryMocked);
 
-		assertNotNull(movies);
-		assertFalse(movies.isEmpty());
-		assertEquals(20, movies.size());
+		assertNotNull(videoList);
+		assertFalse(videoList.isEmpty());
+		assertEquals(6, videoList.size());
 	}
 
 	@Test(expected = SourceException.class)

@@ -10,6 +10,17 @@ import java.net.URL;
 
 public abstract class RemoteQuery extends BaseQuerySpec<URL> {
 
+	protected static final String API_MOVIE_PATH = "movie";
+	protected static final String API_MOVIE_REVIEW_PATH = "reviews";
+	protected static final String API_MOVIE_VIDEO_PATH = "videos";
+	protected static final String API_PARAM_APIKEY = "api_key";
+
+	protected static final String REMOTE_API_V3 = "3";
+	protected static final String REMOTE_API_AUTHORITY = "api.themoviedb.org";
+	protected static final String REMOTE_API_SCHEME = "http";
+	protected static final String API_PARAM_PAGE = "page";
+	protected static final int REMOTE_API_PAGE_SIZE = 20; // testado
+
 	public RemoteQuery(int mLimit, int mOffset) {
 		super(mLimit, mOffset);
 	}

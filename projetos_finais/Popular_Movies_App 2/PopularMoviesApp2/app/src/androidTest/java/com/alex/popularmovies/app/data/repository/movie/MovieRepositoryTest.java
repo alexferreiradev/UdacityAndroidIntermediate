@@ -3,11 +3,15 @@ package com.alex.popularmovies.app.data.repository.movie;
 import android.support.test.runner.AndroidJUnit4;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
+import com.alex.popularmovies.app.data.model.Review;
+import com.alex.popularmovies.app.data.model.Video;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
-import com.alex.popularmovies.app.data.source.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
+import com.alex.popularmovies.app.data.source.remote.RemoteReviewSource;
+import com.alex.popularmovies.app.data.source.remote.RemoteVideoSource;
+import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +39,10 @@ public class MovieRepositoryTest {
 	private RemoteMovieSource remoteSource;
 	@Mock(name = "mLocalSource")
 	private MovieSql localSource;
+	@Mock(name = "mRemoteReviewSource")
+	private RemoteReviewSource remoteReviewSource;
+	@Mock(name = "mRemoteVideoSource")
+	private RemoteVideoSource remoteVideoSource;
 	@Mock(name = "mCacheSource")
 	private MovieCache cacheSource = MovieCache.getInstance();
 
@@ -45,7 +53,7 @@ public class MovieRepositoryTest {
 	@Before
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		movieRepository = new MovieRepository(cacheSource, localSource, remoteSource);
+		movieRepository = new MovieRepository(cacheSource, localSource, remoteSource, remoteReviewSource, remoteVideoSource);
 	}
 
 	@Test
@@ -84,6 +92,28 @@ public class MovieRepositoryTest {
 
 		assertNotNull(movies);
 		assertFalse(movies.isEmpty());
+	}
+
+	@Test
+	public void test_review_by_movie() throws Exception {
+		List<Review> validReview = new ArrayList<>();
+		validReview.add(new Review());
+		when(remoteReviewSource.recover(any(QuerySpecification.class))).thenReturn(validReview);
+		List<Review> reviews = movieRepository.reviewListByMovie(1L, 0, 0);
+
+		assertNotNull(reviews);
+		assertFalse(reviews.isEmpty());
+	}
+
+	@Test
+	public void test_video_by_movie() throws Exception {
+		List<Video> validVideoList = new ArrayList<>();
+		validVideoList.add(new Video());
+		when(remoteVideoSource.recover(any(QuerySpecification.class))).thenReturn(validVideoList);
+		List<Video> reviews = movieRepository.videoListByMovie(1L, 0, 0);
+
+		assertNotNull(reviews);
+		assertFalse(reviews.isEmpty());
 	}
 
 	@Test(expected = DataException.class)

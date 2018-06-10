@@ -1,5 +1,9 @@
 package com.alex.popularmovies.app.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -58,5 +62,18 @@ public class MoviesUtil {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String readStream(InputStream stream) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "utf-8"));
+		StringBuilder stringBuilder = new StringBuilder();
+		do {
+			String line = bufferedReader.readLine();
+			if (line == null || !line.isEmpty()) {
+				stringBuilder.append(line);
+			}
+		} while (bufferedReader.ready());
+
+		return stringBuilder.toString();
 	}
 }

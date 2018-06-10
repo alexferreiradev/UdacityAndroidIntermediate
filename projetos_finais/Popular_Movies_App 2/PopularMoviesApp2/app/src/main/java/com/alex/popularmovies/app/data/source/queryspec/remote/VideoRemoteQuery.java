@@ -10,13 +10,13 @@ import java.net.URL;
  * Created by Alex on 02/04/2017.
  */
 
-public class MoviesRemoteQuery extends RemoteQuery {
+public class VideoRemoteQuery extends RemoteQuery {
 
-	private final MovieFilter mFilter;
+	private Long mMovieId;
 
-	public MoviesRemoteQuery(int mLimit, int mOffset, MovieFilter movieFilter) {
+	public VideoRemoteQuery(int mLimit, int mOffset, Long movieId) {
 		super(mLimit, mOffset);
-		this.mFilter = movieFilter;
+		mMovieId = movieId;
 	}
 
 	@Override
@@ -28,7 +28,8 @@ public class MoviesRemoteQuery extends RemoteQuery {
 				.authority(REMOTE_API_AUTHORITY)
 				.path(REMOTE_API_V3)
 				.appendPath(API_MOVIE_PATH)
-				.appendPath(mFilter.name().toLowerCase())
+				.appendPath(mMovieId.toString())
+				.appendPath(API_MOVIE_VIDEO_PATH)
 				.appendQueryParameter(API_PARAM_APIKEY, api_key)
 				.appendQueryParameter(API_PARAM_PAGE, page);
 
@@ -40,10 +41,5 @@ public class MoviesRemoteQuery extends RemoteQuery {
 		}
 
 		return null;
-	}
-
-	public enum MovieFilter {
-		POPULAR,
-		TOP_RATED
 	}
 }

@@ -2,14 +2,9 @@ package com.alex.popularmovies.app.data.source.remote;
 
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.source.DefaultSource;
-import com.alex.popularmovies.app.data.source.exception.NullConnectionException;
+import com.alex.popularmovies.app.data.source.remote.network.NetworkResource;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -18,29 +13,15 @@ import java.util.List;
 
 public abstract class BaseRemoteSource<ModelType extends BaseModel> implements DefaultSource<ModelType> {
 
-	public BaseRemoteSource() {
+	protected static final String JSON_KEY_RESULTS = "results";
+	protected static final String JSON_KEY_ID = "id";
+	protected NetworkResource mNetworkResource;
+
+	public BaseRemoteSource(NetworkResource networkResource) {
+		mNetworkResource = networkResource;
 	}
 
-	protected String readStream(InputStream stream) throws Exception {
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream, "utf-8"));
-		StringBuilder stringBuilder = new StringBuilder();
-		do {
-			String line = bufferedReader.readLine();
-			if (line == null || !line.isEmpty()) {
-				stringBuilder.append(line);
-			}
-		} while (bufferedReader.ready());
+	protected abstract List<ModelType> getModelListFromJsonResults(String jsonString);
 
-		return stringBuilder.toString();
-	}
-
-	protected void validateConnection(HttpURLConnection connection, URL url) throws NullConnectionException {
-		if (connection == null) {
-			throw new NullConnectionException("Não pode ser aberta conexão para URL: " + url);
-		}
-	}
-
-	protected abstract List<ModelType> getModelListFromJsonResults(String movieJsonString);
-
-	protected abstract ModelType parseJSONToModel(JSONObject movieJsonObject) throws Exception;
+	protected abstract ModelType parseJSONToModel(JSONObject jsonObject) throws Exception;
 }
