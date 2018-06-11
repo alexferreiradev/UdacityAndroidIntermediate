@@ -22,6 +22,7 @@ import com.alex.popularmovies.app.ui.adapter.ListViewAdaper;
 import com.alex.popularmovies.app.ui.adapter.MovieGridAdapter;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
+import com.alex.popularmovies.app.ui.view.moviedetail.DetailsActivity;
 
 import java.util.HashMap;
 import java.util.List;

@@ -13,6 +13,7 @@ import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery;
+import com.alex.popularmovies.app.data.source.queryspec.remote.VideoRemoteQuery;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 
 import java.net.URL;
@@ -136,7 +137,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		List<Video> videoList = new ArrayList<>();
 
 		try {
-			QuerySpecification<URL> querySpec = new ReviewRemoteQuery(limit, offset, movieId);
+			QuerySpecification<URL> querySpec = new VideoRemoteQuery(limit, offset, movieId);
 			videoList = mRemoteVideoSource.recover(querySpec);
 //			updateCache(reviewList, querySpec.getOffset()); // TODO: 02/06/18 Adicionar metodo update item
 		} catch (SourceException e) {
