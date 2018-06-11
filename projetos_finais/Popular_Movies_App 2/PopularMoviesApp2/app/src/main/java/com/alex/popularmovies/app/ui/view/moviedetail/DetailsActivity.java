@@ -1,9 +1,10 @@
-package com.alex.popularmovies.app.ui.view;
+package com.alex.popularmovies.app.ui.view.moviedetail;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View;
 import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
@@ -16,21 +17,17 @@ import com.alex.popularmovies.app.data.source.remote.network.NetworkResourceMana
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import com.alex.popularmovies.app.ui.presenter.detail.DetailContract;
 import com.alex.popularmovies.app.ui.presenter.detail.DetailPresenter;
-import com.alex.popularmovies.app.util.MovieImageUtil;
-
-import java.text.DecimalFormat;
-import java.util.Calendar;
+import com.alex.popularmovies.app.ui.view.BaseActivity;
 
 public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailContract.View {
 	public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
 	private static final String TAG = DetailsActivity.class.getSimpleName();
-	private TextView tvName;
-	private TextView tvYear;
-	private TextView tvRating;
-	private TextView tvSynopsis;
-	private ImageView ivMovieImage;
+
 
 	private long movieId = -1;
+	private View infoFragmentView;
+	private View videoFragmentView;
+	private View reviewFragmentView;
 
 	public DetailsActivity() {
 		super("Filme selecionado");
@@ -53,12 +50,9 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
 		super.initializeWidgets(savedInstanceState);
-
-		tvName = findViewById(R.id.tvMovieName);
-		tvRating = findViewById(R.id.tvMovieRating);
-		ivMovieImage = findViewById(R.id.ivMovieImage);
-		tvYear = findViewById(R.id.tvMovieYear);
-		tvSynopsis = findViewById(R.id.tvMovieSynopsis);
+		infoFragmentView = findViewById(R.id.infoContainer);
+		videoFragmentView = findViewById(R.id.videoContainer);
+		reviewFragmentView = findViewById(R.id.reviewContainer);
 	}
 
 	@Override
@@ -86,29 +80,40 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 	}
 
 	@Override
-	public void bindMovieViewData(Movie movie) {
+	public void setDataAndStartFragments(Movie movie) {
+		FragmentManager supportFragmentManager = getSupportFragmentManager();
+		FragmentTransaction transaction = supportFragmentManager.beginTransaction();
+		Bundle fragmentArgument = new Bundle();
+
+		if (infoFragmentView != null) {
+			InfoDetailsFragment infoDetailsFragment = new InfoDetailsFragment(mPresenter);
+			fragmentArgument.putSerializable(InfoDetailsFragment.MOVIE_ARG_KEY, movie);
+			infoDetailsFragment.setArguments(fragmentArgument);
+			mPresenter.setInfoView(infoDetailsFragment);
+			transaction.replace(R.id.infoContainer, infoDetailsFragment);
+		}
+		if (videoFragmentView != null) {
+			VideoDetailsFragment videoDetailsFragment = new VideoDetailsFragment(mPresenter);
+			fragmentArgument.putSerializable(VideoDetailsFragment.MOVIE_ARG_KEY, movie);
+			videoDetailsFragment.setArguments(fragmentArgument);
+			mPresenter.setVideoView(videoDetailsFragment);
+			transaction.replace(R.id.videoContainer, videoDetailsFragment);
+		}
+		if (reviewFragmentView != null) {
+			ReviewDetailsFragment reviewDetailsFragment = new ReviewDetailsFragment(mPresenter);
+			fragmentArgument.putSerializable(ReviewDetailsFragment.MOVIE_ARG_KEY, movie);
+			reviewDetailsFragment.setArguments(fragmentArgument);
+			mPresenter.setReviewView(reviewDetailsFragment);
+			transaction.replace(R.id.reviewContainer, reviewDetailsFragment);
+		}
+
+		transaction.commit();
 		this.mData = movie;
-		Log.d(TAG, "Fazendo bind de filme: " + movie.getId());
-
-		tvName.setText(movie.getTitle());
-		String popularityFormated = new DecimalFormat("#.#").format(movie.getRating());
-		String ratingFormatted = popularityFormated + "/" + getString(R.string.max_rating);
-		tvRating.setText(ratingFormatted);
-		MovieImageUtil.setImageViewWithPicasso(ivMovieImage, this, movie, MovieImageUtil.IMAGE_LENGTH_W_185);
-		tvSynopsis.setText(movie.getSynopsis());
-		Calendar instance = Calendar.getInstance();
-		instance.setTime(movie.getReleaseDate());
-		tvYear.setText(String.valueOf(instance.get(Calendar.YEAR)));
 	}
 
 	@Override
-	public void setFavOn() {
-		throw new RuntimeException("Função nao disponivel nesta versao");
-	}
-
-	@Override
-	public void setFavOff() {
-		throw new RuntimeException("Função nao disponivel nesta versao");
+	public Movie getData() {
+		return mData;
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 	protected Toolbar mToolbar;
 	protected String mTitle;
 
-	BaseActivity(String mTitle) {
+	public BaseActivity(String mTitle) {
 		this.mTitle = mTitle;
 	}
 
@@ -43,8 +43,8 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
-		mToolbar = (Toolbar) findViewById(R.id.myToolBar);
-		mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+		mToolbar = findViewById(R.id.myToolBar);
+		mProgressBar = findViewById(R.id.progressBar);
 		if (mProgressBar == null) {
 			throw new NullPointerException("A Activity não tem progressBar no layout.");
 		}

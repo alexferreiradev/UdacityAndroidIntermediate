@@ -3,7 +3,7 @@
 				xmlns:tools="http://schemas.android.com/tools"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
-				xmlns:app="http://schemas.android.com/apk/res-auto">
+>
 
 	<ProgressBar
 			android:id="@+id/progressBar"
@@ -12,12 +12,18 @@
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"/>
 
-	<android.support.v7.widget.Toolbar
-			android:id="@+id/myToolBar"
+	<TextView
+			android:id="@+id/tvEmpty"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-			app:title="@string/app_name"
-			tools:text="Popular Movies App"
-			style="@style/toobarActionBar"/>
+			android:layout_alignParentTop="true"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentRight="true"
+			android:gravity="center"
+			tools:text="Espere o carregamento"
+			style="@style/main.emptyText"
+			android:layout_alignParentStart="true"
+			android:layout_alignParentEnd="true"
+	/>
 
 </RelativeLayout>
