@@ -42,4 +42,8 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 
 		return list;
 	}
+
+	public void setmResolver(ContentResolver mResolver) {
+		this.mResolver = mResolver;
+	}
 }

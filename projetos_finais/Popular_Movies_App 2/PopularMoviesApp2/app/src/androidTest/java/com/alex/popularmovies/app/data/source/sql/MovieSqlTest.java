@@ -57,7 +57,7 @@ public class MovieSqlTest extends ProviderTestCase2<PMProvider> {
 		source.recover(1L);
 	}
 
-	@Ignore // TODO: 17/06/18 Erro de mock para mResolver. Não consegui mock
+	@Ignore // TODO: 17/06/18 Erro de mock para mResolver. Não consegui mock - método final.
 	@Test
 	public void recover() throws Exception {
 		Cursor cursorMock = mock(Cursor.class);
