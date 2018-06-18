@@ -29,10 +29,11 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 	protected abstract ModelType createModelFromCursor(Cursor cursor);
 
 	protected List<ModelType> createListModelFromCursor(Cursor cursor) {
-		List<ModelType> list = new ArrayList<ModelType>();
+		List<ModelType> list = new ArrayList<>();
 
-		if (cursor == null || !cursor.moveToFirst())
+		if (cursor == null || !cursor.moveToFirst()) {
 			return list;
+		}
 
 		do {
 			ModelType model = createModelFromCursor(cursor);

@@ -28,36 +28,44 @@ public class PMContract {
 
 	public static final String CONTENT_AUTHORITY = "com.alex.popularmovies.app";
 
-	public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-
-	public static final String PATH_MOVIE = MovieEntry.TABLE_NAME;
+	protected static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 	public static final class MovieEntry implements BaseColumns {
 
 		public static final String TABLE_NAME = "movie";
-		public static final String COLUMN_KEY = TABLE_NAME.concat(_ID);
 
-		public static final String COLUMN_IMDB_ID = "imdb_id";
-		public static final String COLUMN_BACKDROP_PATH = "backdrop_path";
 		public static final String COLUMN_TITLE = "title";
-		public static final String COLUMN_ORIGINAL_TITLE = "original_title";
-		public static final String COLUMN_OVERVIEW = "overview";
-		public static final String COLUMN_VOTE_COUNT = "vote_count";
+		public static final String COLUMN_POSTER_PATH = "poster_path";
+		public static final String COLUMN_THUMBNAIL_PATH = "thumbnail_path";
+		public static final String COLUMN_SYNOPSYS = "synopsys";
+		public static final String COLUMN_RATING = "rating";
 		public static final String COLUMN_RELEASE_DATE = "release_date";
-		public static final String COLUMN_VOTE_AVERAGE = "vote_average";
-		public static final String COLUMN_POPULARITY = "popularity";
+		public static final String COLUMN_IS_FAVORITE = "is_favorite";
 
-		public static final Uri CONTENT_URI =
-				BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIE).build();
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
-		public static final String CONTENT_TYPE =
-				ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
-
-		public static final String CONTENT_ITEM_TYPE =
-				ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_MOVIE;
 
 		public static Uri buildMovieUri(long id) {
 			return ContentUris.withAppendedId(CONTENT_URI, id);
+		}
+
+		public static String createTableSql() {
+			return "create table " + TABLE_NAME + "(" +
+					_ID + " integer auto increment primary key, " +
+					COLUMN_TITLE + " text, " +
+					COLUMN_POSTER_PATH + " text, " +
+					COLUMN_THUMBNAIL_PATH + " text, " +
+					COLUMN_SYNOPSYS + " text, " +
+					COLUMN_RATING + " real, " +
+					COLUMN_RELEASE_DATE + " date, " + // TODO: 17/06/18 ver tipo na doc ofcial
+					COLUMN_IS_FAVORITE + " bool" +
+					")";
+		}
+
+		public static String dropTableSql() {
+			return "drop table if exists " + TABLE_NAME;
 		}
 	}
 

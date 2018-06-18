@@ -3,10 +3,13 @@ package com.alex.popularmovies.app.data.source.sql;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
+import com.alex.popularmovies.app.data.source.queryspec.sql.SqlQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +17,7 @@ import java.util.List;
  */
 
 public class MovieSql extends BaseSqlSource<Movie> {
+	private static final String TAG = MovieSql.class.getSimpleName();
 
 	public MovieSql(Context context) {
 		super(context);
@@ -31,7 +35,20 @@ public class MovieSql extends BaseSqlSource<Movie> {
 
 	@Override
 	public List<Movie> recover(QuerySpecification specification) throws SourceException {
-		throw new SourceException("Metodo nao disponivel para esta versao");
+		List<Movie> movieList = new ArrayList<>();
+
+		try {
+			SqlQuery query = (SqlQuery) specification.getQuery();
+			Cursor cursor = mResolver.query(query.getUri(), query.getProjection(), query.getSelection(), query.getSelectionArgs(), query.getSort());
+			assert cursor != null;
+			movieList = createListModelFromCursor(cursor);
+			cursor.close();
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: " + e.getMessage());
+			throw new SourceException("Erro desconhecido: " + e.getMessage(), e);
+		}
+
+		return movieList;
 	}
 
 	@Override

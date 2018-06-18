@@ -4,32 +4,32 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
 public class PMProvider extends ContentProvider {
 
-	private static final int ALL_MOVIES = 100;
+	protected static final int ALL_MOVIES = 100;
+	protected static final int MOVIE_BY_ID = 101;
 
-	private static final UriMatcher sUriMacher = buildMacher();
+	protected static final UriMatcher sUriMacher = buildMacher();
+	private SQLiteOpenHelper mSqlHelper;
 
 	private static UriMatcher buildMacher() {
 		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-		uriMatcher.addURI(PMContract.CONTENT_AUTHORITY, PMContract.PATH_MOVIE, ALL_MOVIES);
+		uriMatcher.addURI(PMContract.CONTENT_AUTHORITY, PMContract.MovieEntry.TABLE_NAME, ALL_MOVIES);
+		uriMatcher.addURI(PMContract.CONTENT_AUTHORITY, PMContract.MovieEntry.TABLE_NAME + "/#", MOVIE_BY_ID);
 
 		return uriMatcher;
 	}
-
-	public PMProvider() {
-	}
-
 
 	@Override
 	public int delete(Uri uri, String selection, String[] selectionArgs) {
 		// Implement this to handle requests to delete one or more rows.
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
-
 //                getContext().getContentResolver().notifyChange(mUri, );
 				break;
 			default:
@@ -61,8 +61,18 @@ public class PMProvider extends ContentProvider {
 	@Override
 	public Cursor query(Uri uri, String[] projection, String selection,
 						String[] selectionArgs, String sortOrder) {
-		// TODO: Implement this to handle query requests from clients.
-		throw new UnsupportedOperationException("Not yet implemented");
+		Cursor cursor = null;
+		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
+
+		switch (sUriMacher.match(uri)) {
+			case ALL_MOVIES:
+				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+				readDb.close();
+//				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
+				break;
+		}
+
+		return cursor;
 	}
 
 	@Override
@@ -70,5 +80,9 @@ public class PMProvider extends ContentProvider {
 					  String[] selectionArgs) {
 		// TODO: Implement this to handle requests to update one or more rows.
 		throw new UnsupportedOperationException("Not yet implemented");
+	}
+
+	public void setmSqlHelper(SQLiteOpenHelper mSqlHelper) {
+		this.mSqlHelper = mSqlHelper;
 	}
 }
