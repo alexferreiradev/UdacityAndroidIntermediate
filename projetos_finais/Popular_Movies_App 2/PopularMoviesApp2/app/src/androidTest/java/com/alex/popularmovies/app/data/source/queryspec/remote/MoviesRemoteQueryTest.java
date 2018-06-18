@@ -1,6 +1,7 @@
 package com.alex.popularmovies.app.data.source.queryspec.remote;
 
 import android.support.test.runner.AndroidJUnit4;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +22,7 @@ public class MoviesRemoteQueryTest {
 
 	@Before
 	public void setUp() throws Exception {
-		spec = new MoviesRemoteQuery(0, 0, MoviesRemoteQuery.MovieFilter.POPULAR);
+		spec = new MoviesRemoteQuery(0, 0, MovieRepository.MovieFilter.POPULAR);
 	}
 
 	@Test

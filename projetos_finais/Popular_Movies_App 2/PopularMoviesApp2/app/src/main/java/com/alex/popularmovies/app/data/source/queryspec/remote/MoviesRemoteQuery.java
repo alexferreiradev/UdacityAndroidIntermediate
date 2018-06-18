@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.data.source.queryspec.remote;
 
 import android.net.Uri;
 import com.alex.popularmovies.app.BuildConfig;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,9 +13,9 @@ import java.net.URL;
 
 public class MoviesRemoteQuery extends RemoteQuery {
 
-	private final MovieFilter mFilter;
+	private final MovieRepository.MovieFilter mFilter;
 
-	public MoviesRemoteQuery(int mLimit, int mOffset, MovieFilter movieFilter) {
+	public MoviesRemoteQuery(int mLimit, int mOffset, MovieRepository.MovieFilter movieFilter) {
 		super(mLimit, mOffset);
 		this.mFilter = movieFilter;
 	}
@@ -40,10 +41,5 @@ public class MoviesRemoteQuery extends RemoteQuery {
 		}
 
 		return null;
-	}
-
-	public enum MovieFilter {
-		POPULAR,
-		TOP_RATED
 	}
 }

@@ -14,6 +14,7 @@ import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.VideoRemoteQuery;
+import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 
 import java.net.URL;
@@ -106,12 +107,38 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Movie> moviesByPopularity(int limit, int offset) throws DataException {
-		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.POPULAR, limit, offset);
+		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, MovieFilter.POPULAR);
+		return getMoviesByQuery(querySpec);
 	}
 
 	@Override
 	public List<Movie> moviesByTopRate(int limit, int offset) throws DataException {
-		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.TOP_RATED, limit, offset);
+		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, MovieFilter.TOP_RATED);
+		return getMoviesByQuery(querySpec);
+	}
+
+	@Override
+	public List<Movie> favoriteMovieList(int limit, int offset, MovieFilter filter) throws DataException {
+		List<Movie> movies = new ArrayList<>();
+
+		try {
+			if (filter == null) {
+				filter = MovieFilter.POPULAR;
+			}
+
+			MoviesLocalQuery querySpecification = new MoviesLocalQuery(limit, offset, filter);
+
+			movies = mLocalSource.recover(querySpecification);
+			setCacheToDirty();
+			updateCache(movies, querySpecification.getOffset());
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return movies;
 	}
 
 	@Override
@@ -160,13 +187,12 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		return mCacheSource.isDirty() ? new ArrayList<>() : mCacheSource.getCache();
 	}
 
-	private List<Movie> getMoviesByFilter(MoviesRemoteQuery.MovieFilter filter, int limit, int offset) throws DataException {
+	private List<Movie> getMoviesByQuery(QuerySpecification querySpecification) throws DataException {
 		List<Movie> movies = new ArrayList<>();
 
 		try {
-			RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, filter);
-			movies = mRemoteSource.recover(querySpec);
-			updateCache(movies, querySpec.getOffset());
+			movies = mRemoteSource.recover(querySpecification);
+			updateCache(movies, querySpecification.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (Exception e) {
@@ -180,5 +206,11 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	@Override
 	public void setCacheToDirty() {
 		mCacheSource.setDirty(true);
+	}
+
+	public enum MovieFilter {
+		POPULAR,
+		TOP_RATED,
+		FAVORITE,
 	}
 }

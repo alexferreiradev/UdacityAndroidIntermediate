@@ -8,6 +8,7 @@ import com.alex.popularmovies.app.data.model.Video;
 import com.alex.popularmovies.app.data.source.cache.MovieCache;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
+import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
 import com.alex.popularmovies.app.data.source.remote.RemoteReviewSource;
 import com.alex.popularmovies.app.data.source.remote.RemoteVideoSource;
@@ -26,8 +27,7 @@ import java.util.List;
 import static junit.framework.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Created by alex on 31/05/18.
@@ -92,6 +92,22 @@ public class MovieRepositoryTest {
 
 		assertNotNull(movies);
 		assertFalse(movies.isEmpty());
+	}
+
+	@Test
+	public void test_list_favorite() throws Exception {
+		List<Movie> validMovies = new ArrayList<>();
+		validMovies.add(new Movie());
+		MoviesLocalQuery localQuery = new MoviesLocalQuery(0, 0, MovieRepository.MovieFilter.POPULAR);
+		when(localSource.recover(localQuery)).thenReturn(validMovies);
+		when(cacheSource.isNewCache()).thenReturn(true);
+		doNothing().when(cacheSource).updateCacheTo(validMovies);
+
+		List<Movie> movies = movieRepository.favoriteMovieList(0, 0, MovieRepository.MovieFilter.POPULAR);
+
+		assertNotNull(movies);
+		assertFalse(movies.isEmpty());
+		assertEquals(1, movies.size());
 	}
 
 	@Test
