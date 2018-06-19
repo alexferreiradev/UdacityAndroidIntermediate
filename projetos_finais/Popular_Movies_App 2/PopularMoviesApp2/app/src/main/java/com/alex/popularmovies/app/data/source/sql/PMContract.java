@@ -43,6 +43,7 @@ public class PMContract {
 		public static final String COLUMN_IS_FAVORITE = "is_favorite";
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 

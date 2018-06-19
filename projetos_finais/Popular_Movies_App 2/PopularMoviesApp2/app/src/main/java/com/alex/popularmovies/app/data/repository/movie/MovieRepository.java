@@ -57,7 +57,20 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public Movie create(Movie model) throws DataException {
-		throw new DataException("Metodo não permitido para esta versao");
+		try {
+			if (model == null) {
+				return null;
+			}
+
+			Long id = model.getId();
+			if (id == null) {
+				return mLocalSource.create(model);
+			}
+		} catch (SourceException e) {
+			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um filme");
+		}
+
+		return null;
 	}
 
 	@Override
@@ -74,10 +87,10 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 
 			if (mCacheSource.isDirty()) {
-				Log.d(TAG, "Buscando filme em fonte remota.");
-				movie = mRemoteSource.recover(id);
+				Log.d(TAG, "Buscando filme em favoritos.");
+				movie = mLocalSource.recover(id);
 				if (movie == null) {
-					Log.w(TAG, "Filme com id: " + id + " não existe em nenhuma fonte disponível.");
+					Log.w(TAG, "Filme com id: " + id + " não foi encontrado no banco.");
 				}
 			}
 
@@ -97,7 +110,22 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public Movie update(Movie model) throws DataException {
-		throw new DataException("Metodo não permitido para esta versao");
+		try {
+			if (model == null) {
+				return null;
+			}
+
+			Long id = model.getId();
+			if (id == null) {
+				throw new DataException("Objeto não existe para ser atualizado. Model sem ID");
+			} else {
+				return mLocalSource.update(model);
+			}
+		} catch (SourceException e) {
+			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um model");
+		}
+
+		return null;
 	}
 
 	@Override

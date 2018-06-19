@@ -59,10 +59,11 @@ public class MovieRepositoryTest {
 	@Test
 	public void test_recover() throws DataException, SourceException, NullConnectionException {
 		Movie movieMock = mock(Movie.class);
+
 		when(movieMock.getId()).thenReturn(2L);
 		when(cacheSource.recover(anyLong())).thenReturn(null);
 		when(cacheSource.isDirty()).thenReturn(true);
-		when(remoteSource.recover(anyLong())).thenReturn(movieMock);
+		when(localSource.recover(anyLong())).thenReturn(movieMock);
 
 		Movie movie = movieRepository.recover(1L);
 
@@ -137,9 +138,18 @@ public class MovieRepositoryTest {
 		movieRepository.update(null);
 	}
 
-	@Test(expected = DataException.class)
-	public void test_create() throws DataException {
-		movieRepository.create(null);
+	@Test
+	public void test_create() throws Exception {
+		Movie movieMock = mock(Movie.class);
+		Movie movieMockAnswer = mock(Movie.class);
+		when(localSource.create(movieMock)).thenReturn(movieMockAnswer);
+		when(movieMock.getId()).thenReturn(null);
+		when(movieMockAnswer.getId()).thenReturn(2L);
+
+		Movie movieResult = movieRepository.create(movieMock);
+
+		assertNotNull(movieResult);
+		assertEquals(new Long(2L), movieResult.getId());
 	}
 
 	@Test(expected = DataException.class)

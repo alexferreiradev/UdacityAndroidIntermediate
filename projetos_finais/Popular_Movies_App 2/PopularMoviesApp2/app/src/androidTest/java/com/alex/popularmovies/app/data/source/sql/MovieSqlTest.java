@@ -49,7 +49,16 @@ public class MovieSqlTest extends ProviderTestCase2<PMProvider> {
 
 	@Test(expected = SourceException.class)
 	public void create() throws Exception {
-		source.create(null);
+		Movie movieMock = mock(Movie.class);
+		Movie movieAnswer = mock(Movie.class);
+
+		when(movieMock.getId()).thenReturn(null);
+		when(movieAnswer.getId()).thenReturn(2L);
+
+		Movie movieResult = source.create(movieMock);
+
+		assertNotNull(movieResult);
+		assertEquals(new Long(2L), movieResult.getId());
 	}
 
 	@Test(expected = SourceException.class)
