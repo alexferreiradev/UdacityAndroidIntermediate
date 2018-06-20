@@ -51,7 +51,7 @@ public class MovieCache extends BaseCache<Movie> {
 		}
 
 		for (Movie movie : mCache) {
-			if (movie.getId().equals(id)) {
+			if (movie.getIdFromApi().equals(id)) {
 				return movie;
 			}
 		}
@@ -76,7 +76,7 @@ public class MovieCache extends BaseCache<Movie> {
 
 	@Override
 	protected void createCache() {
-		mCache = new ArrayList<Movie>();
+		mCache = new ArrayList<>();
 	}
 
 	@Override

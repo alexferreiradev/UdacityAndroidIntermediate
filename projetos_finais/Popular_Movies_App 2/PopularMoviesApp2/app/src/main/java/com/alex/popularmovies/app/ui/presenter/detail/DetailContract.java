@@ -39,21 +39,18 @@ public interface DetailContract {
 		void closeAndShowMovieGrid();
 	}
 
-	public interface InfoView extends SimpleFragment<Movie> {
+	interface InfoView extends SimpleFragment<Movie> {
 
-		void markMovieFavorite();
-
-		void unFavoriteMovie();
-
+		void updateFavoriteMovieStatus(Movie movie);
 	}
 
-	public interface VideoView extends SimpleFragment<List<Video>> {
+	interface VideoView extends SimpleFragment<List<Video>> {
 
 		void openVideo(Video video);
 
 	}
 
-	public interface ReviewView extends SimpleFragment<List<Review>> {
+	interface ReviewView extends SimpleFragment<List<Review>> {
 
 		void openReview(Review review);
 

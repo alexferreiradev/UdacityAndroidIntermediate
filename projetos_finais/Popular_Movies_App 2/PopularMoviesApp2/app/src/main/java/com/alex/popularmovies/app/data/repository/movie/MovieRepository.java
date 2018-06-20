@@ -65,6 +65,8 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			Long id = model.getId();
 			if (id == null) {
 				return mLocalSource.create(model);
+			} else {
+				throw new SourceException("Filme já existe na base local.");
 			}
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um filme");
@@ -150,21 +152,20 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		try {
 			if (movie == null) {
 				throw new DataException("Filme para ser atualizado estado de favorito nulo");
-			} else if (movie.getId() == null) {
-				movie = mLocalSource.create(movie);
 			} else {
-				Movie movieFound = mLocalSource.recover(movie.getId());
-				if (movieFound == null) {
-					throw new DataException("Filme com id: " + movie.getId() + " não foi encontrado no banco local");
-				}
+				if (movie.isFavorite()) {
+					movie = mLocalSource.create(movie);
+				} else {
+					if (movie.getId() == null) {
+						throw new DataException("Filme para ser removido dos favoritos com id null");
+					}
 
-				movie = mLocalSource.update(movie);
+					movie = mLocalSource.delete(movie);
+				}
 			}
 		} catch (DataException e) {
 			throw e;
 		} catch (SourceException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (NullConnectionException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);

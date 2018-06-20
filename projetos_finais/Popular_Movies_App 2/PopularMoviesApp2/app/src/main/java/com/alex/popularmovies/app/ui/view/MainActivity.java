@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	@Override
 	public void showDataView(Movie data) {
 		Intent intent = new Intent(this, DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EXTRA_PARAM_MOVIE_ID, data.getId());
+		intent.putExtra(DetailsActivity.EXTRA_PARAM_MOVIE_ID, data.getIdFromApi());
 		startActivity(intent);
 	}
 

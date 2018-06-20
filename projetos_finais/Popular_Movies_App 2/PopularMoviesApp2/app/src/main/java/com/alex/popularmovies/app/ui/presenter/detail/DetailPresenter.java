@@ -37,20 +37,9 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 	}
 
 	@Override
-	public void favoriteMovie(Movie movie) {
-
-	}
-
-	@Override
-	public void unFavoriteMovie(Movie movie) {
-
-	}
-
-	@Override
 	public void loadMovie() {
 		mInfoView.showProgressBar(-1);
-		Movie data = mView.getData();
-		mInfoView.startView(data);
+		mInfoView.startView(null);
 		mInfoView.hideProgressBar();
 	}
 
@@ -99,6 +88,13 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 		mReviewView = view;
 	}
 
+	@Override
+	public void updateMovieFavoriteStatus(Movie movie, boolean newStatus) {
+		movie.setFavorite(newStatus);
+		UpdateFavoriteMovieStatus updateFavoriteMovieStatus = new UpdateFavoriteMovieStatus(this);
+		updateFavoriteMovieStatus.execute(movie);
+	}
+
 	@Nullable
 	private Movie getMovieFromRepository(Long movieId) {
 		try {
@@ -112,9 +108,9 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 
 	private List<Video> getVideosFromRepository(Movie movie) {
 		try {
-			return mRepository.videoListByMovie(movie.getId(), 0, 0);
+			return mRepository.videoListByMovie(movie.getIdFromApi(), 0, 0);
 		} catch (DataException e) {
-			Log.e(TAG, "Erro ao tentar carregar videos para o filme: " + movie.getId(), e);
+			Log.e(TAG, "Erro ao tentar carregar videos para o filme: " + movie.getIdFromApi(), e);
 		}
 
 		return null;
@@ -122,9 +118,9 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 
 	private List<Review> loadReviewsFromRepo(Movie movie) {
 		try {
-			return mRepository.reviewListByMovie(movie.getId(), 0, 0);
+			return mRepository.reviewListByMovie(movie.getIdFromApi(), 0, 0);
 		} catch (DataException e) {
-			Log.e(TAG, "Erro ao tentar carregar comentarios para o filme: " + movie.getId(), e);
+			Log.e(TAG, "Erro ao tentar carregar comentarios para o filme: " + movie.getIdFromApi(), e);
 		}
 
 		return null;
@@ -159,6 +155,16 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 		}
 	}
 
+	private Movie updateMovieFavoriteStatusInRepo(Movie movie) {
+		try {
+			return mRepository.updateMovieFavoriteStatus(movie);
+		} catch (DataException e) {
+			Log.e(TAG, "Erro ao tentar alterar status do filme: " + movie.getTitle(), e);
+		}
+
+		return null;
+	}
+
 	private static class FindVideoByMovie extends AsyncTask<Movie, Integer, List<Video>> {
 		private DetailPresenter presenter;
 
@@ -180,6 +186,7 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 		protected void onPostExecute(List<Video> videos) {
 			if (videos == null) {
 				Log.e(TAG, "Ocorreu algum erro no repositorio, os videos não foram carregados");
+				presenter.mView.showErrorMsg("Videos de filme não poderam ser carregado");
 				return;
 			}
 
@@ -210,11 +217,49 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 		protected void onPostExecute(List<Review> reviewList) {
 			if (reviewList == null) {
 				Log.e(TAG, "Ocorreu algum erro no repositorio, os comentarios do video não foram carregados");
+				presenter.mView.showErrorMsg("Comentario de filme não pode ser carregado");
 				return;
 			}
 
 			presenter.mReviewView.hideProgressBar();
 			presenter.mReviewView.startView(reviewList);
+		}
+
+	}
+
+	private static class UpdateFavoriteMovieStatus extends AsyncTask<Movie, Integer, Movie> {
+		private DetailPresenter presenter;
+
+		UpdateFavoriteMovieStatus(DetailPresenter presenter) {
+			this.presenter = presenter;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			presenter.mInfoView.showProgressBar(-1);
+		}
+
+		@Override
+		protected Movie doInBackground(Movie... movies) {
+			return presenter.updateMovieFavoriteStatusInRepo(movies[0]);
+		}
+
+		@Override
+		protected void onPostExecute(Movie movie) {
+			if (movie == null) {
+				Log.e(TAG, "Ocorreu algum erro no repositorio ao tentar atualizar o estado de favorito do filme");
+				presenter.mView.showErrorMsg("Filme não pode ser atualizado");
+				return;
+			}
+
+			if (movie.isFavorite()) {
+				presenter.mView.showSuccessMsg("Filme favoritado");
+			} else {
+				presenter.mView.showSuccessMsg("Filme removido dos favoritos");
+			}
+
+			presenter.mInfoView.hideProgressBar();
+			presenter.mInfoView.updateFavoriteMovieStatus(movie);
 		}
 
 	}

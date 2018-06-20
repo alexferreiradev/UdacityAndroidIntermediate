@@ -5,9 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.alex.popularmovies.app.R;
@@ -44,6 +42,7 @@ public class InfoDetailsFragment extends BaseFragment<Movie, InfoDetailsFragment
 
 		this.mMovie = movie;
 		presenter.loadMovie();
+		setHasOptionsMenu(true);
 	}
 
 	@Nullable
@@ -62,15 +61,15 @@ public class InfoDetailsFragment extends BaseFragment<Movie, InfoDetailsFragment
 
 	@Override
 	public void startView(Movie model) throws IllegalArgumentException {
-		Log.d(TAG, "Fazendo bind de filme: " + model.getId());
-		tvName.setText(model.getTitle());
-		String popularityFormated = new DecimalFormat("#.#").format(model.getRating());
+		Log.d(TAG, "Fazendo bind de filme: " + mMovie.getIdFromApi());
+		tvName.setText(mMovie.getTitle());
+		String popularityFormated = new DecimalFormat("#.#").format(mMovie.getRating());
 		String ratingFormatted = popularityFormated + "/" + getString(R.string.max_rating);
 		tvRating.setText(ratingFormatted);
-		MovieImageUtil.setImageViewWithPicasso(ivMovieImage, getContext(), model, MovieImageUtil.IMAGE_LENGTH_W_185);
-		tvSynopsis.setText(model.getSynopsis());
+		MovieImageUtil.setImageViewWithPicasso(ivMovieImage, getContext(), mMovie, MovieImageUtil.IMAGE_LENGTH_W_185);
+		tvSynopsis.setText(mMovie.getSynopsis());
 		Calendar instance = Calendar.getInstance();
-		instance.setTime(model.getReleaseDate());
+		instance.setTime(mMovie.getReleaseDate());
 		tvYear.setText(String.valueOf(instance.get(Calendar.YEAR)));
 	}
 
@@ -79,22 +78,58 @@ public class InfoDetailsFragment extends BaseFragment<Movie, InfoDetailsFragment
 		return mMovie;
 	}
 
-
 	@Override
-	public void markMovieFavorite() {
-
+	public void updateFavoriteMovieStatus(Movie movie) {
+		mMovie = movie;
+		assert getActivity() != null;
+		getActivity().invalidateOptionsMenu();
 	}
 
 	@Override
-	public void unFavoriteMovie() {
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.menu_info_details_fragment, menu);
+	}
 
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem item = menu.findItem(R.id.actionFavoriteMovie);
+		if (item != null) {
+			if (mMovie != null && mMovie.isFavorite()) {
+				item.setIcon(getResources().getDrawable(R.drawable.ic_local_movies_black)); // TODO: 20/06/18 trocar para estrela
+				item.setTitle(R.string.detail_mark_fav_off);
+			} else {
+				item.setIcon(getResources().getDrawable(R.drawable.ic_local_movies_black)); // TODO: 20/06/18 trocar para estrela apagada
+				item.setTitle(R.string.detail_mark_fav_on);
+			}
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+
+		switch (item.getItemId()) {
+			case R.id.actionFavoriteMovie:
+				if (mMovie != null) {
+					if (mMovie.isFavorite()) {
+						Log.i(TAG, "Selecionando filme para não favorito." + mMovie.getIdFromApi());
+						presenter.updateMovieFavoriteStatus(mMovie, false);
+					} else {
+						Log.i(TAG, "Selecionando filme para favorito: " + mMovie.getIdFromApi());
+						presenter.updateMovieFavoriteStatus(mMovie, true);
+					}
+				}
+				return true;
+		}
+
+		return false;
 	}
 
 	public interface InfoFragmentCallbacks extends IPresenter {
 
-		void favoriteMovie(Movie movie);
-
-		void unFavoriteMovie(Movie movie);
+		void updateMovieFavoriteStatus(Movie movie, boolean newStatus);
 
 		void loadMovie();
 

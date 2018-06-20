@@ -36,7 +36,7 @@ public class PMProvider extends ContentProvider {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = readDb.delete(PMContract.MovieEntry.TABLE_NAME, "id = ?", selectionArgs);
+				int rowsUpdated = readDb.delete(PMContract.MovieEntry.TABLE_NAME, "_id = ?", selectionArgs);
 				readDb.close();
 
 //                getContext().getContentResolver().notifyChange(mUri, );
@@ -53,7 +53,7 @@ public class PMProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
-		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
+		SQLiteDatabase readDb = mSqlHelper.getWritableDatabase();
 
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
@@ -106,7 +106,7 @@ public class PMProvider extends ContentProvider {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "id = ?", selectionArgs);
+				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
 				writerDb.close();
 
 //                getContext().getContentResolver().notifyChange(mUri, );

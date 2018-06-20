@@ -34,6 +34,7 @@ public class PMContract {
 
 		public static final String TABLE_NAME = "movie";
 
+		public static final String COLUMN_ID_FROM_API = "id_from_api";
 		public static final String COLUMN_TITLE = "title";
 		public static final String COLUMN_POSTER_PATH = "poster_path";
 		public static final String COLUMN_THUMBNAIL_PATH = "thumbnail_path";
@@ -54,13 +55,14 @@ public class PMContract {
 
 		public static String createTableSql() {
 			return "create table " + TABLE_NAME + "(" +
-					_ID + " integer auto increment primary key, " +
+					_ID + " integer primary key autoincrement, " +
+					COLUMN_ID_FROM_API + " integer unique, " +
 					COLUMN_TITLE + " text, " +
 					COLUMN_POSTER_PATH + " text, " +
 					COLUMN_THUMBNAIL_PATH + " text, " +
 					COLUMN_SYNOPSYS + " text, " +
 					COLUMN_RATING + " real, " +
-					COLUMN_RELEASE_DATE + " date, " + // TODO: 17/06/18 ver tipo na doc ofcial
+					COLUMN_RELEASE_DATE + " integer, " + // TODO: 17/06/18 ver tipo na doc ofcial
 					COLUMN_IS_FAVORITE + " bool" +
 					")";
 		}

@@ -45,7 +45,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	@Override
 	public void selectItemClicked(Movie item, int pos) {
-		Log.i(TAG, "Filme selecionado: " + item.getId());
+		Log.i(TAG, "Filme selecionado: " + item.getIdFromApi());
 		lastPosSelectedInGrid = pos;
 
 		mView.showDataView(item);

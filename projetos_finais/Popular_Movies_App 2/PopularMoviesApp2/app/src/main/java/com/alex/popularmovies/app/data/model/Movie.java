@@ -24,6 +24,7 @@ public class Movie extends BaseModel<Movie> {
 	 * videos
 	 * reviews
 	 */
+	private Long idFromApi;
 	private String title; // "original_title": "Lock, Stock and Two Smoking Barrels"
 	private String posterPath; // "poster_path": "/qV7QaSf7f7yC2lc985zfyOJIAIN.jpg"
 	private String thumbnailPath; // "backdrop_path": "/kzeR7BA0htJ7BeI6QEUX3PVp39s.jpg"
@@ -40,22 +41,13 @@ public class Movie extends BaseModel<Movie> {
 	public Movie() {
 	}
 
-	public Movie(String title, String posterPath, String thumbnailPath, String synopsis, double rating, Date releaseDate, boolean favorite, Bitmap poster, Bitmap thumbnail) {
-		this.title = title;
-		this.posterPath = posterPath;
-		this.thumbnailPath = thumbnailPath;
-		this.synopsis = synopsis;
-		this.rating = rating;
-		this.releaseDate = releaseDate;
-		this.favorite = favorite;
-		this.poster = poster;
-		this.thumbnail = thumbnail;
+	public Long getIdFromApi() {
+
+		return idFromApi;
 	}
 
-	public Movie(String title, String posterPath, String thumbnailPath, String synopsis, double rating, Date releaseDate, boolean favorite, Bitmap poster, Bitmap thumbnail, List<Video> videos, List<Review> reviews) {
-		this(title, posterPath, thumbnailPath, synopsis, rating, releaseDate, favorite, poster, thumbnail);
-		this.videos = videos;
-		this.reviews = reviews;
+	public void setIdFromApi(Long idFromApi) {
+		this.idFromApi = idFromApi;
 	}
 
 	public String getTitle() {
@@ -148,6 +140,7 @@ public class Movie extends BaseModel<Movie> {
 
 	@Override
 	public boolean equals(Object o) {
+
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
@@ -155,20 +148,24 @@ public class Movie extends BaseModel<Movie> {
 
 		if (Double.compare(movie.rating, rating) != 0) return false;
 		if (favorite != movie.favorite) return false;
+		if (idFromApi != null ? !idFromApi.equals(movie.idFromApi) : movie.idFromApi != null) return false;
 		if (title != null ? !title.equals(movie.title) : movie.title != null) return false;
 		if (posterPath != null ? !posterPath.equals(movie.posterPath) : movie.posterPath != null) return false;
 		if (thumbnailPath != null ? !thumbnailPath.equals(movie.thumbnailPath) : movie.thumbnailPath != null) return false;
 		if (synopsis != null ? !synopsis.equals(movie.synopsis) : movie.synopsis != null) return false;
 		if (releaseDate != null ? !releaseDate.equals(movie.releaseDate) : movie.releaseDate != null) return false;
 		if (poster != null ? !poster.equals(movie.poster) : movie.poster != null) return false;
-		return thumbnail != null ? thumbnail.equals(movie.thumbnail) : movie.thumbnail == null;
+		if (thumbnail != null ? !thumbnail.equals(movie.thumbnail) : movie.thumbnail != null) return false;
+		if (videos != null ? !videos.equals(movie.videos) : movie.videos != null) return false;
+		return reviews != null ? reviews.equals(movie.reviews) : movie.reviews == null;
 	}
 
 	@Override
 	public int hashCode() {
 		int result;
 		long temp;
-		result = title != null ? title.hashCode() : 0;
+		result = idFromApi != null ? idFromApi.hashCode() : 0;
+		result = 31 * result + (title != null ? title.hashCode() : 0);
 		result = 31 * result + (posterPath != null ? posterPath.hashCode() : 0);
 		result = 31 * result + (thumbnailPath != null ? thumbnailPath.hashCode() : 0);
 		result = 31 * result + (synopsis != null ? synopsis.hashCode() : 0);
@@ -178,14 +175,15 @@ public class Movie extends BaseModel<Movie> {
 		result = 31 * result + (favorite ? 1 : 0);
 		result = 31 * result + (poster != null ? poster.hashCode() : 0);
 		result = 31 * result + (thumbnail != null ? thumbnail.hashCode() : 0);
+		result = 31 * result + (videos != null ? videos.hashCode() : 0);
+		result = 31 * result + (reviews != null ? reviews.hashCode() : 0);
 		return result;
 	}
 
 	@Override
-
 	public String toString() {
 		return "Movie{" +
-				"id=" + id +
+				"idFromApi=" + idFromApi +
 				", title='" + title + '\'' +
 				", posterPath='" + posterPath + '\'' +
 				", thumbnailPath='" + thumbnailPath + '\'' +
@@ -195,6 +193,9 @@ public class Movie extends BaseModel<Movie> {
 				", favorite=" + favorite +
 				", poster=" + poster +
 				", thumbnail=" + thumbnail +
+				", videos=" + videos +
+				", reviews=" + reviews +
+				", id=" + id +
 				'}';
 	}
 }
