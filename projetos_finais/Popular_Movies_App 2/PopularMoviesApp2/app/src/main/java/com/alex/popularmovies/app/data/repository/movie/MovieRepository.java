@@ -146,6 +146,35 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	}
 
 	@Override
+	public Movie updateMovieFavoriteStatus(Movie movie) throws DataException {
+		try {
+			if (movie == null) {
+				throw new DataException("Filme para ser atualizado estado de favorito nulo");
+			} else if (movie.getId() == null) {
+				movie = mLocalSource.create(movie);
+			} else {
+				Movie movieFound = mLocalSource.recover(movie.getId());
+				if (movieFound == null) {
+					throw new DataException("Filme com id: " + movie.getId() + " não foi encontrado no banco local");
+				}
+
+				movie = mLocalSource.update(movie);
+			}
+		} catch (DataException e) {
+			throw e;
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (NullConnectionException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return movie;
+	}
+
+	@Override
 	public List<Movie> favoriteMovieList(int limit, int offset, MovieFilter filter) throws DataException {
 		List<Movie> movies = new ArrayList<>();
 

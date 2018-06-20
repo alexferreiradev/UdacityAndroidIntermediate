@@ -1,5 +1,6 @@
 package com.alex.popularmovies.app.data.source.sql;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -28,8 +29,9 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	public Movie create(Movie model) throws SourceException {
 		try {
 			Uri movieUri = mResolver.insert(PMContract.MovieEntry.CONTENT_URI, wrapperContent(model));
-			String movieIdString = movieUri.getPath();
-			Long movieId = Long.valueOf(movieIdString);
+			assert movieUri != null;
+			Long movieId = ContentUris.parseId(movieUri);
+			Log.i(TAG, "Filme criado no banco com ID: " + movieId);
 			model.setId(movieId);
 
 			return model;
@@ -42,8 +44,7 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	@Override
 	public Movie recover(Long id) throws SourceException {
 		try {
-			Uri contentUri = PMContract.MovieEntry.CONTENT_URI;
-			Uri uri = contentUri.buildUpon().appendPath(String.valueOf(id)).build();
+			Uri uri = PMContract.MovieEntry.buildMovieUri(id);
 			Cursor movieCursor = mResolver.query(uri, null, null, null, null);
 			Movie movie = createModelFromCursor(movieCursor);
 
@@ -61,9 +62,9 @@ public class MovieSql extends BaseSqlSource<Movie> {
 		try {
 			SqlQuery query = (SqlQuery) specification.getQuery();
 			Cursor cursor = mResolver.query(query.getUri(), query.getProjection(), query.getSelection(), query.getSelectionArgs(), query.getSort());
-
 			assert cursor != null;
 			movieList = createListModelFromCursor(cursor);
+
 			cursor.close();
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: " + e.getMessage());
@@ -76,10 +77,12 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	@Override
 	public Movie update(Movie model) throws SourceException {
 		try {
-			Uri contentUri = PMContract.MovieEntry.CONTENT_URI;
-			Uri uri = contentUri.buildUpon().appendPath(String.valueOf(model.getId())).build();
-			int rowsUpdated = mResolver.update(uri, wrapperContent(model), null, null);
+			if (model == null || model.getId() == null) {
+				throw new SourceException("filme ou id nulo. Filme invalido.");
+			}
 
+			Uri uri = PMContract.MovieEntry.buildMovieUri(model.getId());
+			int rowsUpdated = mResolver.update(uri, wrapperContent(model), null, null);
 			if (rowsUpdated < 0) {
 				return null;
 			}

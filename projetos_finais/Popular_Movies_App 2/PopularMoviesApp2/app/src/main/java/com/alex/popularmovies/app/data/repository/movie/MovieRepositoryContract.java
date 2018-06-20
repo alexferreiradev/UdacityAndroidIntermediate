@@ -18,6 +18,8 @@ public interface MovieRepositoryContract extends DefaultRepository<Movie> {
 
 	List<Movie> moviesByTopRate(int limit, int offset) throws DataException;
 
+	Movie updateMovieFavoriteStatus(Movie movie) throws DataException;
+
 	List<Movie> favoriteMovieList(int limit, int offset, MovieRepository.MovieFilter filter) throws DataException;
 
 	List<Review> reviewListByMovie(Long movieId, int limit, int offset) throws DataException;
