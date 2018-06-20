@@ -18,6 +18,8 @@
 			</intent-filter>
 		</activity>
 
+		<provider android:authorities="com.alex.popularmovies.app" android:name=".data.source.sql.PMProvider" />
+
 		<activity android:name=".ui.view.moviedetail.DetailsActivity"/>
 	</application>
 

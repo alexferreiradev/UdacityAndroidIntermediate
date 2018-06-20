@@ -14,6 +14,7 @@ import com.alex.popularmovies.app.data.source.queryspec.remote.MoviesRemoteQuery
 import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.VideoRemoteQuery;
+import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 
 import java.net.URL;
@@ -56,7 +57,20 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public Movie create(Movie model) throws DataException {
-		throw new DataException("Metodo não permitido para esta versao");
+		try {
+			if (model == null) {
+				return null;
+			}
+
+			Long id = model.getId();
+			if (id == null) {
+				return mLocalSource.create(model);
+			}
+		} catch (SourceException e) {
+			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um filme");
+		}
+
+		return null;
 	}
 
 	@Override
@@ -73,10 +87,10 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 
 			if (mCacheSource.isDirty()) {
-				Log.d(TAG, "Buscando filme em fonte remota.");
-				movie = mRemoteSource.recover(id);
+				Log.d(TAG, "Buscando filme em favoritos.");
+				movie = mLocalSource.recover(id);
 				if (movie == null) {
-					Log.w(TAG, "Filme com id: " + id + " não existe em nenhuma fonte disponível.");
+					Log.w(TAG, "Filme com id: " + id + " não foi encontrado no banco.");
 				}
 			}
 
@@ -96,7 +110,22 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public Movie update(Movie model) throws DataException {
-		throw new DataException("Metodo não permitido para esta versao");
+		try {
+			if (model == null) {
+				return null;
+			}
+
+			Long id = model.getId();
+			if (id == null) {
+				throw new DataException("Objeto não existe para ser atualizado. Model sem ID");
+			} else {
+				return mLocalSource.update(model);
+			}
+		} catch (SourceException e) {
+			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um model");
+		}
+
+		return null;
 	}
 
 	@Override
@@ -106,12 +135,67 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Movie> moviesByPopularity(int limit, int offset) throws DataException {
-		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.POPULAR, limit, offset);
+		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, MovieFilter.POPULAR);
+		return getMoviesByQuery(querySpec);
 	}
 
 	@Override
 	public List<Movie> moviesByTopRate(int limit, int offset) throws DataException {
-		return getMoviesByFilter(MoviesRemoteQuery.MovieFilter.TOP_RATED, limit, offset);
+		RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, MovieFilter.TOP_RATED);
+		return getMoviesByQuery(querySpec);
+	}
+
+	@Override
+	public Movie updateMovieFavoriteStatus(Movie movie) throws DataException {
+		try {
+			if (movie == null) {
+				throw new DataException("Filme para ser atualizado estado de favorito nulo");
+			} else if (movie.getId() == null) {
+				movie = mLocalSource.create(movie);
+			} else {
+				Movie movieFound = mLocalSource.recover(movie.getId());
+				if (movieFound == null) {
+					throw new DataException("Filme com id: " + movie.getId() + " não foi encontrado no banco local");
+				}
+
+				movie = mLocalSource.update(movie);
+			}
+		} catch (DataException e) {
+			throw e;
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (NullConnectionException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return movie;
+	}
+
+	@Override
+	public List<Movie> favoriteMovieList(int limit, int offset, MovieFilter filter) throws DataException {
+		List<Movie> movies = new ArrayList<>();
+
+		try {
+			if (filter == null) {
+				filter = MovieFilter.POPULAR;
+			}
+
+			MoviesLocalQuery querySpecification = new MoviesLocalQuery(limit, offset, filter);
+
+			movies = mLocalSource.recover(querySpecification);
+			setCacheToDirty();
+			updateCache(movies, querySpecification.getOffset());
+		} catch (SourceException e) {
+			Log.e(TAG, e.getMessage());
+		} catch (Exception e) {
+			Log.e(TAG, "Erro desconhecido: ", e);
+			throw new DataException("Erro desconhecido: ", e);
+		}
+
+		return movies;
 	}
 
 	@Override
@@ -160,13 +244,12 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		return mCacheSource.isDirty() ? new ArrayList<>() : mCacheSource.getCache();
 	}
 
-	private List<Movie> getMoviesByFilter(MoviesRemoteQuery.MovieFilter filter, int limit, int offset) throws DataException {
+	private List<Movie> getMoviesByQuery(QuerySpecification querySpecification) throws DataException {
 		List<Movie> movies = new ArrayList<>();
 
 		try {
-			RemoteQuery querySpec = new MoviesRemoteQuery(limit, offset, filter);
-			movies = mRemoteSource.recover(querySpec);
-			updateCache(movies, querySpec.getOffset());
+			movies = mRemoteSource.recover(querySpecification);
+			updateCache(movies, querySpecification.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (Exception e) {
@@ -180,5 +263,11 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	@Override
 	public void setCacheToDirty() {
 		mCacheSource.setDirty(true);
+	}
+
+	public enum MovieFilter {
+		POPULAR,
+		TOP_RATED,
+		FAVORITE,
 	}
 }

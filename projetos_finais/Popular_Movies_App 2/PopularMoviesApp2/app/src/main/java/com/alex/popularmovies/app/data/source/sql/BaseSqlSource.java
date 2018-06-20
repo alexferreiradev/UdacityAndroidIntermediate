@@ -29,10 +29,11 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 	protected abstract ModelType createModelFromCursor(Cursor cursor);
 
 	protected List<ModelType> createListModelFromCursor(Cursor cursor) {
-		List<ModelType> list = new ArrayList<ModelType>();
+		List<ModelType> list = new ArrayList<>();
 
-		if (cursor == null || !cursor.moveToFirst())
+		if (cursor == null || !cursor.moveToFirst()) {
 			return list;
+		}
 
 		do {
 			ModelType model = createModelFromCursor(cursor);
@@ -40,5 +41,9 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 		} while (cursor.moveToNext());
 
 		return list;
+	}
+
+	public void setmResolver(ContentResolver mResolver) {
+		this.mResolver = mResolver;
 	}
 }
