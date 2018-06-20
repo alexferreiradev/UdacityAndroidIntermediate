@@ -80,15 +80,14 @@ public class PMProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(@NonNull Uri uri, String[] projection, String selection,
-						String[] selectionArgs, String sortOrder) {
+	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
 
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
+			case MOVIE_BY_ID:
 				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-				readDb.close();
 //				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
 				break;
 		}

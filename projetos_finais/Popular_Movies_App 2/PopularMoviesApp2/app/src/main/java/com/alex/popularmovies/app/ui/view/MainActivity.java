@@ -34,6 +34,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	private GridView gvMovies;
 	private ListViewAdaper<Movie> mAdapter;
 	private TextView tvEmpty;
+	private MoviesType activeType;
 	private Map<Integer, MenuItem> menuItems;
 
 	public MainActivity() {
@@ -68,16 +69,26 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	}
 
 	@Override
-	public void toogleMenuMovies() {
+	public void toogleMenuMovies(MoviesType type) {
 		MenuItem menuPopular = menuItems.get(R.id.popular_movies);
 		MenuItem menuTopvoted = menuItems.get(R.id.top_voted_movies);
+		MenuItem menuFavoriteMovies = menuItems.get(R.id.favorite_movies);
 
-		if (menuPopular.isVisible()) {
+		if (type == MoviesType.MOST_POPULAR) {
 			menuPopular.setVisible(false);
+
 			menuTopvoted.setVisible(true);
-		} else {
-			menuPopular.setVisible(true);
+			menuFavoriteMovies.setVisible(true);
+		} else if (type == MoviesType.TOP_VOTED) {
 			menuTopvoted.setVisible(false);
+
+			menuPopular.setVisible(true);
+			menuFavoriteMovies.setVisible(true);
+		} else if (type == MoviesType.FAVORITE) {
+			menuFavoriteMovies.setVisible(false);
+
+			menuPopular.setVisible(true);
+			menuTopvoted.setVisible(true);
 		}
 	}
 
@@ -97,6 +108,10 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 			case R.id.popular_movies:
 				Log.d(TAG, "Popular menu selecionado");
 				mPresenter.setListType(MoviesType.MOST_POPULAR);
+				break;
+			case R.id.favorite_movies:
+				Log.d(TAG, "Favoritos menu selecionado");
+				mPresenter.setListType(MoviesType.FAVORITE);
 				break;
 			default:
 				return false;

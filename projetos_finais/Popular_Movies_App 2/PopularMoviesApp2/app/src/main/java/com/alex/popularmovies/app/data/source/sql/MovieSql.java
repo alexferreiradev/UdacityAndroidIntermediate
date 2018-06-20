@@ -50,7 +50,8 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	public Movie recover(Long id) throws SourceException {
 		try {
 			Uri uri = PMContract.MovieEntry.buildMovieUri(id);
-			Cursor movieCursor = mResolver.query(uri, null, null, null, null);
+			String[] selectionArgs = {String.valueOf(id)};
+			Cursor movieCursor = mResolver.query(uri, null, PMContract.MovieEntry.COLUMN_ID_FROM_API + "=?", selectionArgs, null);
 			Movie movie = createModelFromCursor(movieCursor);
 
 			return movie;
@@ -140,6 +141,7 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	@Override
 	protected Movie wrapperModel(ContentValues values) {
 		Movie movie = new Movie();
+		assert values != null;
 		movie.setIdFromApi(values.getAsLong(COLUMN_ID_FROM_API));
 		movie.setPosterPath(values.getAsString(COLUMN_POSTER_PATH));
 		movie.setRating(values.getAsDouble(COLUMN_RATING));
@@ -157,6 +159,8 @@ public class MovieSql extends BaseSqlSource<Movie> {
 	@Override
 	protected Movie createModelFromCursor(Cursor cursor) {
 		Movie movie = new Movie();
+		assert cursor != null;
+
 		int columnIndex = cursor.getColumnIndex(PMContract.MovieEntry.COLUMN_ID_FROM_API);
 		movie.setIdFromApi(cursor.getLong(columnIndex));
 		columnIndex = cursor.getColumnIndex(COLUMN_POSTER_PATH);

@@ -8,6 +8,7 @@ import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.model.MoviesType;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
 import com.alex.popularmovies.app.ui.presenter.BaseListPresenter;
 
@@ -78,7 +79,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 		this.moviesType = moviesType;
 		reCreateAdapter();
 
-		mView.toogleMenuMovies();
+		mView.toogleMenuMovies(moviesType);
 		mView.setActionBarTitle(moviesType.name().replaceAll("_", " "));
 	}
 
@@ -90,6 +91,8 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 					return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
 				case TOP_VOTED:
 					return mRepository.moviesByTopRate(mLoadItemsLimit, mOffset);
+				case FAVORITE:
+					return mRepository.favoriteMovieList(mLoadItemsLimit, mOffset, MovieRepository.MovieFilter.POPULAR);
 			}
 
 			return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);

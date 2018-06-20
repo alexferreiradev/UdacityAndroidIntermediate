@@ -86,6 +86,8 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			if (movie == null) {
 				Log.d(TAG, "Não foi encontrado o filme no cache, marcando o cache como desatualizado");
 				mCacheSource.setDirty(true);
+			} else {
+				return movie;
 			}
 
 			if (mCacheSource.isDirty()) {
