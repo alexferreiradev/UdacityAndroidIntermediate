@@ -8,6 +8,7 @@ import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.exception.DataException;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.model.MoviesType;
+import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
 import com.alex.popularmovies.app.ui.presenter.BaseListPresenter;
 
@@ -22,12 +23,12 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	private static final String TAG = MoviesPresenter.class.getSimpleName();
 
 	private ListMovieByKey movieByKey;
-	private MoviesType moviesType;
+	private MoviesType mListType;
 	private int lastPosSelectedInGrid;
 
 	public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
-		moviesType = MoviesType.MOST_POPULAR;
+		mListType = MoviesType.MOST_POPULAR;
 		setLastPositionInvalid();
 	}
 
@@ -39,13 +40,13 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	@Override
 	protected void loadDataFromSource() {
 		Log.d(TAG, "Load from source. Offset: " + mOffset);
-		movieByKey = new ListMovieByKey(moviesType, this);
+		movieByKey = new ListMovieByKey(mListType, this);
 		movieByKey.execute();
 	}
 
 	@Override
 	public void selectItemClicked(Movie item, int pos) {
-		Log.i(TAG, "Filme selecionado: " + item.getId());
+		Log.i(TAG, "Filme selecionado: " + item.getIdFromApi());
 		lastPosSelectedInGrid = pos;
 
 		mView.showDataView(item);
@@ -53,7 +54,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	@Override
 	protected void applyFilterFromAdapter() {
-		movieByKey = new ListMovieByKey(moviesType, this);
+		movieByKey = new ListMovieByKey(mListType, this);
 		movieByKey.execute();
 	}
 
@@ -75,11 +76,16 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	@Override
 	public void setListType(MoviesType moviesType) {
-		this.moviesType = moviesType;
+		this.mListType = moviesType;
 		reCreateAdapter();
 
-		mView.toogleMenuMovies();
+		mView.updateMenuItems();
 		mView.setActionBarTitle(moviesType.name().replaceAll("_", " "));
+	}
+
+	@Override
+	public MoviesType getCurrentListType() {
+		return mListType;
 	}
 
 	private List<Movie> getMoviesFromRepository(MoviesType key) {
@@ -90,6 +96,8 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 					return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
 				case TOP_VOTED:
 					return mRepository.moviesByTopRate(mLoadItemsLimit, mOffset);
+				case FAVORITE:
+					return mRepository.favoriteMovieList(mLoadItemsLimit, mOffset, MovieRepository.MovieFilter.POPULAR);
 			}
 
 			return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);

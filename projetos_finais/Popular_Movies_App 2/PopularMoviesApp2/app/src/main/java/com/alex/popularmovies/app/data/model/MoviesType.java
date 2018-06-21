@@ -6,5 +6,5 @@ package com.alex.popularmovies.app.data.model;
 
 public enum MoviesType {
 
-	TOP_VOTED, MOST_POPULAR;
+	TOP_VOTED, MOST_POPULAR, FAVORITE;
 }

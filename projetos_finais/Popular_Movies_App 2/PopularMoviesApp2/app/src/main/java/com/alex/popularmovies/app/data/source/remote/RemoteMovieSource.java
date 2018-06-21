@@ -98,7 +98,7 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 	@Override
 	protected Movie parseJSONToModel(JSONObject jsonObject) throws Exception {
 		Movie movie = new Movie();
-		movie.setId(jsonObject.getInt(JSON_KEY_ID));
+		movie.setIdFromApi(jsonObject.getLong(JSON_KEY_ID));
 		movie.setTitle(jsonObject.getString(MOVIE_JSON_KEY_TITLE));
 		movie.setPosterPath(jsonObject.getString(MOVIE_JSON_KEY_POSTER_PATH));
 		movie.setRating(jsonObject.getDouble(MOVIE_JSON_KEY_VOTE_AVERAGE));

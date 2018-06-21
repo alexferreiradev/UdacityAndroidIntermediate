@@ -24,21 +24,17 @@ import com.alex.popularmovies.app.ui.presenter.main.MoviesContract;
 import com.alex.popularmovies.app.ui.presenter.main.MoviesPresenter;
 import com.alex.popularmovies.app.ui.view.moviedetail.DetailsActivity;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends BaseActivity<Movie, MoviesContract.View, MoviesPresenter> implements MoviesContract.View {
 
 	public static final String TAG = MainActivity.class.getSimpleName();
 	private GridView gvMovies;
-	private ListViewAdaper<Movie> mAdapter;
 	private TextView tvEmpty;
-	private Map<Integer, MenuItem> menuItems;
+	private ListViewAdaper<Movie> mAdapter;
 
 	public MainActivity() {
 		super(null);
-		menuItems = new HashMap<>();
 	}
 
 	@Override
@@ -58,27 +54,43 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.movie_list, menu);
-		int menuTotal = menu.size();
-		for (int i = 0; i < menuTotal; i++) {
-			MenuItem item = menu.getItem(i);
-			menuItems.put(item.getItemId(), item);
+
+		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem menuPopular = menu.findItem(R.id.popular_movies);
+		MenuItem menuTopvoted = menu.findItem(R.id.top_voted_movies);
+		MenuItem menuFavoriteMovies = menu.findItem(R.id.favorite_movies);
+		switch (mPresenter.getCurrentListType()) {
+			case MOST_POPULAR:
+				menuPopular.setVisible(false);
+
+				menuTopvoted.setVisible(true);
+				menuFavoriteMovies.setVisible(true);
+				break;
+			case TOP_VOTED:
+				menuTopvoted.setVisible(false);
+
+				menuPopular.setVisible(true);
+				menuFavoriteMovies.setVisible(true);
+				break;
+			case FAVORITE:
+				menuFavoriteMovies.setVisible(false);
+
+				menuPopular.setVisible(true);
+				menuTopvoted.setVisible(true);
+				break;
 		}
 
 		return true;
 	}
 
 	@Override
-	public void toogleMenuMovies() {
-		MenuItem menuPopular = menuItems.get(R.id.popular_movies);
-		MenuItem menuTopvoted = menuItems.get(R.id.top_voted_movies);
-
-		if (menuPopular.isVisible()) {
-			menuPopular.setVisible(false);
-			menuTopvoted.setVisible(true);
-		} else {
-			menuPopular.setVisible(true);
-			menuTopvoted.setVisible(false);
-		}
+	public void updateMenuItems() {
+		invalidateOptionsMenu();
 	}
 
 	@Override
@@ -97,6 +109,10 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 			case R.id.popular_movies:
 				Log.d(TAG, "Popular menu selecionado");
 				mPresenter.setListType(MoviesType.MOST_POPULAR);
+				break;
+			case R.id.favorite_movies:
+				Log.d(TAG, "Favoritos menu selecionado");
+				mPresenter.setListType(MoviesType.FAVORITE);
 				break;
 			default:
 				return false;
@@ -153,7 +169,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	@Override
 	public void showDataView(Movie data) {
 		Intent intent = new Intent(this, DetailsActivity.class);
-		intent.putExtra(DetailsActivity.EXTRA_PARAM_MOVIE_ID, data.getId());
+		intent.putExtra(DetailsActivity.EXTRA_PARAM_MOVIE_ID, data.getIdFromApi());
 		startActivity(intent);
 	}
 

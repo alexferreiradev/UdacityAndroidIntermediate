@@ -29,13 +29,14 @@ public class MovieCacheTest {
 	public void recover_id() throws Exception {
 		List<Movie> movieCache = this.cache.getCache();
 		Movie movie = new Movie();
-		movie.setId(1L);
+		movie.setIdFromApi(1L);
 		movieCache.add(movie);
 
 		Movie movieRecovered = cache.recover(1L);
 
 		assertNotNull(movieRecovered);
 		assertEquals(movie, movieRecovered);
+		assertEquals(new Long(1L), movieRecovered.getIdFromApi());
 	}
 
 	@Test

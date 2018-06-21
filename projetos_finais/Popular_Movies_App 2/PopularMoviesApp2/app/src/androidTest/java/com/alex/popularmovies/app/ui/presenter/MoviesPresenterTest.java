@@ -60,7 +60,7 @@ public class MoviesPresenterTest {
 
 		verify(view).destroyListAdapter();
 		verify(repository).setCacheToDirty();
-		verify(view).toogleMenuMovies();
+		verify(view).updateMenuItems();
 		verify(view).setActionBarTitle(validTitle);
 	}
 
@@ -69,7 +69,7 @@ public class MoviesPresenterTest {
 		Movie item = mock(Movie.class);
 		moviesPresenter.selectItemClicked(item, 10);
 
-		verify(item).getId();
+		verify(item).getIdFromApi();
 		verify(view).showDataView(item);
 	}
 }

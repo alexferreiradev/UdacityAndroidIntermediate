@@ -22,6 +22,7 @@ public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(false);
 		Log.d(TAG, "Fragment sendo criado: " + this.getClass().getSimpleName());
 	}
 

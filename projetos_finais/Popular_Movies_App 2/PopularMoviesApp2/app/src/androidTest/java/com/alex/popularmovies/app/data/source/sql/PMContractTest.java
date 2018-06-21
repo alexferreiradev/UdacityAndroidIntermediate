@@ -13,11 +13,12 @@ public class PMContractTest {
 	public void test_create_movie_table_sql() {
 		String createSql = PMContract.MovieEntry.createTableSql();
 
-		assertEquals("create table movie(_id integer auto increment primary key, " +
+		assertEquals("create table movie(_id integer primary key autoincrement, " +
+				"id_from_api integer unique, " +
 				"title text, poster_path text, " +
 				"thumbnail_path text, " +
 				"synopsys text, rating real, " +
-				"release_date date, " +
+				"release_date integer, " +
 				"is_favorite bool)", createSql);
 	}
 

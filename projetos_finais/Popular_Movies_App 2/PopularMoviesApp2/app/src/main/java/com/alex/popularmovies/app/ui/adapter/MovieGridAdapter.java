@@ -37,13 +37,14 @@ public class MovieGridAdapter extends BaseAdapter implements ListViewAdaper<Movi
 
 	@Override
 	public long getItemId(int position) {
-		return movies.get(position).getId();
+		return movies.get(position).getIdFromApi();
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			assert inflater != null;
 			convertView = inflater.inflate(R.layout.adapter_movies_grid, parent, false);
 			convertView.setTag(convertView);
 		} else {

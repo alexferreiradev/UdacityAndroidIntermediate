@@ -13,19 +13,21 @@ import com.alex.popularmovies.app.ui.presenter.IPresenter;
 
 public interface MoviesContract {
 
-	public interface Presenter extends IPresenter {
+	interface Presenter extends IPresenter {
 
 		void setListType(MoviesType moviesType);
 
+		MoviesType getCurrentListType();
+
 	}
 
-	public interface View extends BaseListContract.View<Movie> {
+	interface View extends BaseListContract.View<Movie> {
 
 		boolean onOptionsItemSelected(MenuItem item);
 
 		boolean onCreateOptionsMenu(Menu menu);
 
-		void toogleMenuMovies();
+		void updateMenuItems();
 
 		void setGridPosByLastSelectedFilm(int position);
 	}

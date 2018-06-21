@@ -16,6 +16,7 @@ import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery
 import com.alex.popularmovies.app.data.source.queryspec.remote.VideoRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
+import com.alex.popularmovies.app.data.source.sql.PMContract;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -65,6 +66,8 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			Long id = model.getId();
 			if (id == null) {
 				return mLocalSource.create(model);
+			} else {
+				throw new SourceException("Filme já existe na base local.");
 			}
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um filme");
@@ -84,6 +87,9 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			if (movie == null) {
 				Log.d(TAG, "Não foi encontrado o filme no cache, marcando o cache como desatualizado");
 				mCacheSource.setDirty(true);
+			} else {
+				setFavoriteState(movie);
+				return movie;
 			}
 
 			if (mCacheSource.isDirty()) {
@@ -105,6 +111,25 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido", e);
+		}
+	}
+
+	private void setFavoriteState(Movie movie) {
+		try {
+			List<String> selectionArgs = new ArrayList<>();
+			selectionArgs.add(String.valueOf(movie.getIdFromApi()));
+			MoviesLocalQuery moviesLocalQuery = new MoviesLocalQuery(1, 0, PMContract.MovieEntry.COLUMN_ID_FROM_API + "=?", selectionArgs, MovieFilter.POPULAR);
+			List<Movie> movieList = mLocalSource.recover(moviesLocalQuery);
+			if (movieList != null && movieList.size() == 1) {
+				Movie movieFound = movieList.get(0);
+				if (movieFound.getIdFromApi().equals(movie.getIdFromApi())) {
+					movie.setFavorite(true);
+				}
+			}
+		} catch (SourceException e) {
+			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
+		} catch (NullConnectionException e) {
+			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
 		}
 	}
 
@@ -150,21 +175,20 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 		try {
 			if (movie == null) {
 				throw new DataException("Filme para ser atualizado estado de favorito nulo");
-			} else if (movie.getId() == null) {
-				movie = mLocalSource.create(movie);
 			} else {
-				Movie movieFound = mLocalSource.recover(movie.getId());
-				if (movieFound == null) {
-					throw new DataException("Filme com id: " + movie.getId() + " não foi encontrado no banco local");
-				}
+				if (movie.isFavorite()) {
+					movie = mLocalSource.create(movie);
+				} else {
+					if (movie.getId() == null) {
+						throw new DataException("Filme para ser removido dos favoritos com id null");
+					}
 
-				movie = mLocalSource.update(movie);
+					movie = mLocalSource.delete(movie);
+				}
 			}
 		} catch (DataException e) {
 			throw e;
 		} catch (SourceException e) {
-			Log.e(TAG, e.getMessage());
-		} catch (NullConnectionException e) {
 			Log.e(TAG, e.getMessage());
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);

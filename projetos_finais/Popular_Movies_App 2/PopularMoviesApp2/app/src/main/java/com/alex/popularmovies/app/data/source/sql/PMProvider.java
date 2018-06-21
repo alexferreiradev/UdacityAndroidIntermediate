@@ -1,5 +1,6 @@
 package com.alex.popularmovies.app.data.source.sql;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -36,7 +37,7 @@ public class PMProvider extends ContentProvider {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = readDb.delete(PMContract.MovieEntry.TABLE_NAME, "id = ?", selectionArgs);
+				int rowsUpdated = readDb.delete(PMContract.MovieEntry.TABLE_NAME, "_id = ?", selectionArgs);
 				readDb.close();
 
 //                getContext().getContentResolver().notifyChange(mUri, );
@@ -53,7 +54,7 @@ public class PMProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
-		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
+		SQLiteDatabase readDb = mSqlHelper.getWritableDatabase();
 
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
@@ -65,7 +66,6 @@ public class PMProvider extends ContentProvider {
 				}
 
 				readDb.close();
-//				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
 				break;
 		}
 
@@ -80,16 +80,15 @@ public class PMProvider extends ContentProvider {
 	}
 
 	@Override
-	public Cursor query(@NonNull Uri uri, String[] projection, String selection,
-						String[] selectionArgs, String sortOrder) {
+	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 		Cursor cursor = null;
 		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
 
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
-				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-				readDb.close();
-//				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
+			case MOVIE_BY_ID:
+				String limitParam = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder, limitParam);
 				break;
 		}
 
@@ -99,17 +98,14 @@ public class PMProvider extends ContentProvider {
 	@Override
 	public int update(@NonNull Uri uri, ContentValues values, String selection,
 					  String[] selectionArgs) {
-		// Implement this to handle requests to delete one or more rows.
 		SQLiteDatabase writerDb = mSqlHelper.getWritableDatabase();
 
 		switch (sUriMacher.match(uri)) {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "id = ?", selectionArgs);
+				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
 				writerDb.close();
-
-//                getContext().getContentResolver().notifyChange(mUri, );
 				return rowsUpdated;
 			default:
 				throw new UnknownError("URI not known + " + uri);

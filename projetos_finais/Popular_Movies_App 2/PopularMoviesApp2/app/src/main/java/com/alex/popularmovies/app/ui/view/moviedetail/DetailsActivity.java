@@ -1,6 +1,7 @@
 package com.alex.popularmovies.app.ui.view.moviedetail;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -22,6 +23,9 @@ import com.alex.popularmovies.app.ui.view.BaseActivity;
 public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, DetailPresenter> implements DetailContract.View {
 	public static final String EXTRA_PARAM_MOVIE_ID = "Movie id";
 	private static final String TAG = DetailsActivity.class.getSimpleName();
+	public static final String VIDEO_FRAGMENT_TAG = "video_fragment_tag";
+	public static final String INFO_FRAGMENT_TAG = "info_fragment_tag";
+	public static final String REVIEW_FRAGMENT_TAG = "review_fragment_tag";
 
 
 	private long movieId = -1;
@@ -90,25 +94,55 @@ public class DetailsActivity extends BaseActivity<Movie, DetailPresenter.View, D
 			fragmentArgument.putSerializable(InfoDetailsFragment.MOVIE_ARG_KEY, movie);
 			infoDetailsFragment.setArguments(fragmentArgument);
 			mPresenter.setInfoView(infoDetailsFragment);
-			transaction.replace(R.id.infoContainer, infoDetailsFragment);
+			transaction.replace(R.id.infoContainer, infoDetailsFragment, INFO_FRAGMENT_TAG);
 		}
 		if (videoFragmentView != null) {
 			VideoDetailsFragment videoDetailsFragment = new VideoDetailsFragment(mPresenter);
 			fragmentArgument.putSerializable(VideoDetailsFragment.MOVIE_ARG_KEY, movie);
 			videoDetailsFragment.setArguments(fragmentArgument);
 			mPresenter.setVideoView(videoDetailsFragment);
-			transaction.replace(R.id.videoContainer, videoDetailsFragment);
+			transaction.replace(R.id.videoContainer, videoDetailsFragment, VIDEO_FRAGMENT_TAG);
 		}
 		if (reviewFragmentView != null) {
 			ReviewDetailsFragment reviewDetailsFragment = new ReviewDetailsFragment(mPresenter);
 			fragmentArgument.putSerializable(ReviewDetailsFragment.MOVIE_ARG_KEY, movie);
 			reviewDetailsFragment.setArguments(fragmentArgument);
 			mPresenter.setReviewView(reviewDetailsFragment);
-			transaction.replace(R.id.reviewContainer, reviewDetailsFragment);
+			transaction.replace(R.id.reviewContainer, reviewDetailsFragment, REVIEW_FRAGMENT_TAG);
 		}
 
 		transaction.commit();
 		this.mData = movie;
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		FragmentManager supportFragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = supportFragmentManager.beginTransaction();
+		Fragment infoFrag = supportFragmentManager.findFragmentByTag(INFO_FRAGMENT_TAG);
+		Fragment reviewFrag = supportFragmentManager.findFragmentByTag(REVIEW_FRAGMENT_TAG);
+		Fragment videoFrag = supportFragmentManager.findFragmentByTag(VIDEO_FRAGMENT_TAG);
+		fragmentTransaction.remove(infoFrag);
+		fragmentTransaction.remove(reviewFrag);
+		fragmentTransaction.remove(videoFrag);
+		fragmentTransaction.commit();
+	}
+
+	@Override
+	protected void onResumeFragments() {
+		super.onResumeFragments();
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putLong("movie_id_saved", movieId);
 	}
 
 	@Override
