@@ -62,7 +62,7 @@ public class PMContract {
 					COLUMN_THUMBNAIL_PATH + " text, " +
 					COLUMN_SYNOPSYS + " text, " +
 					COLUMN_RATING + " real, " +
-					COLUMN_RELEASE_DATE + " integer, " + // TODO: 17/06/18 ver tipo na doc ofcial
+					COLUMN_RELEASE_DATE + " integer, " +
 					COLUMN_IS_FAVORITE + " bool" +
 					")";
 		}

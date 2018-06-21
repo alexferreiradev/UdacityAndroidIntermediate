@@ -1,5 +1,6 @@
 package com.alex.popularmovies.app.data.source.sql;
 
+import android.app.SearchManager;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -65,7 +66,6 @@ public class PMProvider extends ContentProvider {
 				}
 
 				readDb.close();
-//				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
 				break;
 		}
 
@@ -87,8 +87,8 @@ public class PMProvider extends ContentProvider {
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
 			case MOVIE_BY_ID:
-				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-//				getContext().getContentResolver().notifyChange(uri, null); // TODO: 17/06/18 ver a necessidade disso
+				String limitParam = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder, limitParam);
 				break;
 		}
 
@@ -98,7 +98,6 @@ public class PMProvider extends ContentProvider {
 	@Override
 	public int update(@NonNull Uri uri, ContentValues values, String selection,
 					  String[] selectionArgs) {
-		// Implement this to handle requests to delete one or more rows.
 		SQLiteDatabase writerDb = mSqlHelper.getWritableDatabase();
 
 		switch (sUriMacher.match(uri)) {
@@ -107,8 +106,6 @@ public class PMProvider extends ContentProvider {
 				selectionArgs = new String[]{String.valueOf(movieId)};
 				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
 				writerDb.close();
-
-//                getContext().getContentResolver().notifyChange(mUri, );
 				return rowsUpdated;
 			default:
 				throw new UnknownError("URI not known + " + uri);

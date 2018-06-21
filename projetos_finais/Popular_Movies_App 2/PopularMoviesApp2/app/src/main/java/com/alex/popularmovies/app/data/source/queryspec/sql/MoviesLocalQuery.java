@@ -1,13 +1,19 @@
 package com.alex.popularmovies.app.data.source.queryspec.sql;
 
+import android.app.SearchManager;
+import android.net.Uri;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository.MovieFilter;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.sql.PMContract;
+
+import java.util.List;
 
 public class MoviesLocalQuery implements QuerySpecification<SqlQuery> {
 
 	private int limit;
 	private int offset;
+	private String selection;
+	private List<String> selectionArgs;
 	private MovieFilter filter;
 
 	public MoviesLocalQuery(int limit, int offset, MovieFilter filter) {
@@ -16,10 +22,24 @@ public class MoviesLocalQuery implements QuerySpecification<SqlQuery> {
 		this.filter = filter;
 	}
 
+	public MoviesLocalQuery(int limit, int offset, String selection, List<String> selectionArgs, MovieFilter filter) {
+		this.limit = limit;
+		this.offset = offset;
+		this.selection = selection;
+		this.selectionArgs = selectionArgs;
+		this.filter = filter;
+	}
+
 	@Override
 	public SqlQuery getQuery() {
 		SqlQuery.SqlQueryBuilder queryBuilder = SqlQuery.builder();
-		queryBuilder.setUri(PMContract.MovieEntry.CONTENT_URI);
+		String limitParam = offset + "," + limit;
+		Uri uri = PMContract.MovieEntry.CONTENT_URI.buildUpon().appendQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT, limitParam).build();
+		queryBuilder.setUri(uri);
+		if (selection != null && !selection.isEmpty()) {
+			queryBuilder.setSelection(selection);
+			queryBuilder.setSelectionArgs(selectionArgs.toArray(new String[0]));
+		}
 
 		return queryBuilder.build();
 	}

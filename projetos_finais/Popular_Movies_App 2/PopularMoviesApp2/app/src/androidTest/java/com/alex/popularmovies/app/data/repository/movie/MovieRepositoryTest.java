@@ -133,7 +133,6 @@ public class MovieRepositoryTest {
 		assertFalse(reviews.isEmpty());
 	}
 
-	@Test(expected = DataException.class)
 	public void test_update() throws DataException {
 		movieRepository.update(null);
 	}

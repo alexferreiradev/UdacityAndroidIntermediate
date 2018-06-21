@@ -60,7 +60,7 @@ public class MoviesPresenterTest {
 
 		verify(view).destroyListAdapter();
 		verify(repository).setCacheToDirty();
-		verify(view).toogleMenuMovies();
+		verify(view).updateMenuItems();
 		verify(view).setActionBarTitle(validTitle);
 	}
 

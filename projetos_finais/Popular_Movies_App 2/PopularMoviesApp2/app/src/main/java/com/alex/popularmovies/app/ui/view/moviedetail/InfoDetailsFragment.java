@@ -97,10 +97,10 @@ public class InfoDetailsFragment extends BaseFragment<Movie, InfoDetailsFragment
 		MenuItem item = menu.findItem(R.id.actionFavoriteMovie);
 		if (item != null) {
 			if (mMovie != null && mMovie.isFavorite()) {
-				item.setIcon(getResources().getDrawable(R.drawable.ic_local_movies_black)); // TODO: 20/06/18 trocar para estrela
+				item.setIcon(getResources().getDrawable(R.drawable.ic_action_unfavorite));
 				item.setTitle(R.string.detail_mark_fav_off);
 			} else {
-				item.setIcon(getResources().getDrawable(R.drawable.ic_local_movies_black)); // TODO: 20/06/18 trocar para estrela apagada
+				item.setIcon(getResources().getDrawable(R.drawable.ic_action_favorite));
 				item.setTitle(R.string.detail_mark_fav_on);
 			}
 		}

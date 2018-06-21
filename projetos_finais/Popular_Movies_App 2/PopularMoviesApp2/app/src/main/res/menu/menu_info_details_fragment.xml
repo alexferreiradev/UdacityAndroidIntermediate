@@ -3,6 +3,7 @@
 
 	<item android:id="@+id/actionFavoriteMovie" app:showAsAction="ifRoom"
 		  android:titleCondensed="@string/detail_action_fav" android:contentDescription="@string/detail_action_fav"
-		  android:title="@string/detail_action_fav" android:icon="@drawable/ic_local_movies_black"/>
+		  android:title="@string/detail_action_fav" android:icon="@drawable/ic_action_favorite"
+	/>
 
 </menu>
