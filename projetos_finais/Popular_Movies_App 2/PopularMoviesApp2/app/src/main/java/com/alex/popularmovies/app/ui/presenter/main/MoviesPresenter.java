@@ -77,6 +77,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	@Override
 	public void setListType(MoviesType moviesType) {
 		this.mListType = moviesType;
+		mRepository.setCacheToDirty();
 		reCreateAdapter();
 
 		mView.updateMenuItems();

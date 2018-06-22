@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface MemoryCache<ModelType extends BaseModel> extends DefaultSource<ModelType> {
 
-	boolean isNewCache();
+	boolean isEmpty();
 
 	boolean isDirty();
 

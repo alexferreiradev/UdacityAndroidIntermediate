@@ -80,15 +80,13 @@ public class MovieCache extends BaseCache<Movie> {
 	}
 
 	@Override
-	public boolean isNewCache() {
+	public boolean isEmpty() {
 		return mCache.isEmpty();
 	}
 
 	@Override
 	public void addAllCache(List<Movie> data, int offset) {
-		if (offset > mCache.size() || mCache.isEmpty()) {
-			mCache.addAll(data);
-		}
+		mCache.addAll(data);
 	}
 
 	@Override
