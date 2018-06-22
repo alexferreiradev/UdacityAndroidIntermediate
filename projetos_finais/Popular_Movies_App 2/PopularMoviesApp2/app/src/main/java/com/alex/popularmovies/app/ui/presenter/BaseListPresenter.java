@@ -106,10 +106,10 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 
 	protected void reCreateAdapter() {
 		Log.d(TAG, "Recriando adapter.");
+		mRepository.setCacheToDirty();
 		mView.destroyListAdapter();
 
 		resetPaginationCounter();
-		mRepository.setCacheToDirty();
 		initialize();
 	}
 
