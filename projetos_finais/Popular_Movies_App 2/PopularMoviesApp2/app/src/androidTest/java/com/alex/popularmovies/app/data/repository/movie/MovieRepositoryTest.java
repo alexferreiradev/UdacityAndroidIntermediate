@@ -76,7 +76,7 @@ public class MovieRepositoryTest {
 		List<Movie> validMovies = new ArrayList<>();
 		validMovies.add(new Movie());
 		when(remoteSource.recover(any(QuerySpecification.class))).thenReturn(validMovies);
-		when(cacheSource.isNewCache()).thenReturn(true);
+		when(cacheSource.isDirty()).thenReturn(true);
 		List<Movie> movies = movieRepository.moviesByPopularity(0, 0);
 
 		assertNotNull(movies);
@@ -88,7 +88,7 @@ public class MovieRepositoryTest {
 		List<Movie> validMovies = new ArrayList<>();
 		validMovies.add(new Movie());
 		when(remoteSource.recover(any(QuerySpecification.class))).thenReturn(validMovies);
-		when(cacheSource.isNewCache()).thenReturn(true);
+		when(cacheSource.isDirty()).thenReturn(true);
 		List<Movie> movies = movieRepository.moviesByTopRate(0, 0);
 
 		assertNotNull(movies);
@@ -101,7 +101,7 @@ public class MovieRepositoryTest {
 		validMovies.add(new Movie());
 		MoviesLocalQuery localQuery = new MoviesLocalQuery(0, 0, MovieRepository.MovieFilter.POPULAR);
 		when(localSource.recover(localQuery)).thenReturn(validMovies);
-		when(cacheSource.isNewCache()).thenReturn(true);
+		when(cacheSource.isDirty()).thenReturn(true);
 		doNothing().when(cacheSource).updateCacheTo(validMovies);
 
 		List<Movie> movies = movieRepository.favoriteMovieList(0, 0, MovieRepository.MovieFilter.POPULAR);

@@ -49,7 +49,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	protected void updateCache(List<Movie> data, int offset) {
-		if (mCacheSource.isNewCache() || offset == 0) {
+		if (mCacheSource.isDirty() || offset == 0) {
 			mCacheSource.updateCacheTo(data);
 		} else {
 			mCacheSource.addAllCache(data, offset);
