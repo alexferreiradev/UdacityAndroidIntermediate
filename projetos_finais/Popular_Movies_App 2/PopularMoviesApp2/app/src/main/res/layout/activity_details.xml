@@ -15,54 +15,20 @@
 			android:layout_alignParentTop="true"
 			style="@style/includedSupportActionBar"/>
 
-	<android.support.v4.widget.NestedScrollView
-			android:layout_below="@+id/includedLayout"
-			android:layout_height="wrap_content"
-			android:layout_width="match_parent"
-			android:descendantFocusability="afterDescendants"
-			android:overScrollMode="ifContentScrolls"
+	<android.support.v4.view.ViewPager android:layout_width="match_parent" android:layout_height="match_parent"
+									   android:id="@+id/vpDetails"
+									   android:layout_below="@+id/includedLayout"
+
 	>
-		<RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-
-			<FrameLayout android:layout_width="match_parent"
-						 android:layout_height="wrap_content"
-						 android:minHeight="100dp"
-						 tools:background="@color/colorAccent"
-						 android:layout_alignParentTop="true"
-						 android:id="@+id/infoContainer"
-			/>
-
-			<View android:layout_width="match_parent" android:layout_height="1dp"
-				  android:background="@color/colorPrimary"
-				  android:layout_below="@+id/infoContainer"
-				  tools:layout_height="10dp"
-				  android:id="@+id/separatorInfo"
-			/>
-
-			<FrameLayout android:layout_width="match_parent"
-						 android:layout_height="wrap_content"
-						 tools:layout_height="300dp"
-						 android:minHeight="200dp"
-						 android:layout_below="@+id/separatorInfo"
-						 tools:background="@color/colorAccent"
-						 android:id="@+id/videoContainer"
-			/>
-
-			<View android:layout_width="match_parent" android:layout_height="1dp"
-				  android:background="@color/colorPrimary"
-				  android:layout_below="@+id/videoContainer"
-				  tools:layout_height="10dp"
-				  android:id="@+id/separatorVideo"
-			/>
-
-			<FrameLayout android:layout_width="match_parent"
-						 android:layout_height="wrap_content"
-						 android:minHeight="200dp"
-						 android:layout_below="@+id/separatorVideo"
-						 android:layout_alignParentBottom="true"
-						 tools:background="@color/colorAccent"
-						 android:id="@+id/reviewContainer"
-			/>
-		</RelativeLayout>
-	</android.support.v4.widget.NestedScrollView>
+		<android.support.v4.view.PagerTitleStrip
+				android:id="@+id/pager_title_strip"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_gravity="top"
+				android:background="@android:color/transparent"
+				android:textColor="@color/colorPrimary"
+				style="@style/detail.movieTitle"
+				android:padding="@dimen/activity_horizontal_margin"
+		/>
+	</android.support.v4.view.ViewPager>
 </RelativeLayout>
