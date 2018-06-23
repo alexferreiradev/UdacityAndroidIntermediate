@@ -3,15 +3,15 @@
 
 	<item
 			android:id="@+id/top_voted_movies"
-			android:title="Top Voted Movies"
+			android:title="@string/action_top_voted_movies_title"
 	/>
 	<item
 			android:id="@+id/popular_movies"
-			android:title="Popular movies"
+			android:title="@string/action_popular_movies_title"
 			android:visible="false"/>
 
 	<item
 			android:id="@+id/favorite_movies"
-			android:title="Favorite movies"
+			android:title="@string/action_favorite_movies_title"
 	/>
 </menu>

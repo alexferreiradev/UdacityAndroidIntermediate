@@ -54,7 +54,7 @@ public class ReviewDetailsFragment extends BaseListFragment<Review, ReviewDetail
 		emptyTV = fragmentView.findViewById(R.id.tvEmpty);
 		reviewsLV = fragmentView.findViewById(R.id.lvReview);
 
-		emptyTV.setText("Não há comentários");
+		emptyTV.setText(getString(R.string.review_empty_text));
 		reviewsLV.setEmptyView(emptyTV);
 
 		return fragmentView;

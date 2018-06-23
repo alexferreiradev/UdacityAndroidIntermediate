@@ -58,7 +58,7 @@ public class VideoDetailsFragment extends BaseListFragment<Video, VideoDetailsFr
 		mEmptyTV = fragmentView.findViewById(R.id.tvEmpty);
 		mVideosLV = fragmentView.findViewById(R.id.lvVideos);
 
-		mEmptyTV.setText("Não há videos");
+		mEmptyTV.setText(getString(R.string.video_empty_text));
 		mVideosLV.setEmptyView(mEmptyTV);
 
 		return fragmentView;
