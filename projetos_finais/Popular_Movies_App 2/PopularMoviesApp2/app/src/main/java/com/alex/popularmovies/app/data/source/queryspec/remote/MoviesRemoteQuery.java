@@ -6,6 +6,7 @@ import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 /**
  * Created by Alex on 02/04/2017.
@@ -29,7 +30,7 @@ public class MoviesRemoteQuery extends RemoteQuery {
 				.authority(REMOTE_API_AUTHORITY)
 				.path(REMOTE_API_V3)
 				.appendPath(API_MOVIE_PATH)
-				.appendPath(mFilter.name().toLowerCase())
+				.appendPath(mFilter.name().toLowerCase(Locale.getDefault()))
 				.appendQueryParameter(API_PARAM_APIKEY, api_key)
 				.appendQueryParameter(API_PARAM_PAGE, page);
 

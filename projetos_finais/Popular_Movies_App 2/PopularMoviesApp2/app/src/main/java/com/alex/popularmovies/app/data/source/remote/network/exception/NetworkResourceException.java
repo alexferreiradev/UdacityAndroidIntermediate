@@ -16,8 +16,4 @@ public class NetworkResourceException extends Exception {
 	public NetworkResourceException(Throwable cause) {
 		super(cause);
 	}
-
-	protected NetworkResourceException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-		super(message, cause, enableSuppression, writableStackTrace);
-	}
 }
