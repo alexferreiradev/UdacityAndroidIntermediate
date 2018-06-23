@@ -12,8 +12,14 @@
 	<string name="detail_action_fav">Mark as favorite</string>
 	<string name="detail_mark_fav_on">\@string/detail_action_fav</string>
 	<string name="detail_mark_fav_off">Unfavorite</string>
-	<string name="empty_text">Nenhum filme a listar</string>
+	<string name="movie_empty_text">Nenhum filme a listar</string>
+	<string name="video_empty_text">Nenhum vídeo a listar</string>
+	<string name="review_empty_text">Nenhum comentário a listar</string>
 	<string name="max_rating">10</string>
 	<string name="n_carregado">não carregado</string>
 	<string name="movie_image_content_description">Imagem de Filme</string>
+	<string name="play_video_content_description">Play video</string>
+	<string name="action_top_voted_movies_title">Top Voted Movies</string>
+	<string name="action_popular_movies_title">Popular movies</string>
+	<string name="action_favorite_movies_title">Favorite movies</string>
 </resources>

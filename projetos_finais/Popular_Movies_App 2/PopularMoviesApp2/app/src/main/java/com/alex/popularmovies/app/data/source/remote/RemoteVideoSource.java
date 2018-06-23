@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Alex on 02/04/2017.
@@ -105,7 +106,7 @@ public class RemoteVideoSource extends BaseRemoteSource<Video> {
 		video.setSite(jsonObject.getString(VIDEO_JSON_KEY_SITE));
 		video.setSize(jsonObject.getString(VIDEO_JSON_KEY_SIZE));
 		String videoTypeFromAPI = jsonObject.getString(VIDEO_JSON_KEY_TYPE);
-		VideoType videoType = VideoType.valueOf(videoTypeFromAPI.toUpperCase());
+		VideoType videoType = VideoType.valueOf(videoTypeFromAPI.toUpperCase(Locale.getDefault()));
 		video.setType(videoType);
 
 		return video;
