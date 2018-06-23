@@ -210,7 +210,6 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			MoviesLocalQuery querySpecification = new MoviesLocalQuery(limit, offset, filter);
 
 			movies = mLocalSource.recover(querySpecification);
-			setCacheToDirty();
 			updateCache(movies, querySpecification.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());

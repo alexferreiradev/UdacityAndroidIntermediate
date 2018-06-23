@@ -25,5 +25,5 @@
 			android:layout_alignParentRight="true"
 			android:layout_below="@+id/includedLayout"
 			android:layout_centerHorizontal="true"
-			android:text="@string/empty_text"/>
+			android:text="@string/movie_empty_text" android:layout_alignParentStart="true" android:layout_alignParentEnd="true"/>
 </RelativeLayout>
