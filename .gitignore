@@ -27,3 +27,7 @@
 
 # Keystore files
 **/*.jks
+
+# ignore nos submodules
+projetos_aulas/ud851-Exercises/
+projetos_aulas/ud851-Sunshine/
