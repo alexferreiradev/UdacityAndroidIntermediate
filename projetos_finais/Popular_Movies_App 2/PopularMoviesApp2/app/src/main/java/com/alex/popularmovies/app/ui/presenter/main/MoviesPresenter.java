@@ -24,12 +24,10 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	private ListMovieByKey movieByKey;
 	private MoviesType mListType;
-	private int lastPosSelectedInGrid;
 
-	public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository) {
+	public MoviesPresenter(MoviesContract.View mView, Context mContext, Bundle savedInstanceState, MovieRepositoryContract mRepository, MoviesType moviesType) {
 		super(mView, mContext, savedInstanceState, mRepository);
-		mListType = MoviesType.MOST_POPULAR;
-		setLastPositionInvalid();
+		mListType = moviesType;
 	}
 
 	@Override
@@ -47,7 +45,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	@Override
 	public void selectItemClicked(Movie item, int pos) {
 		Log.i(TAG, "Filme selecionado: " + item.getIdFromApi());
-		lastPosSelectedInGrid = pos;
+		lastPositionInScrool = pos;
 
 		mView.showDataView(item);
 	}
@@ -65,12 +63,14 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 		} else if (!movies.isEmpty()) {
 			if (isNewAdapter()) {
 				mView.createListAdapter(movies);
+				mView.setGridScroolPosition(mView.getAdapter().getCount());
 			} else {
 				mView.addAdapterData(movies);
 			}
 
 			mOffset = mView.getAdapter().getCount();
-			Log.d(TAG, "Total filmes carregados: " + mOffset);
+			setViewAccordingToDataLoaded();
+			Log.v(TAG, "Total filmes carregados: " + mOffset);
 		}
 	}
 
@@ -78,9 +78,17 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	public void setListType(MoviesType moviesType) {
 		this.mListType = moviesType;
 		reCreateAdapter();
+	}
 
+	protected void setViewAccordingToDataLoaded() {
 		mView.updateMenuItems();
-		mView.setActionBarTitle(moviesType.name().replaceAll("_", " "));
+		mView.setActionBarTitle(mListType.name().replaceAll("_", " "));
+		super.loadUntilLastPosition();
+	}
+
+	@Override
+	public void setListScroolPosition(int position) {
+		lastPositionInScrool = position;
 	}
 
 	@Override
@@ -110,36 +118,13 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 	@Override
 	protected void initialize() {
-		try {
-			if (hasLastPositionSelectedValid()) {
-				Log.d(TAG, "Init com last pos");
-				setLastSelectedGrid();
-			} else if (isNewAdapter()) {
-				Log.d(TAG, "Init com new adapter");
-				super.initialize();
-			} else {
-				Log.d(TAG, "Init com load more");
-				loadMoreData(0, 0, mView.getAdapter().getCount());
-			}
-		} catch (DataException e) {
-			Log.e(TAG, "Erro ao tentar iniciar presenter. Erro ao tentar utilizar repositorio.");
+		if (isNewAdapter()) {
+			Log.d(TAG, "Init com new adapter");
+			super.initialize();
+		} else {
+			Log.d(TAG, "Init com load more");
+			loadMoreData(0, 0, mView.getAdapter().getCount());
 		}
-	}
-
-	private boolean hasLastPositionSelectedValid() {
-		return lastPosSelectedInGrid >= 0;
-	}
-
-	private void setLastSelectedGrid() throws DataException {
-		Log.d(TAG, "Select grid position: offset: " + mOffset + " lastSolicited: " + lastOffsetSolicited + " ");
-		mView.setGridPosByLastSelectedFilm(lastPosSelectedInGrid);
-		mView.setLoadProgressBarVisibility(false);
-
-		setLastPositionInvalid();
-	}
-
-	private void setLastPositionInvalid() {
-		lastPosSelectedInGrid = -1;
 	}
 
 	private static class ListMovieByKey extends AsyncTask<String, Integer, List<Movie>> {

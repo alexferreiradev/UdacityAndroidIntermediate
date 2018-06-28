@@ -12,28 +12,32 @@ import java.util.List;
 
 public interface BaseListContract {
 
-	public interface View<ModelType extends BaseModel>
+	interface View<ModelType extends BaseModel>
 			extends BasePresenter.View<ModelType>, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 
-		public void createListAdapter(List<ModelType> results);
+		void createListAdapter(List<ModelType> results);
 
-		public void addAdapterData(List<ModelType> result);
+		void addAdapterData(List<ModelType> result);
 
-		public void removeAdapterData(List<ModelType> result);
+		void removeAdapterData(List<ModelType> result);
 
-		public ListAdapter getAdapter();
+		ListAdapter getAdapter();
 
-		public void destroyListAdapter();
+		void destroyListAdapter();
 
-		public void showAddOrEditDataView(ModelType data);
+		void showAddOrEditDataView(ModelType data);
 
-		public void showDataView(ModelType data);
+		void showDataView(ModelType data);
 
-		public void setEmptyView(String text);
+		void setEmptyView(String text);
+
+		void setGridScroolPosition(int position);
+
+		int getFirstVisibleItemPosition();
 
 	}
 
-	public interface Presenter<ModelType extends BaseModel> extends IPresenter {
+	interface Presenter<ModelType extends BaseModel> extends IPresenter {
 
 		void loadMoreData(int firstVisibleItem, int visibleItemCount, int adapterTotalItems);
 
