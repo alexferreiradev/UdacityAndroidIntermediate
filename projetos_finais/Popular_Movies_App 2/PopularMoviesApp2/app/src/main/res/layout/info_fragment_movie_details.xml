@@ -13,69 +13,69 @@
 			layout="@layout/default_fragment_layout"
 	/>
 
-	<TextView
-			android:id="@+id/tvMovieName"
-			android:layout_width="match_parent"
-			android:layout_height="wrap_content"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentRight="true"
-			tools:text="DeadPool"
-			style="@style/detail.movieTitle"
-			android:layout_alignParentStart="true"
-			android:layout_alignParentEnd="true"/>
+	<ScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+				android:layout_alignParentLeft="true"
+				android:layout_alignParentRight="true"
+				android:layout_alignParentStart="true"
+				android:layout_alignParentEnd="true"
+	>
+		<RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+			<TextView
+					android:id="@+id/tvMovieName"
+					android:layout_width="match_parent"
+					android:layout_height="wrap_content"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentStart="true"
+					android:layout_alignParentEnd="true"
+					tools:text="DeadPool"
+					style="@style/detail.movieTitle"
+			/>
 
-	<ImageView
-			android:id="@+id/ivMovieImage"
-			android:layout_alignParentLeft="true"
-			android:layout_below="@+id/tvMovieName"
-			app:srcCompat="@mipmap/ic_launcher"
-			android:contentDescription="@string/movie_image_content_description"
-			style="@style/detail.movieImage"
-			android:layout_alignParentStart="true"/>
+			<ImageView
+					android:id="@+id/ivMovieImage"
+					android:layout_alignParentLeft="true"
+					android:layout_below="@+id/tvMovieName"
+					app:srcCompat="@mipmap/ic_launcher"
+					android:contentDescription="@string/movie_image_content_description"
+					style="@style/detail.movieImage"
+					android:layout_alignParentStart="true"/>
 
-	<TextView
-			android:id="@+id/tvMovieYear"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/tvMovieName"
-			android:layout_alignTop="@+id/ivMovieImage"
-			android:layout_toRightOf="@+id/ivMovieImage"
-			android:text="@string/n_carregado"
-			tools:text="2017"
-			style="@style/detail.textDetailsLabel"
-			android:layout_toEndOf="@+id/ivMovieImage"/>
+			<TextView
+					android:id="@+id/tvMovieYear"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@+id/tvMovieName"
+					android:layout_alignTop="@+id/ivMovieImage"
+					android:layout_toRightOf="@+id/ivMovieImage"
+					android:text="@string/n_carregado"
+					tools:text="2017"
+					style="@style/detail.textDetailsLabel"
+					android:layout_toEndOf="@+id/ivMovieImage"/>
 
-	<TextView
-			android:id="@+id/tvMovieRating"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_below="@+id/tvMovieYear"
-			android:layout_toRightOf="@+id/ivMovieImage"
-			android:text="@string/n_carregado"
-			tools:text="03/10"
-			style="@style/detail.textDetailsLabel"
-			android:layout_toEndOf="@+id/ivMovieImage"/>
+			<TextView
+					android:id="@+id/tvMovieRating"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_below="@+id/tvMovieYear"
+					android:layout_toRightOf="@+id/ivMovieImage"
+					android:text="@string/n_carregado"
+					tools:text="03/10"
+					style="@style/detail.textDetailsLabel"
+					android:layout_toEndOf="@+id/ivMovieImage"/>
 
-	<!--<Button android:layout_width="wrap_content" android:layout_height="wrap_content"-->
-	<!--android:id="@+id/btFavoriteMovie"-->
-	<!--android:background="@mipmap/ic_launcher"-->
-	<!--android:padding="5dp"-->
-	<!--android:layout_margin="2dp"-->
-	<!--android:layout_below="@+id/tvMovieRating"-->
-	<!--android:layout_toRightOf="@+id/ivMovieImage"-->
-	<!--android:layout_above="@+id/tvMovieSynopsis"-->
-	<!--/>-->
-
-	<TextView
-			android:id="@+id/tvMovieSynopsis"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentEnd="true"
-			android:layout_alignParentLeft="true"
-			android:layout_alignParentRight="true"
-			android:layout_alignParentStart="true"
-			android:layout_below="@+id/ivMovieImage"
-			tools:text="asdfadsfasd afsd fasdfasd fads fadsf adsfa sdf asdf asdfasd\nasdfadsfadsf\nasdfasdfasdf"
-			style="@style/detail.textDetails"
-			android:text="@string/n_carregado"/>
+			<TextView
+					android:id="@+id/tvMovieSynopsis"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_alignParentEnd="true"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentRight="true"
+					android:layout_alignParentStart="true"
+					android:layout_below="@+id/ivMovieImage"
+					tools:text="asdfadsfasd afsd fasdfasd fads fadsf adsfa sdf asdf asdfasd\nasdfadsfadsf\nasdfasdfasdf"
+					style="@style/detail.textDetails"
+					android:text="@string/n_carregado"/>
+		</RelativeLayout>
+	</ScrollView>
 </RelativeLayout>
