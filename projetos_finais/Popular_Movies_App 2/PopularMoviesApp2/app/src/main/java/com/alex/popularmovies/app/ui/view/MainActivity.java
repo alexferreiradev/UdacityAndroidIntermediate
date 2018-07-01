@@ -65,6 +65,16 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	}
 
 	@Override
+	protected void onRestart() {
+		super.onRestart();
+		if (mPresenter != null) {
+			if (mPresenter.getCurrentListType() == MoviesType.FAVORITE) {
+				mPresenter.setListType(MoviesType.FAVORITE);
+			}
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
