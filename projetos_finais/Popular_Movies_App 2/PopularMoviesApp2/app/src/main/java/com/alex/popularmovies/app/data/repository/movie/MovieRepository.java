@@ -15,7 +15,7 @@ import com.alex.popularmovies.app.data.source.queryspec.remote.RemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.ReviewRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.remote.VideoRemoteQuery;
 import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
-import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
+import com.alex.popularmovies.app.data.source.remote.network.exception.ConnectionException;
 import com.alex.popularmovies.app.data.source.sql.PMContract;
 
 import java.net.URL;
@@ -71,9 +71,8 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um filme");
+			throw new DataException("Erro em source: ", e);
 		}
-
-		return null;
 	}
 
 	@Override
@@ -101,20 +100,20 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 
 			return movie;
-		} catch (NullConnectionException e) {
+		} catch (ConnectionException e) {
 			Log.e(TAG, "Erro ao tentar buscar abrir conexão com API: " + e.getMessage(), e);
 			// todo Avisar usuario que sem conexao pode utilizar favoritos
-			return null;
+			throw new DataException("Erro de conexao: ", e);
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
-			return null;
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido", e);
 		}
 	}
 
-	private void setFavoriteState(Movie movie) {
+	private void setFavoriteState(Movie movie) throws DataException {
 		try {
 			List<String> selectionArgs = new ArrayList<>();
 			selectionArgs.add(String.valueOf(movie.getIdFromApi()));
@@ -128,8 +127,10 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
-		} catch (NullConnectionException e) {
+			throw new DataException("Erro em source: ", e);
+		} catch (ConnectionException e) {
 			Log.e(TAG, "Erro ao tentar buscar no cache o id.", e);
+			throw new DataException("Erro em source: ", e);
 		}
 	}
 
@@ -148,9 +149,8 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			}
 		} catch (SourceException e) {
 			Log.e(TAG, "Erro de source ao tentar criar ou atualizar um model");
+			throw new DataException("Erro em source: ", e);
 		}
-
-		return null;
 	}
 
 	@Override
@@ -190,6 +190,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			throw e;
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido: ", e);
@@ -200,7 +201,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Movie> favoriteMovieList(int limit, int offset, MovieFilter filter) throws DataException {
-		List<Movie> movies = new ArrayList<>();
+		List<Movie> movies;
 
 		try {
 			if (filter == null) {
@@ -213,6 +214,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 			updateCache(movies, querySpecification.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido: ", e);
@@ -223,7 +225,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Review> reviewListByMovie(Long movieId, int limit, int offset) throws DataException {
-		List<Review> reviewList = new ArrayList<>();
+		List<Review> reviewList;
 
 		try {
 			QuerySpecification<URL> querySpec = new ReviewRemoteQuery(limit, offset, movieId);
@@ -231,6 +233,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 //			updateCache(reviewList, querySpec.getOffset()); // TODO: 02/06/18 Adicionar metodo update item
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido: ", e);
@@ -241,7 +244,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 
 	@Override
 	public List<Video> videoListByMovie(Long movieId, int limit, int offset) throws DataException {
-		List<Video> videoList = new ArrayList<>();
+		List<Video> videoList;
 
 		try {
 			QuerySpecification<URL> querySpec = new VideoRemoteQuery(limit, offset, movieId);
@@ -249,6 +252,7 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 //			updateCache(reviewList, querySpec.getOffset()); // TODO: 02/06/18 Adicionar metodo update item
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido: ", e);
@@ -258,23 +262,24 @@ public class MovieRepository extends BaseRepository<Movie> implements MovieRepos
 	}
 
 	@Override
-	public boolean hasCache() throws DataException {
+	public boolean hasCache() {
 		return !mCacheSource.isDirty();
 	}
 
 	@Override
-	public List<Movie> getCurrentCache() throws DataException {
+	public List<Movie> getCurrentCache() {
 		return mCacheSource.isDirty() ? new ArrayList<>() : mCacheSource.getCache();
 	}
 
 	private List<Movie> getMoviesByQuery(QuerySpecification querySpecification) throws DataException {
-		List<Movie> movies = new ArrayList<>();
+		List<Movie> movies;
 
 		try {
 			movies = mRemoteSource.recover(querySpecification);
 			updateCache(movies, querySpecification.getOffset());
 		} catch (SourceException e) {
 			Log.e(TAG, e.getMessage());
+			throw new DataException("Erro em source: ", e);
 		} catch (Exception e) {
 			Log.e(TAG, "Erro desconhecido: ", e);
 			throw new DataException("Erro desconhecido: ", e);

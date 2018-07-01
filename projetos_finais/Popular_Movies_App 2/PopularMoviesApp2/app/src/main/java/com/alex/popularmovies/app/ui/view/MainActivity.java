@@ -29,6 +29,9 @@ import java.util.List;
 public class MainActivity extends BaseActivity<Movie, MoviesContract.View, MoviesPresenter> implements MoviesContract.View {
 
 	public static final String TAG = MainActivity.class.getSimpleName();
+	private static final String SAVED_LIST_TYPE_KEY = "saved_list_type_key";
+	private static final String SAVED_LIST_POSITION_KEY = "saved_list_position_key";
+
 	private GridView gvMovies;
 	private TextView tvEmpty;
 	private ListViewAdaper<Movie> mAdapter;
@@ -38,9 +41,40 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	}
 
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mPresenter != null) {
+			MoviesType currentListType = mPresenter.getCurrentListType();
+			int firstVisiblePosition = gvMovies.getFirstVisiblePosition();
+
+			outState.putString(SAVED_LIST_TYPE_KEY, currentListType.name());
+			outState.putInt(SAVED_LIST_POSITION_KEY, firstVisiblePosition);
+		}
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		if (savedInstanceState != null && savedInstanceState.containsKey(SAVED_LIST_POSITION_KEY)) {
+			int firstPositionVisible = savedInstanceState.getInt(SAVED_LIST_POSITION_KEY, 0);
+
+			if (mPresenter != null) {
+				mPresenter.setListScroolPosition(firstPositionVisible);
+			}
+		}
+	}
+
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		String savedListType = MoviesType.MOST_POPULAR.name();
+		if (savedInstanceState != null) {
+			if (savedInstanceState.containsKey(SAVED_LIST_TYPE_KEY)) {
+				savedListType = savedInstanceState.getString(SAVED_LIST_TYPE_KEY);
+			}
+		}
 
 		BaseCache<Movie> movieCache = MovieCache.getInstance();
 		MovieRepository movieRepository = new MovieRepository(movieCache,
@@ -48,7 +82,8 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 				new RemoteMovieSource(new NetworkResourceManager()),
 				new RemoteReviewSource(new NetworkResourceManager()),
 				new RemoteVideoSource(new NetworkResourceManager()));
-		mPresenter = new MoviesPresenter(this, this, savedInstanceState, movieRepository);
+
+		mPresenter = new MoviesPresenter(this, this, savedInstanceState, movieRepository, MoviesType.valueOf(savedListType));
 	}
 
 	@Override
@@ -94,9 +129,17 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 	}
 
 	@Override
-	public void setGridPosByLastSelectedFilm(int position) {
+	public void setGridScroolPosition(int position) {
 		Log.d(TAG, "Selecionando posicao: " + position + " para grid scrool.");
-		gvMovies.smoothScrollToPosition(position);
+		View v = gvMovies.getChildAt(0);
+		int topOffset = (v == null) ? 0 : (v.getTop() - gvMovies.getPaddingTop());
+
+		gvMovies.smoothScrollToPositionFromTop(position, topOffset);
+	}
+
+	@Override
+	public int getFirstVisibleItemPosition() {
+		return gvMovies.getFirstVisiblePosition();
 	}
 
 	@Override
@@ -184,7 +227,7 @@ public class MainActivity extends BaseActivity<Movie, MoviesContract.View, Movie
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		Log.d(TAG, "scrool chamado = total = " + totalItemCount + " first visible item position: " + firstVisibleItem);
+		Log.v(TAG, "scrool chamado = total = " + totalItemCount + " first visible item position: " + firstVisibleItem);
 
 		if (mPresenter != null) {
 			mPresenter.loadMoreData(firstVisibleItem, visibleItemCount, totalItemCount);

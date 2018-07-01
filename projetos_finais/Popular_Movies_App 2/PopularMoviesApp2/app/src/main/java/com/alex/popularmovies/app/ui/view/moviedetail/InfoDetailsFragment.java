@@ -49,6 +49,7 @@ public class InfoDetailsFragment extends BaseFragment<Movie, InfoDetailsFragment
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View fragmentView = inflater.inflate(R.layout.info_fragment_movie_details, container, false);
+
 		mProgressBar = fragmentView.findViewById(R.id.progressBar);
 		tvName = fragmentView.findViewById(R.id.tvMovieName);
 		tvRating = fragmentView.findViewById(R.id.tvMovieRating);

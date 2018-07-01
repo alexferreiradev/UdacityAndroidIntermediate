@@ -17,6 +17,8 @@ public interface MoviesContract {
 
 		void setListType(MoviesType moviesType);
 
+		void setListScroolPosition(int position);
+
 		MoviesType getCurrentListType();
 
 	}
@@ -28,7 +30,5 @@ public interface MoviesContract {
 		boolean onCreateOptionsMenu(Menu menu);
 
 		void updateMenuItems();
-
-		void setGridPosByLastSelectedFilm(int position);
 	}
 }

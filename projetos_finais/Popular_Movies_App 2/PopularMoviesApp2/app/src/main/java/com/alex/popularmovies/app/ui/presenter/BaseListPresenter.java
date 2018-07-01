@@ -3,6 +3,7 @@ package com.alex.popularmovies.app.ui.presenter;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ListAdapter;
 import com.alex.popularmovies.app.data.model.BaseModel;
 import com.alex.popularmovies.app.data.repository.DefaultRepository;
 
@@ -31,6 +32,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 	protected String mFilterKey;
 	protected String mFilterValue;
 	protected int lastOffsetSolicited;
+	protected int lastPositionInScrool;
 
 	public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
@@ -92,16 +94,39 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 			mLoadItemsLimit = visibleItemCount + INTERVAL_TO_LOAD_MORE;
 		}
 
-		Log.d(TAG, "Load more com: total items carregados: " + adapterTotalItems + " lastVisi: " + lastItemVisiblePosition);
+		Log.v(TAG, "Load more com: total items carregados: " + adapterTotalItems + " lastVisi: " + lastItemVisiblePosition);
 
 		if (lastItemVisiblePosition > adapterTotalItems - INTERVAL_TO_LOAD_MORE) {
-			Log.d(TAG, "Load more com LastOffset: " + lastOffsetSolicited + " e offset: " + mOffset);
+			Log.v(TAG, "Load more com LastOffset: " + lastOffsetSolicited + " e offset: " + mOffset);
 			if (mOffset > lastOffsetSolicited) {
 				lastOffsetSolicited = mOffset;
-				Log.d(TAG, "Load more solicitando mais dados");
+				Log.v(TAG, "Load more solicitando mais dados");
 				loadDataFromSource();
 			}
 		}
+	}
+
+	protected void loadUntilLastPosition() {
+		ListAdapter adapter = mView.getAdapter();
+		boolean addMoreToAdapter = adapter != null && ((adapter.getCount() - INTERVAL_TO_LOAD_MORE) <= lastPositionInScrool);
+		boolean moreToAdapter = adapter != null && adapter.getCount() > lastPositionInScrool;
+		if (hasLastPositionValid() && addMoreToAdapter) {
+			Log.d(TAG, "Carregando mais até adapter > lastpos. Adapter: " + adapter.getCount() + " x lastPos: " + lastPositionInScrool);
+			mView.setGridScroolPosition(adapter.getCount());
+		} else if (hasLastPositionValid() && mView.getFirstVisibleItemPosition() != lastPositionInScrool) {
+			Log.d(TAG, "Carregando mais até visible = lastPos. " + mView.getFirstVisibleItemPosition() + " " + lastPositionInScrool);
+			mView.setGridScroolPosition(lastPositionInScrool);
+			Log.d(TAG, "Invalidando lastPos");
+			setLastPositionInvalid();
+		}
+	}
+
+	private boolean hasLastPositionValid() {
+		return lastPositionInScrool >= 0;
+	}
+
+	private void setLastPositionInvalid() {
+		lastPositionInScrool = -1;
 	}
 
 	protected void reCreateAdapter() {
@@ -109,6 +134,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 		mRepository.setCacheToDirty();
 		mView.destroyListAdapter();
 
+		setLastPositionInvalid();
 		resetPaginationCounter();
 		initialize();
 	}

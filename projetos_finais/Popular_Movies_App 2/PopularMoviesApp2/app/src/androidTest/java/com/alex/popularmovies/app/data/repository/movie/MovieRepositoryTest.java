@@ -12,7 +12,6 @@ import com.alex.popularmovies.app.data.source.queryspec.sql.MoviesLocalQuery;
 import com.alex.popularmovies.app.data.source.remote.RemoteMovieSource;
 import com.alex.popularmovies.app.data.source.remote.RemoteReviewSource;
 import com.alex.popularmovies.app.data.source.remote.RemoteVideoSource;
-import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 import com.alex.popularmovies.app.data.source.sql.MovieSql;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,13 +50,13 @@ public class MovieRepositoryTest {
 
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		movieRepository = new MovieRepository(cacheSource, localSource, remoteSource, remoteReviewSource, remoteVideoSource);
 	}
 
 	@Test
-	public void test_recover() throws DataException, SourceException, NullConnectionException {
+	public void test_recover() throws DataException, SourceException {
 		Movie movieMock = mock(Movie.class);
 
 		when(movieMock.getId()).thenReturn(2L);
