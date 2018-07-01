@@ -6,7 +6,6 @@ import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.remote.network.NetworkResource;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NetworkResourceException;
-import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -35,12 +34,12 @@ public class RemoteReviewSource extends BaseRemoteSource<Review> {
 	}
 
 	@Override
-	public Review recover(Long id) throws SourceException, NullConnectionException {
+	public Review recover(Long id) throws SourceException {
 		throw new SourceException("Método não disponível para esta versao.");
 	}
 
 	@Override
-	public List<Review> recover(QuerySpecification specification) throws SourceException, NullConnectionException {
+	public List<Review> recover(QuerySpecification specification) throws SourceException {
 		List<Review> reviewList = new ArrayList<>();
 
 		try {

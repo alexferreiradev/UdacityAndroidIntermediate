@@ -10,6 +10,7 @@ import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.model.MoviesType;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepository;
 import com.alex.popularmovies.app.data.repository.movie.MovieRepositoryContract;
+import com.alex.popularmovies.app.data.source.remote.network.exception.ConnectionException;
 import com.alex.popularmovies.app.ui.presenter.BaseListPresenter;
 
 import java.util.List;
@@ -56,20 +57,27 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 		movieByKey.execute();
 	}
 
-	private void setMovieGrid(List<Movie> movies) {
+	private void setMovieGrid(List<Movie> movies, Throwable mThrowable) {
 		hideProgressView();
 		if (movies == null) {
-			mView.showErrorMsg("Erro ao tentar buscar filmes.");
+			if (mThrowable != null) {
+				if (mThrowable instanceof ConnectionException) {
+					mView.showErrorMsg("Erro de conexão, dispositivo offline");
+				}
+			} else {
+				mView.showErrorMsg("Erro interno ao tentar buscar filmes.");
+			}
 		} else if (!movies.isEmpty()) {
 			if (isNewAdapter()) {
 				mView.createListAdapter(movies);
-				mView.setGridScroolPosition(mView.getAdapter().getCount());
 			} else {
 				mView.addAdapterData(movies);
 			}
 
 			mOffset = mView.getAdapter().getCount();
 			setViewAccordingToDataLoaded();
+			super.loadUntilLastPosition();
+
 			Log.v(TAG, "Total filmes carregados: " + mOffset);
 		}
 	}
@@ -77,13 +85,13 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	@Override
 	public void setListType(MoviesType moviesType) {
 		this.mListType = moviesType;
+		setViewAccordingToDataLoaded();
 		reCreateAdapter();
 	}
 
-	protected void setViewAccordingToDataLoaded() {
+	private void setViewAccordingToDataLoaded() {
 		mView.updateMenuItems();
 		mView.setActionBarTitle(mListType.name().replaceAll("_", " "));
-		super.loadUntilLastPosition();
 	}
 
 	@Override
@@ -96,7 +104,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 		return mListType;
 	}
 
-	private List<Movie> getMoviesFromRepository(MoviesType key) {
+	private List<Movie> getMoviesFromRepository(MoviesType key) throws Throwable {
 		try {
 			Log.d(TAG, "Load background: key: " + key + " offset: " + mOffset);
 			switch (key) {
@@ -111,6 +119,9 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 			return mRepository.moviesByPopularity(mLoadItemsLimit, mOffset);
 		} catch (DataException e) {
 			Log.e(TAG, "Erro ao tentar listar filmes", e);
+			if (e.getCause() instanceof ConnectionException) {
+				throw e.getCause();
+			}
 		}
 
 		return null;
@@ -130,6 +141,7 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 	private static class ListMovieByKey extends AsyncTask<String, Integer, List<Movie>> {
 		private MoviesType key;
 		private MoviesPresenter presenter;
+		private Throwable mThrowable;
 
 		ListMovieByKey(MoviesType key, MoviesPresenter presenter) {
 			this.key = key;
@@ -143,12 +155,18 @@ public class MoviesPresenter extends BaseListPresenter<MoviesContract.View, Movi
 
 		@Override
 		protected List<Movie> doInBackground(String... params) {
-			return presenter.getMoviesFromRepository(key);
+			try {
+				return presenter.getMoviesFromRepository(key);
+			} catch (Throwable throwable) {
+				mThrowable = throwable;
+			}
+
+			return null;
 		}
 
 		@Override
 		protected void onPostExecute(List<Movie> movies) {
-			presenter.setMovieGrid(movies);
+			presenter.setMovieGrid(movies, mThrowable);
 		}
 	}
 }
