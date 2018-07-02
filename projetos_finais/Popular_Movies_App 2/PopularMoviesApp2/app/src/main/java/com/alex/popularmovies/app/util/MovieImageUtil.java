@@ -2,6 +2,7 @@ package com.alex.popularmovies.app.util;
 
 import android.content.Context;
 import android.widget.ImageView;
+import com.alex.popularmovies.app.R;
 import com.alex.popularmovies.app.data.model.Movie;
 import com.squareup.picasso.Picasso;
 
@@ -21,6 +22,6 @@ final public class MovieImageUtil {
 				.append(imageLength).append("/")
 				.append(movie.getPosterPath()).toString();
 
-		Picasso.with(context).load(path).error(context.getResources().getDrawable(android.R.drawable.stat_notify_error)).into(imageView);
+		Picasso.with(context).load(path).placeholder(context.getResources().getDrawable(R.drawable.ic_movie_loading)).error(context.getResources().getDrawable(R.drawable.ic_movie_not_loaded)).into(imageView);
 	}
 }
