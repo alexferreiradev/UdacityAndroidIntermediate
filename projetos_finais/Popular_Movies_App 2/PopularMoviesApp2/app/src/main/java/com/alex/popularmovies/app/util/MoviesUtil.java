@@ -14,13 +14,13 @@ import java.util.Locale;
  * Created by Alex on 11/12/2016.
  */
 
-public class MoviesUtil {
+public final class MoviesUtil {
 
 	/**
 	 * Formata data para o padrão FULL
 	 *
-	 * @param date
-	 * @return
+	 * @param date data a ser convertida
+	 * @return string da data formatada
 	 */
 	public static String formatDate(Date date) {
 		return formatDate(date, SimpleDateFormat.FULL);
@@ -29,9 +29,9 @@ public class MoviesUtil {
 	/**
 	 * Formata data para um padrão escolhido.
 	 *
-	 * @param date
-	 * @param dateStyle
-	 * @return
+	 * @param date obj a ser convertido em string
+	 * @param dateStyle - formato da string a ser utilizado
+	 * @return string da data formatada
 	 */
 	public static String formatDate(Date date, int dateStyle) {
 		if (date == null)
@@ -44,8 +44,8 @@ public class MoviesUtil {
 	/**
 	 * Usa FULL como estilo padrao.
 	 *
-	 * @param dateString
-	 * @return
+	 * @param dateString string que representa um {@link Date}
+	 * @return string da data formatada
 	 */
 	public static Date convertToDate(String dateString) {
 		return convertToDate(dateString, SimpleDateFormat.FULL);
