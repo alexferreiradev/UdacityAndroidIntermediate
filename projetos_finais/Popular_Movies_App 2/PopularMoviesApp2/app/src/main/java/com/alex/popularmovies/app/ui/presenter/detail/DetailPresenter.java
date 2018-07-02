@@ -146,6 +146,7 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 		@Override
 		protected void onPostExecute(Movie movie) {
 			presenter.hideProgressView();
+
 			if (movie == null) {
 				presenter.mView.showErrorMsg("Erro ao buscar filme");
 				presenter.mView.closeAndShowMovieGrid();
@@ -184,13 +185,14 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 
 		@Override
 		protected void onPostExecute(List<Video> videos) {
+			presenter.mVideoView.hideProgressBar();
+
 			if (videos == null) {
 				Log.e(TAG, "Ocorreu algum erro no repositorio, os videos não foram carregados");
 				presenter.mView.showErrorMsg("Videos de filme não poderam ser carregado");
 				return;
 			}
 
-			presenter.mVideoView.hideProgressBar();
 			presenter.mVideoView.startView(videos);
 		}
 
@@ -215,13 +217,14 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 
 		@Override
 		protected void onPostExecute(List<Review> reviewList) {
+			presenter.mReviewView.hideProgressBar();
+
 			if (reviewList == null) {
 				Log.e(TAG, "Ocorreu algum erro no repositorio, os comentarios do video não foram carregados");
 				presenter.mView.showErrorMsg("Comentario de filme não pode ser carregado");
 				return;
 			}
 
-			presenter.mReviewView.hideProgressBar();
 			presenter.mReviewView.startView(reviewList);
 		}
 
@@ -246,6 +249,8 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 
 		@Override
 		protected void onPostExecute(Movie movie) {
+			presenter.mInfoView.hideProgressBar();
+
 			if (movie == null) {
 				Log.e(TAG, "Ocorreu algum erro no repositorio ao tentar atualizar o estado de favorito do filme");
 				presenter.mView.showErrorMsg("Filme não pode ser atualizado");
@@ -258,7 +263,6 @@ public class DetailPresenter extends BasePresenter<DetailContract.View, Movie, M
 				presenter.mView.showSuccessMsg("Filme removido dos favoritos");
 			}
 
-			presenter.mInfoView.hideProgressBar();
 			presenter.mInfoView.updateFavoriteMovieStatus(movie);
 		}
 
