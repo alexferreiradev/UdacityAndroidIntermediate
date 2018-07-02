@@ -20,7 +20,7 @@
 									   android:layout_below="@+id/includedLayout"
 
 	>
-		<android.support.v4.view.PagerTitleStrip
+		<android.support.v4.view.PagerTabStrip
 				android:id="@+id/pager_title_strip"
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
 				android:background="@android:color/transparent"
 				android:textColor="@color/colorPrimary"
 				style="@style/detail.movieTitle"
-				android:padding="@dimen/activity_horizontal_margin"
+				android:padding="5dp"
 		/>
 	</android.support.v4.view.ViewPager>
 </RelativeLayout>

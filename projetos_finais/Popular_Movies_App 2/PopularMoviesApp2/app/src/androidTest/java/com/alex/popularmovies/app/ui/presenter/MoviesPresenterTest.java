@@ -39,7 +39,7 @@ public class MoviesPresenterTest {
 		doNothing().when(view).initializeWidgets(any());
 		doNothing().when(view).setEmptyView(anyString());
 
-		moviesPresenter = new MoviesPresenter(view, context, null, repository);
+		moviesPresenter = new MoviesPresenter(view, context, null, repository, null);
 	}
 
 	@Test

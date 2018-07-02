@@ -5,8 +5,8 @@ import com.alex.popularmovies.app.data.model.Movie;
 import com.alex.popularmovies.app.data.source.exception.SourceException;
 import com.alex.popularmovies.app.data.source.queryspec.QuerySpecification;
 import com.alex.popularmovies.app.data.source.remote.network.NetworkResource;
+import com.alex.popularmovies.app.data.source.remote.network.exception.ConnectionException;
 import com.alex.popularmovies.app.data.source.remote.network.exception.NetworkResourceException;
-import com.alex.popularmovies.app.data.source.remote.network.exception.NullConnectionException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -40,12 +40,12 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 	}
 
 	@Override
-	public Movie recover(Long id) throws SourceException, NullConnectionException {
+	public Movie recover(Long id) throws SourceException {
 		throw new SourceException("Método não disponível para esta versao.");
 	}
 
 	@Override
-	public List<Movie> recover(QuerySpecification specification) throws SourceException, NullConnectionException {
+	public List<Movie> recover(QuerySpecification specification) throws SourceException, ConnectionException {
 		List<Movie> movies = new ArrayList<>();
 
 		try {
@@ -57,6 +57,8 @@ public class RemoteMovieSource extends BaseRemoteSource<Movie> {
 				Log.w(TAG_NAME, "Erro de resource nao valido: " + stringResourceFromURL);
 				throw new SourceException("Não foi encontrado nenhum recurso valido para URL: " + url);
 			}
+		} catch (ConnectionException e) {
+			throw e;
 		} catch (NetworkResourceException e) {
 			throw new SourceException("Erro ao tentar criar string de recurso na internet.", e);
 		} catch (Exception e) {
