@@ -4,3 +4,6 @@
 [submodule "projetos_aulas/ud851-Exercises"]
 	path = projetos_aulas/ud851-Exercises
 	url = git@github.com:alexferreiradev/ud851-Exercises.git
+[submodule "projetos_aulas/Android_Me"]
+	path = projetos_aulas/Android_Me
+	url = git@github.com:udacity/Android_Me.git
