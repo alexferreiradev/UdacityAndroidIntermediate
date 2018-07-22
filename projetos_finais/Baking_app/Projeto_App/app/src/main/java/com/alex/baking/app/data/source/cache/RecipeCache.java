@@ -55,7 +55,7 @@ public class RecipeCache extends BaseCache<Recipe> {
 			}
 		}
 
-		throw new RuntimeException("Id não encontrado");
+		return null;
 	}
 
 	@Override

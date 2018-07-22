@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class)
+@RunWith(AndroidJUnit4.class) // Necessita de Uri
 public class PMContractTest {
 
 	@Test
