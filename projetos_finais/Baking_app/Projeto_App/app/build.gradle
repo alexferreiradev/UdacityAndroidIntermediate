@@ -4,7 +4,7 @@ android {
 	compileSdkVersion 27
 
 	defaultConfig {
-		applicationId "com.alex.popularmovies.app"
+		applicationId "com.alex.baking.app"
 		minSdkVersion 14
 		targetSdkVersion 27
 		versionCode 1
@@ -23,7 +23,7 @@ android {
 	}
 
 	buildTypes.each {
-		it.buildConfigField 'String', 'OPEN_MOVIE_API_KEY', OpenMovieApiKey
+		it.buildConfigField 'String', 'OPEN_RECIPES_API_KEY', OpenRecipesApiKey
 	}
 
 	compileOptions {

@@ -4,7 +4,7 @@
 		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="300dp"
-		tools:context="com.alex.popularmovies.app.ui.view.moviedetail.DetailsActivity"
+		tools:context="com.alex.baking.app.ui.view.moviedetail.DetailsActivity"
 >
 
 	<include
