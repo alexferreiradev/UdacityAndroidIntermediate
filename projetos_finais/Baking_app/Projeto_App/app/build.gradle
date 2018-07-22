@@ -23,7 +23,7 @@ android {
 	}
 
 	buildTypes.each {
-		it.buildConfigField 'String', 'OPEN_MOVIE_API_KEY', MyOpenMovieApiKey
+		it.buildConfigField 'String', 'OPEN_MOVIE_API_KEY', OpenMovieApiKey
 	}
 
 	compileOptions {
