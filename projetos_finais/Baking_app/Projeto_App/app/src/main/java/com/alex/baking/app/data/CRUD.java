@@ -1,7 +1,7 @@
 package com.alex.baking.app.data;
 
-import com.alex.baking.app.data.exception.DataException;
 import com.alex.baking.app.data.model.BaseModel;
+import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 
 /**
  * Created by Alex on 17/12/2017.
@@ -9,12 +9,12 @@ import com.alex.baking.app.data.model.BaseModel;
 
 public interface CRUD<ModelType extends BaseModel> {
 
-	ModelType create(ModelType model) throws DataException;
+	ModelType create(ModelType model);
 
-	ModelType recover(Long id) throws DataException;
+	ModelType recover(Long id) throws ConnectionException;
 
-	ModelType update(ModelType model) throws DataException;
+	ModelType update(ModelType model);
 
-	ModelType delete(ModelType model) throws DataException;
+	ModelType delete(ModelType model);
 
 }

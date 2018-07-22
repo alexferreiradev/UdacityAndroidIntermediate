@@ -2,11 +2,9 @@ package com.alex.baking.app.data.source.remote.network;
 
 import android.util.Log;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
-import com.alex.baking.app.data.source.remote.network.exception.NetworkResourceException;
-import com.alex.baking.app.util.MoviesUtil;
+import com.alex.baking.app.util.Util;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -20,7 +18,8 @@ public class NetworkResourceManager implements NetworkResource {
 	private static final String TAG = NetworkResourceManager.class.getSimpleName();
 
 	@Override
-	public String getStringResourceFromURL(URL url) throws NetworkResourceException, ConnectionException {
+	public String getStringResourceFromURL(URL url) throws ConnectionException {
+		String msgErroException = "Erro interno desconhecido";
 		HttpURLConnection connection = null;
 		String stringResource;
 		InputStream inputStream;
@@ -28,9 +27,8 @@ public class NetworkResourceManager implements NetworkResource {
 		try {
 			connection = (HttpURLConnection) url.openConnection();
 			if (connection == null) {
-				String msg = "Não pode ser aberta conexão para URL: " + url;
-				Log.e(TAG, msg);
-				throw new ConnectionException(msg);
+				msgErroException = "Não pode ser aberta conexão para URL: " + url;
+				throw new ConnectionException(msgErroException);
 			}
 
 			connection.setReadTimeout(30000);
@@ -41,24 +39,22 @@ public class NetworkResourceManager implements NetworkResource {
 
 			int responseCode = connection.getResponseCode();
 			if (responseCode != HttpsURLConnection.HTTP_OK) {
-				throw new NetworkResourceException("HTTP error code pela api: " + responseCode);
+				throw new RuntimeException("HTTP error code pela api: " + responseCode);
 			}
 
 			inputStream = connection.getInputStream();
-			stringResource = MoviesUtil.readStream(inputStream);
+			stringResource = Util.readStream(inputStream);
 			inputStream.close();
 		} catch (ConnectionException e) {
-			Log.e(TAG, "Url incorreta", e);
-			throw new ConnectionException("Host nao identificavel", e);
+			Log.e(TAG, msgErroException, e);
+			throw e;
 		} catch (UnknownHostException e) {
-			Log.e(TAG, "Dispositivo offline", e);
-			throw new ConnectionException("Host nao identificavel", e);
-		} catch (IOException e) {
-			Log.e(TAG, "Erro IO", e);
-			throw new NetworkResourceException(e);
+			msgErroException = "Erro de host desconhecido";
+			Log.e(TAG, msgErroException, e);
+			throw new RuntimeException(msgErroException, e);
 		} catch (Exception e) {
-			Log.e(TAG, "Erro desconhecido", e);
-			throw new NetworkResourceException(e);
+			Log.e(TAG, msgErroException, e);
+			throw new RuntimeException(msgErroException, e);
 		} finally {
 			if (connection != null) {
 				connection.disconnect();

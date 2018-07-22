@@ -12,6 +12,9 @@ public class SqlQuery {
 	private String[] selectionArgs;
 	private String sort;
 
+	private SqlQuery() {
+	}
+
 	public static SqlQueryBuilder builder() {
 		return new SqlQueryBuilder(new SqlQuery());
 	}
