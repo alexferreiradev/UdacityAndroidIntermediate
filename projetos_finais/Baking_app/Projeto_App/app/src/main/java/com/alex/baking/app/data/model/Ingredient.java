@@ -2,15 +2,15 @@ package com.alex.baking.app.data.model;
 
 public class Ingredient extends BaseModel {
 
-	private Long quantity;
+	private Double quantity;
 	private MeasureType measure;
 	private String ingredient;
 
-	public Long getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Long quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 

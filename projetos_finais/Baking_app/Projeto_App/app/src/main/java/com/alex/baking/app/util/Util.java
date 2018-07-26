@@ -1,5 +1,7 @@
 package com.alex.baking.app.util;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,6 +17,8 @@ import java.util.Locale;
  */
 
 public final class Util {
+
+	private static final String TAG = Util.class.getSimpleName();
 
 	/**
 	 * Formata data para o padrão FULL
@@ -75,5 +79,32 @@ public final class Util {
 		} while (bufferedReader.ready());
 
 		return stringBuilder.toString();
+	}
+
+	public static String readFileTextFromResources(String relativePathToFile) {
+		String textFromFile = null;
+
+		if (relativePathToFile == null) {
+			return null;
+		} else if (!relativePathToFile.startsWith("/")) {
+			relativePathToFile = "/" + relativePathToFile;
+		}
+
+		InputStream resourceAsStream = null;
+		try {
+			resourceAsStream = Util.class.getResourceAsStream(relativePathToFile);
+			textFromFile = Util.readStream(resourceAsStream);
+		} catch (IOException e) {
+			Log.e(TAG, "Erro de IO ao tentar ler arquivo.");
+		} finally {
+			if (resourceAsStream != null) {
+				try {
+					resourceAsStream.close();
+				} catch (IOException ignored) {
+				}
+			}
+		}
+
+		return textFromFile;
 	}
 }

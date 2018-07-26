@@ -7,11 +7,11 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class) // Necessita de Uri
-public class PMContractTest {
+public class BakingContractTest {
 
 	@Test
 	public void test_create_movie_table_sql() {
-		String createSql = PMContract.MovieEntry.createTableSql();
+		String createSql = BakingContract.RecipeEntry.createTableSql();
 
 		assertEquals("create table movie(_id integer primary key autoincrement, " +
 				"id_from_api integer unique, " +
@@ -24,7 +24,7 @@ public class PMContractTest {
 
 	@Test
 	public void test_drop_movie_table_sql() {
-		String dropSql = PMContract.MovieEntry.dropTableSql();
+		String dropSql = BakingContract.RecipeEntry.dropTableSql();
 
 		assertEquals("drop table if exists movie", dropSql);
 	}

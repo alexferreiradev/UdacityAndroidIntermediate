@@ -22,8 +22,8 @@ public class PMProvider extends ContentProvider {
 	private static UriMatcher buildMacher() {
 		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-		uriMatcher.addURI(PMContract.CONTENT_AUTHORITY, PMContract.MovieEntry.TABLE_NAME, ALL_MOVIES);
-		uriMatcher.addURI(PMContract.CONTENT_AUTHORITY, PMContract.MovieEntry.TABLE_NAME + "/#", MOVIE_BY_ID);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.RecipeEntry.TABLE_NAME, ALL_MOVIES);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.RecipeEntry.TABLE_NAME + "/#", MOVIE_BY_ID);
 
 		return uriMatcher;
 	}
@@ -37,7 +37,7 @@ public class PMProvider extends ContentProvider {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = readDb.delete(PMContract.MovieEntry.TABLE_NAME, "_id = ?", selectionArgs);
+				int rowsUpdated = readDb.delete(BakingContract.RecipeEntry.TABLE_NAME, "_id = ?", selectionArgs);
 				readDb.close();
 
 //                getContext().getContentResolver().notifyChange(mUri, );
@@ -49,7 +49,7 @@ public class PMProvider extends ContentProvider {
 
 	@Override
 	public String getType(@NonNull Uri uri) {
-		return PMContract.MovieEntry.CONTENT_TYPE;
+		return BakingContract.RecipeEntry.CONTENT_TYPE;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class PMProvider extends ContentProvider {
 
 		switch (sUriMacher.match(uri)) {
 			case ALL_MOVIES:
-				long idMovie = readDb.insert(PMContract.MovieEntry.TABLE_NAME, null, values);
+				long idMovie = readDb.insert(BakingContract.RecipeEntry.TABLE_NAME, null, values);
 				if (idMovie > 0) {
 					uri = ContentUris.withAppendedId(uri, idMovie);
 				} else {
@@ -74,7 +74,7 @@ public class PMProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		mSqlHelper = new MovieSqlHelper(getContext());
+		mSqlHelper = new BakingSqlHelper(getContext());
 
 		return true;
 	}
@@ -88,7 +88,7 @@ public class PMProvider extends ContentProvider {
 			case ALL_MOVIES:
 			case MOVIE_BY_ID:
 				String limitParam = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
-				cursor = readDb.query(PMContract.MovieEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder, limitParam);
+				cursor = readDb.query(BakingContract.RecipeEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder, limitParam);
 				break;
 		}
 
@@ -104,7 +104,7 @@ public class PMProvider extends ContentProvider {
 			case MOVIE_BY_ID:
 				long movieId = ContentUris.parseId(uri);
 				selectionArgs = new String[]{String.valueOf(movieId)};
-				int rowsUpdated = writerDb.update(PMContract.MovieEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
+				int rowsUpdated = writerDb.update(BakingContract.RecipeEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
 				writerDb.close();
 				return rowsUpdated;
 			default:

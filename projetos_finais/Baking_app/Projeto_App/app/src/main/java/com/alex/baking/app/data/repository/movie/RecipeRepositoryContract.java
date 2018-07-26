@@ -16,8 +16,8 @@ public interface RecipeRepositoryContract extends DefaultRepository<Recipe> {
 
 	List<Recipe> getRecipeList(int limit, int offset) throws ConnectionException;
 
-	List<Ingredient> getIngredientListByRecipe(Long recipeId, int limit, int offset);
+	List<Ingredient> getIngredientListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException;
 
-	List<Step> getStepListByRecipe(Long recipeId, int limit, int offset);
+	List<Step> getStepListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException;
 
 }

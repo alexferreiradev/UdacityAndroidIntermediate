@@ -55,12 +55,12 @@ public class RecipeRepositoryTest {
 	}
 
 	@Test
-	public void getIngredientListByRecipe() {
+	public void getIngredientListByRecipe() throws ConnectionException {
 		assertNotNull(repo.getIngredientListByRecipe(1L, 0, 0));
 	}
 
 	@Test
-	public void getStepListByRecipe() {
+	public void getStepListByRecipe() throws ConnectionException {
 		assertNotNull(repo.getStepListByRecipe(1L, 0, 0));
 	}
 }

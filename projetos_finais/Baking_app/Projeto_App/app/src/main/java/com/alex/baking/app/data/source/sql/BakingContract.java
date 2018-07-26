@@ -24,13 +24,13 @@ import android.provider.BaseColumns;
 /**
  * Defines table and column names for the movies database.
  */
-public class PMContract {
+public class BakingContract {
 
 	public static final String CONTENT_AUTHORITY = "com.alex.popularmovies.app";
 
 	protected static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
-	public static final class MovieEntry implements BaseColumns {
+	public static final class RecipeEntry implements BaseColumns {
 
 		public static final String TABLE_NAME = "movie";
 
