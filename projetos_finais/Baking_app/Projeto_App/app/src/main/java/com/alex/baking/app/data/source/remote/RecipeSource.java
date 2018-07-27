@@ -13,11 +13,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecipeAPISource extends BaseRemoteSource<Recipe> {
+public class RecipeSource extends BaseRemoteSource<Recipe> {
 
-	private static final String TAG = RecipeAPISource.class.getSimpleName();
+	private static final String TAG = RecipeSource.class.getSimpleName();
 
-	public RecipeAPISource(NetworkResource networkResource) {
+	public RecipeSource(NetworkResource networkResource) {
 		super(networkResource);
 	}
 

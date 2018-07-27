@@ -4,8 +4,10 @@ import android.util.Log;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
+import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -19,11 +21,11 @@ public class BaseRepository<ModelType extends BaseModel> implements DefaultRepos
 	@SuppressWarnings("WeakerAccess")
 	protected MemoryCache<ModelType> mCacheSource;
 	@SuppressWarnings("WeakerAccess")
-	protected DefaultSource<ModelType> mLocalSource;
+	protected DefaultSource<ModelType, SqlQuery> mLocalSource;
 	@SuppressWarnings("WeakerAccess")
-	protected DefaultSource<ModelType> mRemoteSource;
+	protected DefaultSource<ModelType, URL> mRemoteSource;
 
-	public BaseRepository(MemoryCache<ModelType> cacheSource, DefaultSource<ModelType> localSource, DefaultSource<ModelType> remoteSource) {
+	public BaseRepository(MemoryCache<ModelType> cacheSource, DefaultSource<ModelType, SqlQuery> localSource, DefaultSource<ModelType, URL> remoteSource) {
 		this.mCacheSource = cacheSource;
 		this.mLocalSource = localSource;
 		this.mRemoteSource = remoteSource;

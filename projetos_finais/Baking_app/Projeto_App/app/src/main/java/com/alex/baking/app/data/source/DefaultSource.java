@@ -10,13 +10,13 @@ import java.util.List;
  * Created by Alex on 02/04/2017.
  */
 
-public interface DefaultSource<ModelType extends BaseModel> {
+public interface DefaultSource<ModelType extends BaseModel, QueryReturnType> {
 
 	ModelType create(ModelType model);
 
 	ModelType recover(Long id) throws ConnectionException;
 
-	List<ModelType> recover(QuerySpecification specification) throws ConnectionException;
+	List<ModelType> recover(QuerySpecification<QueryReturnType> specification) throws ConnectionException;
 
 	ModelType update(ModelType model);
 

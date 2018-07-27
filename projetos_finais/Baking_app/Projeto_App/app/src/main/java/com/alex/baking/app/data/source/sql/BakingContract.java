@@ -32,16 +32,83 @@ public class BakingContract {
 
 	public static final class RecipeEntry implements BaseColumns {
 
-		public static final String TABLE_NAME = "movie";
+		public static final String TABLE_NAME = "recipe";
 
 		public static final String COLUMN_ID_FROM_API = "id_from_api";
-		public static final String COLUMN_TITLE = "title";
-		public static final String COLUMN_POSTER_PATH = "poster_path";
-		public static final String COLUMN_THUMBNAIL_PATH = "thumbnail_path";
-		public static final String COLUMN_SYNOPSYS = "synopsys";
-		public static final String COLUMN_RATING = "rating";
-		public static final String COLUMN_RELEASE_DATE = "release_date";
-		public static final String COLUMN_IS_FAVORITE = "is_favorite";
+		public static final String COLUMN_NAME = "nome";
+		public static final String COLUMN_SERVING = "serving";
+		public static final String COLUMN_IMAGE = "image";
+
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
+
+
+		public static Uri buildRecipeUri(long id) {
+			return ContentUris.withAppendedId(CONTENT_URI, id);
+		}
+
+		public static String createTableSql() {
+			return "create table " + TABLE_NAME + "(" +
+					_ID + " integer primary key autoincrement, " +
+					COLUMN_ID_FROM_API + " integer unique, " +
+					COLUMN_NAME + " text, " +
+					COLUMN_SERVING + " text, " +
+					COLUMN_IMAGE + " text, " +
+					")";
+		}
+
+		public static String dropTableSql() {
+			return "drop table if exists " + TABLE_NAME;
+		}
+	}
+
+	public static final class IngredientEntry implements BaseColumns {
+
+		public static final String TABLE_NAME = "ingredient";
+
+		public static final String COLUMN_QUANTITY = "quantity";
+		public static final String COLUMN_MEASURE = "measure";
+		public static final String COLUMN_INGREDIENT = "ingredient";
+		public static final String COLUMN_FK_RECIPE = "recipe_id";
+
+		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
+		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
+		public static final Uri CONTENT_URI_BY_RECIPE_ID = RecipeEntry.CONTENT_URI.buildUpon().appendPath(RecipeEntry.TABLE_NAME).appendPath("#").appendPath(TABLE_NAME).build();
+		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
+		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
+
+
+		public static Uri buildIngredientUri(long id) {
+			return ContentUris.withAppendedId(CONTENT_URI, id);
+		}
+
+		public static String createTableSql() {
+			return "create table " + TABLE_NAME + "(" +
+					_ID + " integer primary key autoincrement, " +
+					COLUMN_FK_RECIPE + " integer, " +
+					COLUMN_QUANTITY + " real, " +
+					COLUMN_MEASURE + " text, " +
+					COLUMN_INGREDIENT + " text, " +
+					")";
+		}
+
+		public static String dropTableSql() {
+			return "drop table if exists " + TABLE_NAME;
+		}
+	}
+
+	public static final class StepEntry implements BaseColumns {
+
+		public static final String TABLE_NAME = "step";
+
+		public static final String COLUMN_ID_FROM_API = "id_from_api";
+		public static final String COLUMN_SHORT_DESCRIPTION = "short_description";
+		public static final String COLUMN_DESCRIPTION = "description";
+		public static final String COLUMN_VIDEO_URL = "video_url";
+		public static final String COLUMN_THUMBNAIL_URL = "thumbnail_url";
+		public static final String COLUMN_FK_RECIPE = "recipe_id";
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
@@ -57,13 +124,11 @@ public class BakingContract {
 			return "create table " + TABLE_NAME + "(" +
 					_ID + " integer primary key autoincrement, " +
 					COLUMN_ID_FROM_API + " integer unique, " +
-					COLUMN_TITLE + " text, " +
-					COLUMN_POSTER_PATH + " text, " +
-					COLUMN_THUMBNAIL_PATH + " text, " +
-					COLUMN_SYNOPSYS + " text, " +
-					COLUMN_RATING + " real, " +
-					COLUMN_RELEASE_DATE + " integer, " +
-					COLUMN_IS_FAVORITE + " bool" +
+					COLUMN_FK_RECIPE + " integer, " +
+					COLUMN_SHORT_DESCRIPTION + " real, " +
+					COLUMN_DESCRIPTION + " text, " +
+					COLUMN_VIDEO_URL + " text, " +
+					COLUMN_THUMBNAIL_URL + " text, " +
 					")";
 		}
 

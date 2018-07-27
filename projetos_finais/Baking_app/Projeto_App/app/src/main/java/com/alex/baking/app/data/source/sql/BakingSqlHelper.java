@@ -17,16 +17,18 @@ public class BakingSqlHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String createSql = BakingContract.RecipeEntry.createTableSql();
-		db.execSQL(createSql);
+		db.execSQL(BakingContract.RecipeEntry.createTableSql());
+		db.execSQL(BakingContract.IngredientEntry.createTableSql());
+		db.execSQL(BakingContract.StepEntry.createTableSql());
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		String dropSql = BakingContract.RecipeEntry.dropTableSql();
-
-		db.execSQL(dropSql);
 		Log.i(TAG, "Atualizando banco da versão: " + oldVersion + " para: " + newVersion);
+
+		db.execSQL(BakingContract.RecipeEntry.dropTableSql());
+		db.execSQL(BakingContract.IngredientEntry.dropTableSql());
+		db.execSQL(BakingContract.StepEntry.dropTableSql());
 
 		onCreate(db);
 	}

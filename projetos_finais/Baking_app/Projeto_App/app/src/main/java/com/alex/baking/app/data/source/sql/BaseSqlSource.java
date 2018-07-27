@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.source.DefaultSource;
+import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by Alex on 02/04/2017.
  */
 
-abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSource<ModelType> {
+abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSource<ModelType, SqlQuery> {
 
 	protected ContentResolver mResolver;
 

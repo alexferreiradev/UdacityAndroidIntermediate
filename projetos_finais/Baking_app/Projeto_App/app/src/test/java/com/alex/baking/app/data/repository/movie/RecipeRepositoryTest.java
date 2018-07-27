@@ -4,6 +4,7 @@ import com.alex.baking.app.data.model.Recipe;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
 import com.alex.baking.app.data.source.queryspec.QuerySpecification;
+import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,9 +30,9 @@ public class RecipeRepositoryTest {
 	@Mock(name = "cache")
 	private MemoryCache<Recipe> mCacheSource;
 	@Mock(name = "local")
-	private DefaultSource<Recipe> mLocalSource;
+	private DefaultSource<Recipe, SqlQuery> mLocalSource;
 	@Mock(name = "remoto")
-	private DefaultSource<Recipe> mRemoteSource;
+	private DefaultSource<Recipe, URL> mRemoteSource;
 
 	@InjectMocks
 	private RecipeRepository repo;

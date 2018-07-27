@@ -8,8 +8,10 @@ import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
 import com.alex.baking.app.data.source.queryspec.remote.IngredientQuery;
 import com.alex.baking.app.data.source.queryspec.remote.RecipeQuery;
+import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -18,10 +20,10 @@ import java.util.List;
 
 public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRepositoryContract {
 	private static final String TAG = RecipeRepository.class.getSimpleName();
-	private DefaultSource<Ingredient> mRemoteIngredientSource;
-	private DefaultSource<Step> mRemoteStepSource;
+	private DefaultSource<Ingredient, URL> mRemoteIngredientSource;
+	private DefaultSource<Step, URL> mRemoteStepSource;
 
-	public RecipeRepository(MemoryCache<Recipe> cacheSource, DefaultSource<Recipe> localSource, DefaultSource<Recipe> remoteSource) {
+	public RecipeRepository(MemoryCache<Recipe> cacheSource, DefaultSource<Recipe, SqlQuery> localSource, DefaultSource<Recipe, URL> remoteSource) {
 		super(cacheSource, localSource, remoteSource);
 	}
 
@@ -40,11 +42,11 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 		return mRemoteStepSource.recover(new IngredientQuery(limit, offset, recipeId));
 	}
 
-	public void setRemoteIngredientSource(DefaultSource<Ingredient> remoteIngredientSource) {
+	public void setRemoteIngredientSource(DefaultSource<Ingredient, URL> remoteIngredientSource) {
 		this.mRemoteIngredientSource = remoteIngredientSource;
 	}
 
-	public void setRemoteStepSource(DefaultSource<Step> remoteStepSource) {
+	public void setRemoteStepSource(DefaultSource<Step, URL> remoteStepSource) {
 		this.mRemoteStepSource = remoteStepSource;
 	}
 }

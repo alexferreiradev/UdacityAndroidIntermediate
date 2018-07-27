@@ -2,10 +2,19 @@ package com.alex.baking.app.data.model;
 
 public class Step extends BaseModel {
 
+	private String idFromAPI;
 	private String shortDescription;
 	private String description;
 	private String videoURL;
 	private String thumbnailURL;
+
+	public String getIdFromAPI() {
+		return idFromAPI;
+	}
+
+	public void setIdFromAPI(String idFromAPI) {
+		this.idFromAPI = idFromAPI;
+	}
 
 	public String getShortDescription() {
 		return shortDescription;
@@ -41,12 +50,12 @@ public class Step extends BaseModel {
 
 	@Override
 	public boolean equals(Object o) {
-
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof Step)) return false;
 
 		Step step = (Step) o;
 
+		if (idFromAPI != null ? !idFromAPI.equals(step.idFromAPI) : step.idFromAPI != null) return false;
 		if (shortDescription != null ? !shortDescription.equals(step.shortDescription) : step.shortDescription != null) return false;
 		if (description != null ? !description.equals(step.description) : step.description != null) return false;
 		if (videoURL != null ? !videoURL.equals(step.videoURL) : step.videoURL != null) return false;
@@ -55,7 +64,8 @@ public class Step extends BaseModel {
 
 	@Override
 	public int hashCode() {
-		int result = shortDescription != null ? shortDescription.hashCode() : 0;
+		int result = idFromAPI != null ? idFromAPI.hashCode() : 0;
+		result = 31 * result + (shortDescription != null ? shortDescription.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (videoURL != null ? videoURL.hashCode() : 0);
 		result = 31 * result + (thumbnailURL != null ? thumbnailURL.hashCode() : 0);
@@ -65,7 +75,8 @@ public class Step extends BaseModel {
 	@Override
 	public String toString() {
 		return "Step{" +
-				"shortDescription='" + shortDescription + '\'' +
+				"idFromAPI='" + idFromAPI + '\'' +
+				", shortDescription='" + shortDescription + '\'' +
 				", description='" + description + '\'' +
 				", videoURL='" + videoURL + '\'' +
 				", thumbnailURL='" + thumbnailURL + '\'' +

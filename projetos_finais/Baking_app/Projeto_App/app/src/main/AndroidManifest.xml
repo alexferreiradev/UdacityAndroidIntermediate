@@ -12,7 +12,7 @@
 			android:supportsRtl="false"
 			android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
 		<provider
-				android:name=".data.source.sql.PMProvider"
+				android:name=".data.source.sql.BakingProvider"
 				android:authorities="com.alex.baking.app"
 				android:exported="false"/>
 

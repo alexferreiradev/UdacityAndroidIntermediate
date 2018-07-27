@@ -37,7 +37,7 @@ public class IngredientSourceTest {
 		MockitoAnnotations.initMocks(this);
 	}
 
-	@Test
+	@Test // TODO: 27/07/18 Testar com test instrumentado, pois nao esta criando obj json
 	public void recover_query() throws ConnectionException {
 		String validJsonString = Util.readFileTextFromResources("/recipe_source/valid_recipe_file.json");
 		when(query.getQuery()).thenReturn(null);

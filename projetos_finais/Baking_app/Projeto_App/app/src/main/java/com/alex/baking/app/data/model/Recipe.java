@@ -4,12 +4,21 @@ import java.util.List;
 
 public class Recipe extends BaseModel<Recipe> {
 
+	private String idFromAPI;
 	private String nome;
 	private String serving;
 	private String image;
 
 	private List<Ingredient> ingredientList;
 	private List<Step> stepList;
+
+	public String getIdFromAPI() {
+		return idFromAPI;
+	}
+
+	public void setIdFromAPI(String idFromAPI) {
+		this.idFromAPI = idFromAPI;
+	}
 
 	public List<Ingredient> getIngredientList() {
 		return ingredientList;
@@ -58,6 +67,7 @@ public class Recipe extends BaseModel<Recipe> {
 
 		Recipe recipe = (Recipe) o;
 
+		if (idFromAPI != null ? !idFromAPI.equals(recipe.idFromAPI) : recipe.idFromAPI != null) return false;
 		if (nome != null ? !nome.equals(recipe.nome) : recipe.nome != null) return false;
 		if (serving != null ? !serving.equals(recipe.serving) : recipe.serving != null) return false;
 		if (image != null ? !image.equals(recipe.image) : recipe.image != null) return false;
@@ -67,7 +77,8 @@ public class Recipe extends BaseModel<Recipe> {
 
 	@Override
 	public int hashCode() {
-		int result = nome != null ? nome.hashCode() : 0;
+		int result = idFromAPI != null ? idFromAPI.hashCode() : 0;
+		result = 31 * result + (nome != null ? nome.hashCode() : 0);
 		result = 31 * result + (serving != null ? serving.hashCode() : 0);
 		result = 31 * result + (image != null ? image.hashCode() : 0);
 		result = 31 * result + (ingredientList != null ? ingredientList.hashCode() : 0);
@@ -78,7 +89,8 @@ public class Recipe extends BaseModel<Recipe> {
 	@Override
 	public String toString() {
 		return "Recipe{" +
-				"nome='" + nome + '\'' +
+				"idFromAPI='" + idFromAPI + '\'' +
+				", nome='" + nome + '\'' +
 				", serving='" + serving + '\'' +
 				", image='" + image + '\'' +
 				", ingredientList=" + ingredientList +

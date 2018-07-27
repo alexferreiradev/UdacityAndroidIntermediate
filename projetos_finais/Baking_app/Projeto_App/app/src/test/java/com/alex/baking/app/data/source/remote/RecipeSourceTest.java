@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class RecipeAPISourceTest {
+public class RecipeSourceTest {
 
 	@Mock
 	private NetworkResource networkResource;
@@ -30,7 +30,7 @@ public class RecipeAPISourceTest {
 	private QuerySpecification query;
 
 	@InjectMocks
-	private RecipeAPISource source;
+	private RecipeSource source;
 
 	@Before
 	public void setUp() {
