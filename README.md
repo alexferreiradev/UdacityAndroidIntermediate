@@ -3,6 +3,9 @@ Para arquivar projetos implementados durante o curso.
 
 # Lista de projetos
 
-# Configuração de Ambiente
+## Projeto 0
+Na pasta UdacityPortifolio
 
-Veja mais em (/tuto_ambiente.md)[link]
+In the path UdacityPortifolio
+## Projeto 1
+testes
