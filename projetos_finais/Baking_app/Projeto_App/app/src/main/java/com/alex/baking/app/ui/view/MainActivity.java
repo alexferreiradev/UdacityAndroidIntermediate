@@ -25,8 +25,6 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		mPresenter = null; // TODO: 29/07/18 - Não comitar, dont push this
 	}
 
 	@Override

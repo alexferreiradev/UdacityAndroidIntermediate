@@ -8,7 +8,8 @@ import com.alex.baking.app.ui.view.contract.RecipeContract;
 public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, RecipeContract.Presenter> implements RecipeContract.View {
 
 	public RecipeActivity() {
-		super("Recipe selected"); // TODO: 29/07/18 Trocar para resource
+		super("");
+		setTitle(R.string.recipe_steps_label);
 	}
 
 	public RecipeActivity(String mTitle) {

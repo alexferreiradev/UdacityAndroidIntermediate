@@ -9,7 +9,6 @@ import com.alex.baking.app.data.model.Recipe;
 import com.alex.baking.app.data.source.queryspec.QuerySpecification;
 import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -23,7 +22,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-@Ignore // TODO: 26/07/18 - Não comitar, dont push this
 public class RecipeSqlSourceTest {
 
 	@Mock
