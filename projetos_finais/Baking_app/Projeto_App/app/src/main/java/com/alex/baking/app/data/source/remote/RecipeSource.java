@@ -49,7 +49,7 @@ public class RecipeSource extends BaseRemoteSource<Recipe> {
 	@Override
 	protected Recipe parseJSONToModel(JSONObject jsonObject) throws Exception {
 		Recipe recipe = new Recipe();
-		recipe.setId(jsonObject.getLong("id"));
+		recipe.setIdFromAPI(jsonObject.getString("id"));
 		recipe.setNome(jsonObject.getString("name"));
 		recipe.setServing(jsonObject.getString("servings"));
 		recipe.setImage(jsonObject.getString("image"));

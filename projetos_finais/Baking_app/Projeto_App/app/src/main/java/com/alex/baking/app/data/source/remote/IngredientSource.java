@@ -28,7 +28,7 @@ public class IngredientSource extends BaseRemoteSource<Ingredient> {
 
 	@Override
 	protected List<Ingredient> getModelListFromJsonResults(String jsonString) {
-		List<Ingredient> IngredientList = new ArrayList<>();
+		List<Ingredient> ingredientList = new ArrayList<>();
 
 		try {
 			JSONArray jsonArray = new JSONArray(jsonString);
@@ -37,24 +37,24 @@ public class IngredientSource extends BaseRemoteSource<Ingredient> {
 				if (recipeJSONObj.getLong("id") == recipeId) {
 					JSONArray ingredients = recipeJSONObj.getJSONArray("ingredients");
 					for (int j = 0; j < ingredients.length(); j++) {
-						JSONObject ingredientObj = ingredients.getJSONObject(i);
+						JSONObject ingredientObj = ingredients.getJSONObject(j);
 						Ingredient Ingredient = parseJSONToModel(ingredientObj);
 
-						IngredientList.add(Ingredient);
+						ingredientList.add(Ingredient);
 					}
 				}
 			}
 		} catch (JSONException e) {
-			String msg = "Erro ao fazer parse de JSON";
+			String msg = "Erro de json ao fazer parse de JSON";
 			Log.e(TAG, msg, e);
 			throw new RuntimeException(msg, e);
 		} catch (Exception e) {
-			String msg = "Erro ao fazer parse de JSON";
+			String msg = "Erro desconhecido ao fazer parse de JSON";
 			Log.e(TAG, msg, e);
 			throw new RuntimeException(msg, e);
 		}
 
-		return IngredientList;
+		return ingredientList;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package com.alex.baking.app.data.repository.movie;
+package com.alex.baking.app.data.repository.recipe;
 
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.model.Recipe;

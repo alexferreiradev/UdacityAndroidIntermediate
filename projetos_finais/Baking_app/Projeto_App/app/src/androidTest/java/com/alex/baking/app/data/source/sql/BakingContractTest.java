@@ -6,27 +6,26 @@ import org.junit.runner.RunWith;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(AndroidJUnit4.class) // Necessita de Uri
+@RunWith(AndroidJUnit4.class) // Necessita de Uri do Android
 public class BakingContractTest {
 
 	@Test
 	public void test_create_movie_table_sql() {
 		String createSql = BakingContract.RecipeEntry.createTableSql();
 
-		assertEquals("create table movie(_id integer primary key autoincrement, " +
+		assertEquals("create table recipe(" +
+				"_id integer primary key autoincrement, " +
 				"id_from_api integer unique, " +
-				"title text, poster_path text, " +
-				"thumbnail_path text, " +
-				"synopsys text, rating real, " +
-				"release_date integer, " +
-				"is_favorite bool)", createSql);
+				"nome text, " +
+				"serving text, " +
+				"image text, )", createSql);
 	}
 
 	@Test
 	public void test_drop_movie_table_sql() {
 		String dropSql = BakingContract.RecipeEntry.dropTableSql();
 
-		assertEquals("drop table if exists movie", dropSql);
+		assertEquals("drop table if exists recipe", dropSql);
 	}
 
 }

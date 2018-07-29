@@ -1,4 +1,4 @@
-package com.alex.baking.app.data.repository.movie;
+package com.alex.baking.app.data.repository.recipe;
 
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.Recipe;
@@ -6,8 +6,8 @@ import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.data.repository.BaseRepository;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
-import com.alex.baking.app.data.source.queryspec.remote.IngredientQuery;
 import com.alex.baking.app.data.source.queryspec.remote.RecipeQuery;
+import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsQuery;
 import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 
@@ -34,12 +34,12 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 
 	@Override
 	public List<Ingredient> getIngredientListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException {
-		return mRemoteIngredientSource.recover(new IngredientQuery(limit, offset, recipeId));
+		return mRemoteIngredientSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
 	}
 
 	@Override
 	public List<Step> getStepListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException {
-		return mRemoteStepSource.recover(new IngredientQuery(limit, offset, recipeId));
+		return mRemoteStepSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
 	}
 
 	public void setRemoteIngredientSource(DefaultSource<Ingredient, URL> remoteIngredientSource) {

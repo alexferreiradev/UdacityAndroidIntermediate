@@ -36,8 +36,8 @@ public class StepSource extends BaseRemoteSource<Step> {
 				if (recipeJSONObj.getLong("id") == recipeId) {
 					JSONArray stepsJsonArray = recipeJSONObj.getJSONArray("steps");
 					for (int j = 0; j < stepsJsonArray.length(); j++) {
-						JSONObject ingredientObj = stepsJsonArray.getJSONObject(i);
-						Step Step = parseJSONToModel(ingredientObj);
+						JSONObject stepObj = stepsJsonArray.getJSONObject(j);
+						Step Step = parseJSONToModel(stepObj);
 
 						StepList.add(Step);
 					}
@@ -59,7 +59,7 @@ public class StepSource extends BaseRemoteSource<Step> {
 	@Override
 	protected Step parseJSONToModel(JSONObject jsonObject) throws Exception {
 		Step step = new Step();
-		step.setId(jsonObject.getLong("id"));
+		step.setIdFromAPI(jsonObject.getString("id"));
 		step.setDescription(jsonObject.getString("description"));
 		step.setShortDescription(jsonObject.getString("shortDescription"));
 		step.setThumbnailURL(jsonObject.getString("shortDescription"));
