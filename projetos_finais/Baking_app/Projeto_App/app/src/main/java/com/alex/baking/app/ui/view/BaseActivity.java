@@ -1,5 +1,6 @@
 package com.alex.baking.app.ui.view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -63,9 +64,9 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 			}
 			supportActionBar.setDisplayHomeAsUpEnabled(true);
 
-//			Drawable drawable = getResources().getDrawable(R.drawable.ic_local_movies_black);
-//			drawable.setBounds(24, 24, 24, 24);
-//			supportActionBar.setHomeAsUpIndicator(drawable); // TODO: 22/07/18 add icone
+			Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
+			drawable.setBounds(24, 24, 24, 24);
+			supportActionBar.setHomeAsUpIndicator(drawable);
 		} else {
 			throw new RuntimeException("Não foi possivel configurar a action bar para suporte a versoes antigas");
 		}

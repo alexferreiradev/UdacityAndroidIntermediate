@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		tools:context="com.alex.baking.app.ui.view.MainActivity">
+
+	<include android:id="@+id/includedLayout"
+			 layout="@layout/default_layout"
+			 android:layout_height="wrap_content"
+			 tools:visibility="gone"
+			 android:layout_width="match_parent"
+	/>
+
+	<android.support.v7.widget.RecyclerView
+			android:id="@+id/rvRecipeList"
+			style="@style/main.list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+
+	<TextView android:layout_width="match_parent" android:layout_height="match_parent"
+			  android:id="@+id/tvEmpty"
+			  android:visibility="gone"
+			  style="@style/main.emptyText"
+	/>
+
+</android.support.constraint.ConstraintLayout>
