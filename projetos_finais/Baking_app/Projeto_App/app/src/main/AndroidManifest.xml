@@ -1,27 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-		  package="com.alex.baking.app">
+		  xmlns:tools="http://schemas.android.com/tools" package="com.alex.baking.app">
 
 	<uses-permission android:name="android.permission.INTERNET"/>
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
 	<application
 			android:allowBackup="false"
-			android:icon="@drawable/ic_local_movies_black"
+			android:icon="@drawable/ic_action_favorite"
 			android:label="@string/app_name"
 			android:supportsRtl="false"
-			android:theme="@style/AppTheme">
-		<activity android:name=".ui.view.MainActivity">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN"/>
-				<category android:name="android.intent.category.LAUNCHER"/>
-			</intent-filter>
+			android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
+		<provider
+				android:name=".data.source.sql.BakingProvider"
+				android:authorities="com.alex.baking.app"
+				android:exported="false"/>
+
+		<activity android:name=".ui.view.Main2Activity">
+
 		</activity>
-
-		<provider android:authorities="com.alex.baking.app" android:name=".data.source.sql.PMProvider" android:exported="false"/>
-
-		<activity android:name=".ui.view.moviedetail.DetailsActivity"/>
 	</application>
-
 
 </manifest>
