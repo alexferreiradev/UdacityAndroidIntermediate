@@ -1,0 +1,143 @@
+Index: gradle/wrapper/gradle-wrapper.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- gradle/wrapper/gradle-wrapper.properties	(revision 7507f4e375a8e377f09950f74f8e75bd7a591ea9)
++++ gradle/wrapper/gradle-wrapper.properties	(date 1531929995000)
+@@ -1,6 +1,6 @@
+-#Mon Dec 28 10:00:20 PST 2015
++#Tue Jul 17 13:41:24 BRT 2018
+ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-2.14.1-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-4.4-all.zip
+Index: .gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .gitignore	(revision 7507f4e375a8e377f09950f74f8e75bd7a591ea9)
++++ .gitignore	(date 1531929995000)
+@@ -1,9 +1,33 @@
+-*.iml
+-.gradle
+-/local.properties
+-/.idea/workspace.xml
+-/.idea/libraries
+-.DS_Store
+-/build
+-/captures
+-.externalNativeBuild
++####### Android output
++# Built application files
++**/*.apk
++**/*.ap_
++# Files for the ART/Dalvik VM
++**/*.dex
++# Java class files
++**/*.class
++# Generated files
++**/bin/
++**/gen/
++**/out/
++**/app/free/
++
++# Gradle files
++**/.gradle/
++**/gradle/
++**/build/
++**/local.properties
++
++# Log Files
++**/*.log
++
++# IDE files
++**/*.iml
++**/.idea/
++
++# Keystore files
++**/*.jks
++
++# ignore nos submodules
++projetos_aulas/ud851-Exercises/
++projetos_aulas/ud851-Sunshine/
+\ No newline at end of file
+Index: build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build.gradle	(revision 7507f4e375a8e377f09950f74f8e75bd7a591ea9)
++++ build.gradle	(date 1531929995000)
+@@ -2,10 +2,11 @@
+ 
+ buildscript {
+     repositories {
++        google()
+         jcenter()
+     }
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:2.2.3'
++        classpath 'com.android.tools.build:gradle:3.1.3'
+ 
+         // NOTE: Do not place your application dependencies here; they belong
+         // in the individual module build.gradle files
+@@ -14,6 +15,7 @@
+ 
+ allprojects {
+     repositories {
++        google()
+         jcenter()
+     }
+ }
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision 7507f4e375a8e377f09950f74f8e75bd7a591ea9)
++++ app/build.gradle	(date 1531932332000)
+@@ -1,12 +1,12 @@
+ apply plugin: 'com.android.application'
+ 
+ android {
+-    compileSdkVersion 25
+-    buildToolsVersion "25.0.2"
++    compileSdkVersion 27
++    buildToolsVersion "27.0.3"
+     defaultConfig {
+         applicationId "com.example.android.android_me"
+         minSdkVersion 16
+-        targetSdkVersion 25
++        targetSdkVersion 27
+         versionCode 1
+         versionName "1.0"
+         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+@@ -20,10 +20,20 @@
+ }
+ 
+ dependencies {
+-    compile fileTree(dir: 'libs', include: ['*.jar'])
+-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
++    implementation fileTree(dir: 'libs', include: ['*.jar'])
++
++    implementation 'com.android.support:appcompat-v7:27.0.2'
++
++    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+         exclude group: 'com.android.support', module: 'support-annotations'
+     })
+-    compile 'com.android.support:appcompat-v7:25.1.0'
+-    testCompile 'junit:junit:4.12'
++
++    testImplementation 'junit:junit:4.12'
++
++    // Obrigatório para testes de unidade locais (framework JUnit 4)
++    testImplementation 'junit:junit:4.12'
++
++    // Obrigatório para testes instrumentados
++    androidTestImplementation 'com.android.support:support-annotations:27.0.2'
++    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+ }
