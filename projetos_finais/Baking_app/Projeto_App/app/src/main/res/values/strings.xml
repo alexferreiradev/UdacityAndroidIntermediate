@@ -22,4 +22,11 @@
 	<string name="action_top_voted_movies_title">Top Voted Movies</string>
 	<string name="action_popular_movies_title">Popular movies</string>
 	<string name="action_favorite_movies_title">Favorite movies</string>
+	<string name="recipe_image_content_description">Imagem do prato</string>
+	<string name="recipe_ingredient_label">Ingredientes</string>
+	<string name="recipe_steps_label">Modo de preparo</string>
+	<string name="recipe_serving_label">Serve</string>
+	<string name="step_bt_next">Próxima etapa</string>
+	<string name="text_not_loaded">Carregando…</string>
+	<string name="step_description_label">Instruções</string>
 </resources>

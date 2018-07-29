@@ -1,5 +1,6 @@
 package com.alex.baking.app.ui.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,6 +19,11 @@ public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> 
 	}
 
 	protected abstract void startWithArguments(Bundle arguments);
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {

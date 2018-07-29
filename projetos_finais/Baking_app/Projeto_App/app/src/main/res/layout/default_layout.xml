@@ -17,7 +17,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			app:title="@string/app_name"
-			tools:text="Popular Movies App"
+			tools:text="@string/app_name"
 			style="@style/toobarActionBar"/>
 
 </RelativeLayout>

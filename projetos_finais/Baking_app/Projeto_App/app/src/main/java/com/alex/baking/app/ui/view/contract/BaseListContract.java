@@ -1,8 +1,10 @@
-package com.alex.baking.app.ui.presenter;
+package com.alex.baking.app.ui.view.contract;
 
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import com.alex.baking.app.data.model.BaseModel;
+import com.alex.baking.app.ui.presenter.BasePresenter;
+import com.alex.baking.app.ui.presenter.IPresenter;
 
 import java.util.List;
 

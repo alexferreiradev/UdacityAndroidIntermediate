@@ -6,10 +6,7 @@ import android.util.Log;
 import android.widget.ListAdapter;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.repository.DefaultRepository;
-
-/**
- * Created by Alex on 17/03/2017.
- */
+import com.alex.baking.app.ui.view.contract.BaseListContract;
 
 /**
  * Classe base para criar presenter para activities que tenham listview ou algum container de info.
