@@ -14,8 +14,8 @@ import com.alex.baking.app.ui.view.contract.BaseListContract;
  * @param <ViewType>  - Interface
  * @param <ModelType> - Tipo de model
  */
-public abstract class BaseListPresenter<ViewType extends BaseListContract.View, ModelType extends BaseModel, RepoType extends DefaultRepository>
-		extends BasePresenter<ViewType, ModelType, RepoType>
+public abstract class BaseListPresenter<ViewType extends BaseListContract.View, ModelType extends BaseModel, RepoType extends DefaultRepository, TaskParamType, TaskProgressType, TaskResultType>
+		extends BasePresenter<ViewType, ModelType, RepoType, TaskParamType, TaskProgressType, TaskResultType>
 		implements BaseListContract.Presenter<ModelType> {
 
 	// Esta configuração deve ser dinamica quando trabalhado com outros tamanhos de dispositivos
@@ -31,7 +31,7 @@ public abstract class BaseListPresenter<ViewType extends BaseListContract.View, 
 	protected int lastOffsetSolicited;
 	protected int lastPositionInScrool;
 
-	public BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
+	BaseListPresenter(ViewType mView, Context mContext, Bundle savedInstanceState, RepoType mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
 		resetPaginationCounter();
 	}

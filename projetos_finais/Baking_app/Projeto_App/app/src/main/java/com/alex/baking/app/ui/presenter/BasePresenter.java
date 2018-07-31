@@ -1,7 +1,10 @@
 package com.alex.baking.app.ui.presenter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.repository.DefaultRepository;
 
@@ -11,7 +14,8 @@ import com.alex.baking.app.data.repository.DefaultRepository;
 
 public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		ModelType extends BaseModel,
-		RepoType extends DefaultRepository> implements IPresenter {
+		RepoType extends DefaultRepository,
+		TaskParamType, TaskProgressType, TaskResultType> implements IPresenter {
 
 	protected Context mContext;
 	protected ViewType mView;
@@ -51,6 +55,30 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 	 */
 	protected void initializeWidgets(Bundle savedInstanceState) {
 		mView.initializeWidgets(savedInstanceState);
+	}
+
+	protected abstract void backgroudFinished(@NonNull TaskResultType taskResultType);
+
+	protected abstract TaskResultType loadInBackgroud(TaskParamType[] taskParamTypes);
+
+	@SuppressLint("StaticFieldLeak")
+	class BackgroundTask extends AsyncTask<TaskParamType, TaskProgressType, TaskResultType> {
+
+		@SafeVarargs
+		@Override
+		protected final TaskResultType doInBackground(TaskParamType... taskParamTypes) {
+			return loadInBackgroud(taskParamTypes);
+		}
+
+		@Override
+		protected void onPostExecute(TaskResultType taskResultType) {
+			super.onPostExecute(taskResultType);
+			if (taskResultType == null) {
+				mView.showErrorMsg("Erro interno");
+				return;
+			}
+			backgroudFinished(taskResultType);
+		}
 	}
 
 	public interface View<ModelType extends BaseModel> {
