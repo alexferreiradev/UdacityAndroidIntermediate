@@ -25,9 +25,10 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 
 	protected ModelType mData;
 	protected PresenterType mPresenter;
+	protected String mTitle;
+
 	protected ProgressBar mProgressBar;
 	protected Toolbar mToolbar;
-	protected String mTitle;
 
 	public BaseActivity(String mTitle) {
 		this.mTitle = mTitle;

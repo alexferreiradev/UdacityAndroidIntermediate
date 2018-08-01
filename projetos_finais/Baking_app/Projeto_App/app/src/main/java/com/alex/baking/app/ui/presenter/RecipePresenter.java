@@ -17,8 +17,13 @@ import java.util.List;
 
 public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, RecipeRepositoryContract, String, Double, Object> implements RecipeContract.Presenter {
 
-	private static final String LOAD_RECIPE = "load_recipe";
 	private static final String TAG = RecipePresenter.class.getSimpleName();
+
+	private static final String LOAD_RECIPE = "load_recipe";
+	private static final String LOAD_INGREDIENTS = "load_recipe_ingredients";
+	private static final String LOAD_STEPS = "load_recipe_steps";
+	private static final int LIMIT = 100;
+
 	private Long recipeId;
 	private Recipe recipe;
 
@@ -60,7 +65,10 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 			switch (strings[0]) {
 				case LOAD_RECIPE:
 					return mRepository.recover(recipeId);
-				// TODO: 31/07/18 Adicionar load ingre e step
+				case LOAD_INGREDIENTS:
+					return mRepository.getIngredientListByRecipe(recipeId, LIMIT, 0);
+				case LOAD_STEPS:
+					return mRepository.getStepListByRecipe(recipeId, LIMIT, 0);
 			}
 		} catch (ConnectionException e) {
 			Log.e(TAG, "Erro interno");

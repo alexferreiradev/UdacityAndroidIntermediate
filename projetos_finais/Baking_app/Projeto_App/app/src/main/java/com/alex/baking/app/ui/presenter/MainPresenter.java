@@ -52,7 +52,7 @@ public class MainPresenter extends BaseListPresenter<MainContract.View, Recipe, 
 	@Override
 	public void selectItemClicked(Recipe item, int pos) {
 		Intent intent = new Intent(mContext, RecipeActivity.class);
-		intent.putExtra("", item.getId()); // TODO: 30/07/18 add constante para ID
+		intent.putExtra(RecipeActivity.RECIPE_ID_EXTRA_PARAM_KEY, item.getId());
 
 		mContext.startActivity(intent);
 	}

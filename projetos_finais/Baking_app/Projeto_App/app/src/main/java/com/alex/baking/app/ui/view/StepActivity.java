@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
+import butterknife.BindView;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.ui.view.contract.StepContract;
@@ -12,6 +14,9 @@ import com.alex.baking.app.ui.view.contract.StepContract;
 import java.util.List;
 
 public class StepActivity extends BaseActivity<Step, StepContract.View, StepContract.Presenter> implements StepContract.View {
+
+	@BindView(R.id.flStepContainer)
+	private FrameLayout stepContainerFL;
 
 	public StepActivity() {
 		super("");
@@ -95,6 +100,11 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 
 	@Override
 	public void initializeArgumentsFromIntent() {
+
+	}
+
+	@Override
+	public void bindViewModel(Step step) {
 
 	}
 }

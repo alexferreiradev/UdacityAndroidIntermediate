@@ -1,10 +1,14 @@
 package com.alex.baking.app.ui.view;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
+import android.widget.TextView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Recipe;
 import com.alex.baking.app.ui.view.contract.MainContract;
@@ -12,6 +16,11 @@ import com.alex.baking.app.ui.view.contract.MainContract;
 import java.util.List;
 
 public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainContract.Presenter> implements MainContract.View {
+
+	@BindView(R.id.rvRecipeList)
+	private RecyclerView recipeRV;
+	@BindView(R.id.tvEmpty)
+	private TextView emptyTV;
 
 	public MainActivity() {
 		super("Baking Time");
@@ -28,12 +37,17 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 	}
 
 	@Override
+	public void initializeWidgets(Bundle savedInstanceState) {
+		super.initializeWidgets(savedInstanceState);
+		ButterKnife.bind(this);
+	}
+
+	@Override
 	public void initializeArgumentsFromIntent() {
 	}
 
 	@Override
 	public void createListAdapter(List<Recipe> results) {
-
 	}
 
 	@Override
