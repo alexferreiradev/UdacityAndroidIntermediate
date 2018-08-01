@@ -43,4 +43,11 @@
 		<item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
 		<item name="android:layout_height">150dp</item>
 	</style>
+
+	<style name="recipe.itemList.text" parent="RecipeTheme">
+		<item name="android:layout_margin">16dp</item>
+		<item name="android:textSize">12sp</item>
+		<item name="android:textColor">@color/colorAccent</item>
+		<item name="android:textStyle">normal</item>
+	</style>
 </resources>

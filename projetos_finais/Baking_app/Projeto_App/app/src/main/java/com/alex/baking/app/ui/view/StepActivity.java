@@ -1,6 +1,7 @@
 package com.alex.baking.app.ui.view;
 
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -50,6 +51,11 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 
 	@Override
 	public ListAdapter getAdapter() {
+		return null;
+	}
+
+	@Override
+	public RecyclerView.Adapter getRecycleAdapter() {
 		return null;
 	}
 

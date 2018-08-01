@@ -54,17 +54,21 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 
 	@Override
 	public boolean isDualPanel() {
-		return false;
+		return stepContainerFL != null;
 	}
 
 	@Override
 	public void replaceStepFragment(Long selectedStepId) {
-
 	}
 
 	@Override
 	public void addIngredientToAdapter(List<Ingredient> ingredientList) {
-
+//		if (ingredientAdapter == null){
+//			ingredientAdapter = new IngredientAdapter(ingredientList);
+//			in
+//		} else {
+//			ingredientAdapter.addAllModel(ingredientList);
+//		}
 	}
 
 	@Override
