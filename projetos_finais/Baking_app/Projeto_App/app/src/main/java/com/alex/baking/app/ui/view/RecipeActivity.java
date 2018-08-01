@@ -17,9 +17,9 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	public final static String RECIPE_ID_EXTRA_PARAM_KEY = "recipe_id";
 
 	@BindView(R.id.flRecipeContainer)
-	private FrameLayout recipeContainerFL;
+	FrameLayout recipeContainerFL;
 	@BindView(R.id.flStepContainer)
-	private FrameLayout stepContainerFL;
+	FrameLayout stepContainerFL;
 
 	public RecipeActivity() {
 		super("");

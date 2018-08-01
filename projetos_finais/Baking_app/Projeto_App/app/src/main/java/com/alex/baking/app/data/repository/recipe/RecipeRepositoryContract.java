@@ -20,5 +20,5 @@ public interface RecipeRepositoryContract extends DefaultRepository<Recipe> {
 
 	List<Step> getStepListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException;
 
-	Step recoverStep(Long stepId);
+	Step recoverStep(Long stepId) throws ConnectionException;
 }

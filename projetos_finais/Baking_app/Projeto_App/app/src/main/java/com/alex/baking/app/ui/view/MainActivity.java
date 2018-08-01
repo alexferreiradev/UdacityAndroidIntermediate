@@ -19,9 +19,9 @@ import java.util.List;
 public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainContract.Presenter> implements MainContract.View {
 
 	@BindView(R.id.rvRecipeList)
-	private RecyclerView recipeRV;
+	RecyclerView recipeRV;
 	@BindView(R.id.tvEmpty)
-	private TextView emptyTV;
+	TextView emptyTV;
 	private RecipeAdapter recipeAdapter;
 
 	public MainActivity() {

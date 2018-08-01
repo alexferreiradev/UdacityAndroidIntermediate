@@ -17,7 +17,7 @@ import java.util.List;
 public class StepActivity extends BaseActivity<Step, StepContract.View, StepContract.Presenter> implements StepContract.View {
 
 	@BindView(R.id.flStepContainer)
-	private FrameLayout stepContainerFL;
+	FrameLayout stepContainerFL;
 
 	public StepActivity() {
 		super("");
