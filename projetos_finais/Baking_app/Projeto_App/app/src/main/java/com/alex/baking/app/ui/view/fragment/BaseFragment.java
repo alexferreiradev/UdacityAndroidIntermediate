@@ -9,13 +9,13 @@ import android.view.View;
 import android.widget.ProgressBar;
 import com.alex.baking.app.ui.presenter.IPresenter;
 
-public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> extends Fragment implements SimpleFragment<ModelType> {
+public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> extends Fragment implements SimpleFragment<ModelType, PresenterType> {
 	private static final String TAG = BaseFragment.class.getSimpleName();
 	protected PresenterType presenter;
 	protected ProgressBar mProgressBar;
 
-	public BaseFragment(PresenterType presenter) {
-		this.presenter = presenter;
+	public BaseFragment() {
+
 	}
 
 	protected abstract void startWithArguments(Bundle arguments);

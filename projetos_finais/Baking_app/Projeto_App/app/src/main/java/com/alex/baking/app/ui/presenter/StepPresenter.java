@@ -15,7 +15,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	private Long stepId;
 	private Step step;
 
-	protected StepPresenter(StepContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
+	public StepPresenter(StepContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
 	}
 
@@ -47,5 +47,10 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	@Override
 	public void setStepId(Long stepId) {
 		this.stepId = stepId;
+	}
+
+	@Override
+	public void selectNextStep() {
+
 	}
 }
