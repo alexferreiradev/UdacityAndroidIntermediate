@@ -6,14 +6,24 @@ import com.alex.baking.app.ui.presenter.IPresenter;
 
 public interface StepContract {
 
-	interface View extends BasePresenter.View<Step> {
+	interface View extends BasePresenter.View {
+	}
+
+	interface FragmentView {
+
 		void bindViewModel(Step step);
+
+		void setPresenter(Presenter presenter);
+
+		Step getStepFromPosition(int pos);
 	}
 
 	interface Presenter extends IPresenter {
 
 		void setStepId(Long stepId);
 
-		void selectNextStep();
+		void selectNextStep(int currentPosition);
+
+		void setFragmentView(FragmentView fragmentView);
 	}
 }

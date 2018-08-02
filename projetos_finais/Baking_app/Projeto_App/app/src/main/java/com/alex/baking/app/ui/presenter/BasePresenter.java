@@ -81,7 +81,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		}
 	}
 
-	public interface View<ModelType extends BaseModel> {
+	public interface View {
 		/**
 		 * Inverte o atributo visible de um progressBar
 		 */

@@ -11,7 +11,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Recipe;
+import com.alex.baking.app.data.repository.recipe.RecipeRepository;
+import com.alex.baking.app.data.repository.recipe.RecipeRepositoryContract;
+import com.alex.baking.app.data.source.cache.RecipeCache;
+import com.alex.baking.app.data.source.remote.RecipeSource;
+import com.alex.baking.app.data.source.remote.network.NetworkResourceManager;
+import com.alex.baking.app.data.source.sql.RecipeSqlSource;
 import com.alex.baking.app.ui.adapter.RecipeAdapter;
+import com.alex.baking.app.ui.presenter.MainPresenter;
 import com.alex.baking.app.ui.view.contract.MainContract;
 
 import java.util.List;
@@ -36,6 +43,13 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		RecipeRepositoryContract repo = new RecipeRepository(
+				RecipeCache.getInstance(),
+				new RecipeSqlSource(this),
+				new RecipeSource(new NetworkResourceManager())
+		);
+		mPresenter = new MainPresenter(this, this, savedInstanceState, repo);
 	}
 
 	@Override

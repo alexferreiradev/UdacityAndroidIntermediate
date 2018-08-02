@@ -10,12 +10,18 @@ import java.util.List;
 
 public interface RecipeContract {
 
-	interface View extends BasePresenter.View<Recipe> {
-		void bindViewModel(Recipe recipe);
+	interface View extends BasePresenter.View {
 
 		boolean isDualPanel();
 
 		void replaceStepFragment(Long selectedStepId);
+	}
+
+	interface FragmentView {
+
+		void setPresenter(Presenter presenter);
+
+		void bindViewModel(Recipe recipe);
 
 		void addIngredientToAdapter(List<Ingredient> ingredientList);
 
@@ -23,8 +29,11 @@ public interface RecipeContract {
 	}
 
 	interface Presenter extends IPresenter {
+
 		void setRecipeId(Long recipeId);
 
-		void selectStep(Long selectedStepId);
+		void selectStep(Long selectedStepId, int position);
+
+		void setFragmentView(FragmentView fragmentView);
 	}
 }

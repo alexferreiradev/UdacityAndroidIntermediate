@@ -14,6 +14,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	private static final String TAG = StepPresenter.class.getSimpleName();
 	private Long stepId;
 	private Step step;
+	private StepContract.FragmentView fragmentView;
 
 	public StepPresenter(StepContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
@@ -29,7 +30,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	protected void backgroudFinished(@NonNull Object o) {
 		if (o instanceof Step) {
 			step = (Step) o;
-			mView.bindViewModel(step);
+			fragmentView.bindViewModel(step);
 		}
 	}
 
@@ -50,7 +51,17 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	}
 
 	@Override
-	public void selectNextStep() {
+	public void selectNextStep(int currentPosition) {
+		if (currentPosition < 0) {
+			return; // nao dual panel
+		}
 
+		Step stepFromPosition = fragmentView.getStepFromPosition(currentPosition + 1);
+		fragmentView.bindViewModel(stepFromPosition);
+	}
+
+	@Override
+	public void setFragmentView(StepContract.FragmentView fragmentView) {
+		this.fragmentView = fragmentView;
 	}
 }

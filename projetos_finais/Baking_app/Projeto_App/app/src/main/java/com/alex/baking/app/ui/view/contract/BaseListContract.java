@@ -16,7 +16,7 @@ import java.util.List;
 public interface BaseListContract {
 
 	interface View<ModelType extends BaseModel>
-			extends BasePresenter.View<ModelType>, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
+			extends BasePresenter.View, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 
 		void createListAdapter(List<ModelType> results);
 

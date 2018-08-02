@@ -14,7 +14,7 @@ import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.ui.view.contract.StepContract;
 
-public class StepFragment extends BaseFragment<Step, StepContract.Presenter> implements StepContract.View {
+public class StepFragment extends BaseFragment<Step, StepContract.Presenter> implements StepContract.FragmentView {
 
 	@BindView(R.id.tvDescription)
 	TextView descriptionTV;
@@ -38,62 +38,37 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@Override
-	public void setPresenter(StepContract.Presenter presenter) {
-		this.presenter = presenter;
-	}
-
-
-	@Override
-	public void startView(Step model) throws IllegalArgumentException {
+	public void bindViewModel(Step step) {
 		// TODO: 01/08/18 Add fragment de video
 
-		shortDescriptionTV.setText(model.getShortDescription());
-		descriptionTV.setText(model.getDescription());
+		shortDescriptionTV.setText(step.getShortDescription());
+		descriptionTV.setText(step.getDescription());
 		nextBt.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				presenter.selectNextStep();
+				presenter.selectNextStep(-1);
 			}
 		});
 	}
 
 	@Override
-	public Step destroyView(Step model) {
+	public void setPresenter(StepContract.Presenter presenter) {
+		this.presenter = presenter;
+	}
+
+	@Override
+	public Step getStepFromPosition(int pos) {
 		return null;
 	}
 
+
 	@Override
-	public void bindViewModel(Step step) {
+	public void startView(Step model) throws IllegalArgumentException {
 
 	}
 
 	@Override
-	public void setLoadProgressBarVisibility(boolean toVisible) {
-
-	}
-
-	@Override
-	public void initializeWidgets(Bundle savedInstanceState) {
-
-	}
-
-	@Override
-	public void initializeArgumentsFromIntent() {
-
-	}
-
-	@Override
-	public void showErrorMsg(String msg) {
-
-	}
-
-	@Override
-	public void showSuccessMsg(String msg) {
-
-	}
-
-	@Override
-	public void setActionBarTitle(String title) {
-
+	public Step destroyView(Step model) {
+		return null;
 	}
 }

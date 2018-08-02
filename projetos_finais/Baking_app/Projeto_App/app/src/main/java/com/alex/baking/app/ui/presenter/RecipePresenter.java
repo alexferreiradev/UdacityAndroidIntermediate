@@ -26,8 +26,9 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 
 	private Long recipeId;
 	private Recipe recipe;
+	private RecipeContract.FragmentView fragmentView;
 
-	protected RecipePresenter(RecipeContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
+	public RecipePresenter(RecipeContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
 	}
 
@@ -42,7 +43,7 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	protected void backgroudFinished(@NonNull Object result) {
 		if (result instanceof Recipe) {
 			recipe = (Recipe) result;
-			mView.bindViewModel(recipe);
+			fragmentView.bindViewModel(recipe);
 		} else if (result instanceof List) {
 			List resultList = (List) result;
 			if (resultList.isEmpty()) {
@@ -51,10 +52,10 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 
 			if (resultList.get(0) instanceof Ingredient) {
 				List<Ingredient> ingredientList = ((List<Ingredient>) resultList);
-				mView.addIngredientToAdapter(ingredientList);
+				fragmentView.addIngredientToAdapter(ingredientList);
 			} else {
 				List<Step> stepList = ((List<Step>) resultList);
-				mView.addStepToAdapter(stepList);
+				fragmentView.addStepToAdapter(stepList);
 			}
 		}
 	}
@@ -83,14 +84,20 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	}
 
 	@Override
-	public void selectStep(Long selectedStepId) {
+	public void selectStep(Long selectedStepId, int position) {
 		if (mView.isDualPanel()) {
-			mView.replaceStepFragment(selectedStepId);
+			// TODO: 02/08/18
 		} else {
 			Intent intent = new Intent(mContext, StepActivity.class);
-			intent.putExtra("", selectedStepId);
+			intent.putExtra(StepActivity.STEP_ID_EXTRA_PARAM_KEY, selectedStepId);
+			intent.putExtra(StepActivity.STEP_POSITION_EXTRA_PARAM_KEY, position);
 
 			mContext.startActivity(intent);
 		}
+	}
+
+	@Override
+	public void setFragmentView(RecipeContract.FragmentView fragmentView) {
+		this.fragmentView = fragmentView;
 	}
 }

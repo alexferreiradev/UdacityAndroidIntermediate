@@ -21,7 +21,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 		ViewType extends BasePresenter.View,
 		PresenterType extends IPresenter>
 		extends AppCompatActivity
-		implements BasePresenter.View<ModelType> {
+		implements BasePresenter.View {
 
 	protected ModelType mData;
 	protected PresenterType mPresenter;
