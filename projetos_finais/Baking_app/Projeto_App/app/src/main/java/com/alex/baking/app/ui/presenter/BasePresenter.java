@@ -57,9 +57,12 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		mView.initializeWidgets(savedInstanceState);
 	}
 
-	protected abstract void backgroudFinished(@NonNull TaskResultType taskResultType);
+	protected void backgroudFinished(@NonNull TaskResultType taskResultType) {
+	}
 
-	protected abstract TaskResultType loadInBackgroud(TaskParamType[] taskParamTypes);
+	protected TaskResultType loadInBackgroud(TaskParamType[] taskParamTypes) {
+		return null;
+	}
 
 	@SuppressLint("StaticFieldLeak")
 	class BackgroundTask extends AsyncTask<TaskParamType, TaskProgressType, TaskResultType> {
