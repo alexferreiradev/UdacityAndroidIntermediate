@@ -19,11 +19,11 @@
 
 			<ImageView
 					android:id="@+id/ivRecipe"
-					tools:background="@color/colorPrimary"
 					android:layout_alignParentLeft="true"
 					android:layout_alignParentTop="true"
+					android:layout_alignParentBottom="true"
 					android:layout_alignParentStart="true"
-					android:src="@drawable/ic_action_favorite"
+					android:src="@drawable/ic_baseline_fastfood"
 					android:contentDescription="@string/recipe_image_content_description"
 					style="@style/main.image"
 					/>

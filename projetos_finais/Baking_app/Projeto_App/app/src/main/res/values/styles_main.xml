@@ -16,10 +16,10 @@
 	</style>
 
 	<style name="main.image" parent="main.Light">
-		<item name="android:layout_width">50dp</item>
-		<item name="android:layout_height">50dp</item>
+		<item name="android:layout_width">150dp</item>
+		<item name="android:layout_height">wrap_content</item>
 		<item name="android:layout_margin">16dp</item>
-		<item name="android:scaleType">centerCrop</item>
+		<item name="android:scaleType">fitCenter</item>
 		<item name="android:contentDescription">@string/recipe_image_content_description</item>
 	</style>
 

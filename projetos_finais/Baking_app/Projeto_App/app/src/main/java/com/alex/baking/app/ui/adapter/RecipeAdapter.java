@@ -1,6 +1,7 @@
 package com.alex.baking.app.ui.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import com.alex.baking.app.ui.view.contract.MainContract;
 
 import java.util.List;
 
+@SuppressWarnings("Convert2Lambda")
 public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeViewHolder> implements RecycleViewAdaper<Recipe> {
 
 	private List<Recipe> recipeList;
@@ -42,7 +44,17 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 		Recipe recipe = recipeList.get(position);
 		holder.nameTV.setText(recipe.getNome());
 		holder.servingTV.setText(recipe.getServing());
-		// TODO: 01/08/18 add imagem padrao quando nao tem no recipe
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				presenter.selectItemClicked(recipe, holder.getAdapterPosition());
+			}
+		});
+
+		String recipeImage = recipe.getImage();
+		if (recipeImage != null && !recipeImage.isEmpty()) {
+			holder.recipeIV.setImageURI(Uri.parse(recipeImage));
+		}
 	}
 
 	@Override
@@ -62,7 +74,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 		notifyDataSetChanged();
 	}
 
-	class RecipeViewHolder extends RecyclerView.ViewHolder {
+	static class RecipeViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.ivRecipe)
 		ImageView recipeIV;
