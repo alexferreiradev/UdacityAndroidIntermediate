@@ -8,7 +8,6 @@ import android.util.Log;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Recipe;
 import com.alex.baking.app.data.repository.recipe.RecipeRepositoryContract;
-import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 import com.alex.baking.app.ui.view.RecipeActivity;
 import com.alex.baking.app.ui.view.contract.MainContract;
 
@@ -24,6 +23,11 @@ public class MainPresenter extends BaseListPresenter<MainContract.View, Recipe, 
 
 	@Override
 	protected void backgroudFinished(@NonNull List<Recipe> recipes) {
+		if (recipes.isEmpty()) {
+			Log.w(TAG, "Lista vazia de repo");
+			return;
+		}
+
 		mView.createListAdapter(recipes);
 	}
 
@@ -31,8 +35,8 @@ public class MainPresenter extends BaseListPresenter<MainContract.View, Recipe, 
 	protected List<Recipe> loadInBackgroud(String... strings) {
 		try {
 			return mRepository.getRecipeList(mLoadItemsLimit, mOffset);
-		} catch (ConnectionException e) {
-			Log.e(TAG, "Erro interno ao carregar lista");
+		} catch (Exception e) {
+			Log.e(TAG, "Erro interno ao carregar lista", e);
 		}
 
 		return null;

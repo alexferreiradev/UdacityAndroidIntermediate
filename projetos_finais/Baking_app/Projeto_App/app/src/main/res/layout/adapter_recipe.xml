@@ -1,48 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		>
 
-	<RelativeLayout
-			android:id="@+id/cvRecipe"
+	<android.support.v7.widget.CardView
 			android:layout_width="match_parent"
-			android:layout_height="match_parent"
+			style="@style/main.cardView"
 			>
 
-		<ImageView
-				android:id="@+id/ivRecipe"
-				tools:background="@color/colorPrimary"
-				android:layout_alignParentLeft="true"
-				android:layout_alignParentTop="true"
-				android:layout_alignParentStart="true"
-				android:contentDescription="@string/recipe_image_content_description"
-				style="@style/main.image"
-				/>
+		<RelativeLayout
+				android:id="@+id/cvRecipe"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				>
 
-		<TextView
-				android:id="@+id/tvName"
-				tools:text="Nome do prato"
-				style="@style/main.Item"
-				android:layout_alignParentTop="true"
-				android:layout_toRightOf="@+id/ivRecipe"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_toEndOf="@+id/ivRecipe"
-				/>
+			<ImageView
+					android:id="@+id/ivRecipe"
+					tools:background="@color/colorPrimary"
+					android:layout_alignParentLeft="true"
+					android:layout_alignParentTop="true"
+					android:layout_alignParentStart="true"
+					android:src="@drawable/ic_action_favorite"
+					android:contentDescription="@string/recipe_image_content_description"
+					style="@style/main.image"
+					/>
 
-		<TextView
-				android:id="@+id/tvServing"
-				tools:text="10"
-				style="@style/main.Item"
-				android:layout_below="@+id/tvName"
-				android:layout_toRightOf="@+id/ivRecipe"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_toEndOf="@+id/ivRecipe"
-				/>
+			<TextView
+					android:id="@+id/tvName"
+					tools:text="Nome do prato"
+					style="@style/main.recipeName"
+					android:layout_alignParentTop="true"
+					android:layout_toRightOf="@+id/ivRecipe"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toEndOf="@+id/ivRecipe"
+					/>
 
-	</RelativeLayout>
-</android.support.v7.widget.CardView>
+			<TextView
+					android:id="@+id/tvServing"
+					tools:text="10"
+					style="@style/main.Item"
+					android:layout_below="@+id/tvName"
+					android:layout_toRightOf="@+id/ivRecipe"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_toEndOf="@+id/ivRecipe"
+					/>
+
+		</RelativeLayout>
+	</android.support.v7.widget.CardView>
+
+</LinearLayout>

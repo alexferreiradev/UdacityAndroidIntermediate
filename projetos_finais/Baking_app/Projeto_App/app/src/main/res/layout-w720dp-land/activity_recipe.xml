@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-											 xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-											 android:layout_width="match_parent" android:layout_height="match_parent">
+<android.support.constraint.ConstraintLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		>
+
+	<include
+			android:id="@+id/includedLayout"
+			layout="@layout/default_layout"
+			android:layout_height="wrap_content"
+			tools:visibility="visible"
+			tools:background="@color/colorAccent"
+			app:layout_constraintTop_toTopOf="parent"
+			android:layout_width="match_parent"
+			/>
 
 	<FrameLayout
 			android:id="@+id/flRecipeContainer"
 			android:layout_height="match_parent"
+			app:layout_constraintTop_toBottomOf="@+id/includedLayout"
 			app:layout_constraintStart_toStartOf="parent"
 			tools:background="@color/colorPrimaryDark"
-			style="@style/recipe.master"/>
+			style="@style/recipe.master"
+			/>
+
 	<FrameLayout
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
+			app:layout_constraintTop_toBottomOf="@+id/includedLayout"
 			android:id="@+id/flStepContainer"
 
 			tools:background="@color/colorPrimary"
@@ -19,5 +37,6 @@
 			android:layout_marginLeft="24dp"
 			app:layout_constraintEnd_toEndOf="parent"
 			app:layout_constraintStart_toEndOf="@+id/flRecipeContainer"
-			android:layout_marginStart="24dp"/>
+			android:layout_marginStart="24dp"
+			/>
 </android.support.constraint.ConstraintLayout>

@@ -21,6 +21,7 @@ public class StepSqlSource extends BaseSqlSource<Step> {
 		contentValues.put(BakingContract.StepEntry.COLUMN_SHORT_DESCRIPTION, data.getShortDescription());
 		contentValues.put(BakingContract.StepEntry.COLUMN_THUMBNAIL_URL, data.getThumbnailURL());
 		contentValues.put(BakingContract.StepEntry.COLUMN_VIDEO_URL, data.getVideoURL());
+		contentValues.put(BakingContract.StepEntry.COLUMN_FK_RECIPE, data.getRecipeId());
 
 		return contentValues;
 	}
@@ -34,6 +35,7 @@ public class StepSqlSource extends BaseSqlSource<Step> {
 		recipe.setShortDescription(values.getAsString(BakingContract.StepEntry.COLUMN_SHORT_DESCRIPTION));
 		recipe.setThumbnailURL(values.getAsString(BakingContract.StepEntry.COLUMN_THUMBNAIL_URL));
 		recipe.setVideoURL(values.getAsString(BakingContract.StepEntry.COLUMN_VIDEO_URL));
+		recipe.setRecipeId(values.getAsLong(BakingContract.StepEntry.COLUMN_FK_RECIPE));
 
 		return recipe;
 	}
@@ -53,6 +55,8 @@ public class StepSqlSource extends BaseSqlSource<Step> {
 		recipe.setThumbnailURL(cursor.getString(columnIndex));
 		columnIndex = cursor.getColumnIndex(BakingContract.StepEntry.COLUMN_VIDEO_URL);
 		recipe.setVideoURL(cursor.getString(columnIndex));
+		columnIndex = cursor.getColumnIndex(BakingContract.StepEntry.COLUMN_FK_RECIPE);
+		recipe.setRecipeId(cursor.getLong(columnIndex));
 
 		return recipe;
 	}

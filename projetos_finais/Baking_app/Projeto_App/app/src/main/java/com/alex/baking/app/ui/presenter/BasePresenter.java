@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.repository.DefaultRepository;
 
@@ -12,10 +13,13 @@ import com.alex.baking.app.data.repository.DefaultRepository;
  * Created by Alex on 16/03/2017.
  */
 
+@SuppressWarnings("WeakerAccess")
 public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		ModelType extends BaseModel,
 		RepoType extends DefaultRepository,
 		TaskParamType, TaskProgressType, TaskResultType> implements IPresenter {
+
+	private static final String TAG = BasePresenter.class.getSimpleName();
 
 	protected Context mContext;
 	protected ViewType mView;
@@ -67,6 +71,11 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 	@SuppressLint("StaticFieldLeak")
 	class BackgroundTask extends AsyncTask<TaskParamType, TaskProgressType, TaskResultType> {
 
+		@Override
+		protected void onPreExecute() {
+			mView.setLoadProgressBarVisibility(true);
+		}
+
 		@SafeVarargs
 		@Override
 		protected final TaskResultType doInBackground(TaskParamType... taskParamTypes) {
@@ -75,12 +84,14 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 
 		@Override
 		protected void onPostExecute(TaskResultType taskResultType) {
-			super.onPostExecute(taskResultType);
+			mView.setLoadProgressBarVisibility(false);
 			if (taskResultType == null) {
+				Log.e(TAG, "Erro interno");
 				mView.showErrorMsg("Erro interno");
 				return;
 			}
 			backgroudFinished(taskResultType);
+			super.onPostExecute(taskResultType);
 		}
 	}
 

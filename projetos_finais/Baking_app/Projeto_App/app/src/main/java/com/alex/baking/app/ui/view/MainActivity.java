@@ -1,6 +1,7 @@
 package com.alex.baking.app.ui.view;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
@@ -32,11 +33,7 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 	private RecipeAdapter recipeAdapter;
 
 	public MainActivity() {
-		super("Baking Time");
-	}
-
-	public MainActivity(String mTitle) {
-		super(mTitle);
+		super();
 	}
 
 	@Override
@@ -49,13 +46,17 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 				new RecipeSqlSource(this),
 				new RecipeSource(new NetworkResourceManager())
 		);
+
 		mPresenter = new MainPresenter(this, this, savedInstanceState, repo);
+		mTitle = getString(R.string.app_name);
 	}
 
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
 		super.initializeWidgets(savedInstanceState);
 		ButterKnife.bind(this);
+
+		recipeRV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 	}
 
 	@Override
@@ -67,6 +68,9 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 	public void createListAdapter(List<Recipe> results) {
 		recipeAdapter = new RecipeAdapter(results, mPresenter, this);
 		recipeRV.setAdapter(recipeAdapter);
+
+		recipeRV.setVisibility(View.VISIBLE);
+		emptyTV.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -106,6 +110,7 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 
 	@Override
 	public void setEmptyView(String text) {
+		emptyTV.setVisibility(View.VISIBLE);
 		emptyTV.setText(text);
 	}
 
@@ -126,7 +131,7 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		// nao utilizado
+		mPresenter.loadMoreData(firstVisibleItem, visibleItemCount, totalItemCount);
 	}
 
 	@Override

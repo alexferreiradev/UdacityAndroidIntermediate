@@ -23,15 +23,6 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 	@BindView(R.id.flStepContainer)
 	FrameLayout stepContainerFL;
 
-	public StepActivity() {
-		super("");
-		setTitle(getString(R.string.recipe_steps_label));
-	}
-
-	public StepActivity(String mTitle) {
-		super(mTitle);
-	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

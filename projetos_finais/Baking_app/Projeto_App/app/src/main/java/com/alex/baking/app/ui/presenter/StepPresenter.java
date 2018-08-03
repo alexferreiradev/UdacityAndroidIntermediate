@@ -39,7 +39,9 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 		try {
 			return mRepository.recoverStep(stepId);
 		} catch (ConnectionException e) {
-			Log.e(TAG, "Erro interno");
+			Log.e(TAG, "Erro de conexão", e);
+		} catch (Exception e) {
+			Log.e(TAG, "Erro interno", e);
 		}
 
 		return null;

@@ -20,6 +20,7 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		contentValues.put(BakingContract.IngredientEntry.COLUMN_INGREDIENT, data.getIngredient());
 		contentValues.put(BakingContract.IngredientEntry.COLUMN_MEASURE, data.getMeasure().name());
 		contentValues.put(BakingContract.IngredientEntry.COLUMN_QUANTITY, data.getQuantity());
+		contentValues.put(BakingContract.IngredientEntry.COLUMN_FK_RECIPE, data.getRecipeId());
 
 		return contentValues;
 	}
@@ -32,6 +33,7 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		String measureString = values.getAsString(BakingContract.IngredientEntry.COLUMN_MEASURE).toUpperCase();
 		recipe.setMeasure(MeasureType.valueOf(measureString));
 		recipe.setQuantity(values.getAsDouble(BakingContract.IngredientEntry.COLUMN_QUANTITY));
+		recipe.setRecipeId(values.getAsLong(BakingContract.IngredientEntry.COLUMN_FK_RECIPE));
 
 		return recipe;
 	}
@@ -48,6 +50,8 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		recipe.setMeasure(MeasureType.valueOf(measureString));
 		columnIndex = cursor.getColumnIndex(BakingContract.IngredientEntry.COLUMN_QUANTITY);
 		recipe.setQuantity(cursor.getDouble(columnIndex));
+		columnIndex = cursor.getColumnIndex(BakingContract.IngredientEntry.COLUMN_FK_RECIPE);
+		recipe.setRecipeId(cursor.getLong(columnIndex));
 
 		return recipe;
 	}

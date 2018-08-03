@@ -30,8 +30,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 	protected ProgressBar mProgressBar;
 	protected Toolbar mToolbar;
 
-	public BaseActivity(String mTitle) {
-		this.mTitle = mTitle;
+	public BaseActivity() {
 	}
 
 	@Override

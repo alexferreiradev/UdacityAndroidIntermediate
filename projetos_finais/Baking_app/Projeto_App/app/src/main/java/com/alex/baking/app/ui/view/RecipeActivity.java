@@ -1,6 +1,8 @@
 package com.alex.baking.app.ui.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -24,6 +26,7 @@ import com.alex.baking.app.ui.view.fragment.BaseFragment;
 import com.alex.baking.app.ui.view.fragment.RecipeFragment;
 import com.alex.baking.app.ui.view.fragment.StepFragment;
 
+@SuppressWarnings("ConstantConditions")
 public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, RecipeContract.Presenter> implements RecipeContract.View, StepContract.View {
 
 	public final static String RECIPE_ID_EXTRA_PARAM_KEY = "recipe_id";
@@ -31,18 +34,10 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	@BindView(R.id.flRecipeContainer)
 	FrameLayout recipeContainerFL;
 	@BindView(R.id.flStepContainer)
+	@Nullable
 	FrameLayout stepContainerFL;
 
 	private StepFragment stepFragment;
-
-	public RecipeActivity() {
-		super("");
-		setTitle(R.string.recipe_steps_label);
-	}
-
-	public RecipeActivity(String mTitle) {
-		super(mTitle);
-	}
 
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
@@ -81,11 +76,18 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 		repo.setRemoteIngredientSource(new IngredientSource(networkResource));
 		repo.setRemoteStepSource(new StepSource(networkResource));
 		mPresenter = new RecipePresenter(this, this, savedInstanceState, repo);
+		mTitle = getString(R.string.app_name);
 	}
 
 	@Override
 	public void initializeArgumentsFromIntent() {
-
+		Intent intent = getIntent();
+		if (intent != null && intent.hasExtra(RECIPE_ID_EXTRA_PARAM_KEY)) {
+			long recipeId = intent.getExtras().getLong(RECIPE_ID_EXTRA_PARAM_KEY, -1);
+			mPresenter.setRecipeId(recipeId);
+		} else {
+			throw new IllegalArgumentException("Não foi passado ID de recipe");
+		}
 	}
 
 	@Override
