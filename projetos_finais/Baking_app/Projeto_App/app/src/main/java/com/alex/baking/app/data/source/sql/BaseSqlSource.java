@@ -21,9 +21,10 @@ import java.util.List;
 
 abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSource<ModelType, SqlQuery> {
 
+	@SuppressWarnings("WeakerAccess")
 	protected ContentResolver mResolver;
 
-	public BaseSqlSource(Context context) {
+	BaseSqlSource(Context context) {
 		mResolver = context.getContentResolver();
 	}
 
@@ -37,7 +38,7 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 
 	protected abstract Uri getContentUriByID();
 
-	protected List<ModelType> createListModelFromCursor(Cursor cursor) {
+	private List<ModelType> createListModelFromCursor(Cursor cursor) {
 		List<ModelType> list = new ArrayList<>();
 
 		if (cursor == null || !cursor.moveToFirst()) {
@@ -63,7 +64,12 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 		Uri uriInsert = mResolver.insert(getContentUri(), contentValues);
 		if (uriInsert != null) {
 			Long id = ContentUris.parseId(uriInsert);
+			if (id < 0) {
+				throw new IllegalStateException("Não foi possível recuperar ID do objeto salvo");
+			}
 			model.setId(id);
+		} else {
+			throw new IllegalStateException("Não foi possível recuperar ID do objeto salvo");
 		}
 
 		return model;
@@ -73,9 +79,9 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 	public ModelType recover(Long id) {
 		ModelType modelFromCursor = null;
 
-		String selection = BakingContract.IngredientEntry._ID + "=?";
+		String selection = BaseColumns._ID + "=?";
 		String[] selectionArgs = {String.valueOf(id)};
-		Cursor cursor = mResolver.query(getContentUriByID(), null, selection, selectionArgs, null);
+		Cursor cursor = mResolver.query(getContentUri(), null, selection, selectionArgs, null);
 		if (cursor != null && cursor.moveToFirst()) {
 			modelFromCursor = createModelFromCursor(cursor);
 			cursor.close();
@@ -104,7 +110,7 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 			return null;
 		}
 
-		String where = BakingContract.IngredientEntry._ID + "=?";
+		String where = BaseColumns._ID + "=?";
 		String[] whereArgs = {String.valueOf(model.getId())};
 		int rowsUpdated = mResolver.update(getContentUri(), wrapperContent(model), where, whereArgs);
 		if (rowsUpdated <= 0) {
@@ -120,7 +126,7 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 			return null;
 		}
 
-		String where = BakingContract.IngredientEntry._ID + "=?";
+		String where = BaseColumns._ID + "=?";
 		String[] whereArgs = {String.valueOf(model.getId())};
 		int rowsDeleted = mResolver.delete(getContentUri(), where, whereArgs);
 		if (rowsDeleted <= 0) {

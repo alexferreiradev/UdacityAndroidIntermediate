@@ -40,7 +40,7 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 
 	@SuppressWarnings("unchecked")
 	@Override
-	protected void backgroudFinished(@NonNull Object result) {
+	protected void backgroundFinished(@NonNull Object result) {
 		if (result instanceof Recipe) {
 			recipe = (Recipe) result;
 			fragmentView.bindViewModel(recipe);
@@ -61,7 +61,7 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	}
 
 	@Override
-	protected Object loadInBackgroud(String... strings) {
+	protected Object loadInBackground(String... strings) {
 		try {
 			switch (strings[0]) {
 				case LOAD_RECIPE:
@@ -72,6 +72,8 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 					return mRepository.getStepListByRecipe(recipeId, LIMIT, 0);
 			}
 		} catch (ConnectionException e) {
+			Log.e(TAG, "Erro de conexao");
+		} catch (Exception e) {
 			Log.e(TAG, "Erro interno");
 		}
 

@@ -61,10 +61,10 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		mView.initializeWidgets(savedInstanceState);
 	}
 
-	protected void backgroudFinished(@NonNull TaskResultType taskResultType) {
+	protected void backgroundFinished(@NonNull TaskResultType taskResultType) {
 	}
 
-	protected TaskResultType loadInBackgroud(TaskParamType[] taskParamTypes) {
+	protected TaskResultType loadInBackground(TaskParamType[] taskParamTypes) {
 		return null;
 	}
 
@@ -79,7 +79,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 		@SafeVarargs
 		@Override
 		protected final TaskResultType doInBackground(TaskParamType... taskParamTypes) {
-			return loadInBackgroud(taskParamTypes);
+			return loadInBackground(taskParamTypes);
 		}
 
 		@Override
@@ -90,8 +90,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 				mView.showErrorMsg("Erro interno");
 				return;
 			}
-			backgroudFinished(taskResultType);
-			super.onPostExecute(taskResultType);
+			backgroundFinished(taskResultType);
 		}
 	}
 

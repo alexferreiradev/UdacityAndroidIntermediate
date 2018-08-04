@@ -9,7 +9,7 @@
 
 	<include
 			android:id="@+id/includedLayout"
-			layout="@layout/default_layout"
+			layout="@layout/default_activity_layout"
 			android:layout_height="wrap_content"
 			tools:visibility="visible"
 			tools:background="@color/colorAccent"
@@ -17,9 +17,12 @@
 			android:layout_width="match_parent"
 			/>
 
-	<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
-	             app:layout_constraintTop_toBottomOf="@+id/includedLayout"
-	             android:id="@+id/flRecipeContainer"
+	<FrameLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toBottomOf="@+id/includedLayout"
+			app:layout_constraintBottom_toBottomOf="parent"
+			android:id="@+id/flRecipeContainer"
 	/>
 
 </android.support.constraint.ConstraintLayout>

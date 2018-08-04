@@ -7,15 +7,6 @@
 		tools:context="com.alex.baking.app.ui.view.StepActivity"
 		>
 
-	<include
-			android:id="@+id/includedLayout"
-			layout="@layout/default_layout"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			tools:visibility="gone"
-			android:layout_width="match_parent"
-			/>
-
 	<FrameLayout
 			android:layout_width="match_parent"
 			android:id="@+id/flVideoContainer"
