@@ -14,6 +14,7 @@ import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.ui.view.contract.StepContract;
 
+@SuppressWarnings("Convert2Lambda")
 public class StepFragment extends BaseFragment<Step, StepContract.Presenter> implements StepContract.FragmentView {
 
 	@BindView(R.id.tvDescription)
@@ -34,7 +35,6 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 
 	@Override
 	protected void startWithArguments(Bundle arguments) {
-		presenter.startPresenterView();
 	}
 
 	@Override
