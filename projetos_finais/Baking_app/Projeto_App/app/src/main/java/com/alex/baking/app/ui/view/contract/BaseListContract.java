@@ -1,5 +1,6 @@
 package com.alex.baking.app.ui.view.contract;
 
+import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
 import android.widget.ListAdapter;
 import com.alex.baking.app.data.model.BaseModel;
@@ -15,7 +16,7 @@ import java.util.List;
 public interface BaseListContract {
 
 	interface View<ModelType extends BaseModel>
-			extends BasePresenter.View<ModelType>, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
+			extends BasePresenter.View, AbsListView.OnScrollListener, AbsListView.OnItemClickListener {
 
 		void createListAdapter(List<ModelType> results);
 
@@ -24,6 +25,8 @@ public interface BaseListContract {
 		void removeAdapterData(List<ModelType> result);
 
 		ListAdapter getAdapter();
+
+		RecyclerView.Adapter getRecycleAdapter();
 
 		void destroyListAdapter();
 

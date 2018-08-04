@@ -1,5 +1,6 @@
 package com.alex.baking.app.data.model;
 
+@SuppressWarnings("SimplifiableIfStatement")
 public class Step extends BaseModel {
 
 	private String idFromAPI;
@@ -7,6 +8,15 @@ public class Step extends BaseModel {
 	private String description;
 	private String videoURL;
 	private String thumbnailURL;
+	private Long recipeId;
+
+	public Long getRecipeId() {
+		return recipeId;
+	}
+
+	public void setRecipeId(Long recipeId) {
+		this.recipeId = recipeId;
+	}
 
 	public String getIdFromAPI() {
 		return idFromAPI;
@@ -59,7 +69,8 @@ public class Step extends BaseModel {
 		if (shortDescription != null ? !shortDescription.equals(step.shortDescription) : step.shortDescription != null) return false;
 		if (description != null ? !description.equals(step.description) : step.description != null) return false;
 		if (videoURL != null ? !videoURL.equals(step.videoURL) : step.videoURL != null) return false;
-		return thumbnailURL != null ? thumbnailURL.equals(step.thumbnailURL) : step.thumbnailURL == null;
+		if (thumbnailURL != null ? !thumbnailURL.equals(step.thumbnailURL) : step.thumbnailURL != null) return false;
+		return recipeId != null ? recipeId.equals(step.recipeId) : step.recipeId == null;
 	}
 
 	@Override
@@ -69,6 +80,7 @@ public class Step extends BaseModel {
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (videoURL != null ? videoURL.hashCode() : 0);
 		result = 31 * result + (thumbnailURL != null ? thumbnailURL.hashCode() : 0);
+		result = 31 * result + (recipeId != null ? recipeId.hashCode() : 0);
 		return result;
 	}
 
@@ -80,6 +92,7 @@ public class Step extends BaseModel {
 				", description='" + description + '\'' +
 				", videoURL='" + videoURL + '\'' +
 				", thumbnailURL='" + thumbnailURL + '\'' +
+				", recipeId=" + recipeId +
 				", id=" + id +
 				'}';
 	}

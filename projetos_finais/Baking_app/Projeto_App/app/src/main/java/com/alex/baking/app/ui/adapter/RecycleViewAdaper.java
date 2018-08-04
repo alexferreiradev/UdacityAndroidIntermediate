@@ -8,7 +8,7 @@ import java.util.List;
  * Created by Alex on 17/12/2017.
  */
 
-public interface ListViewAdaper<ModelType extends BaseModel> {
+public interface RecycleViewAdaper<ModelType extends BaseModel> {
 
 	void addAllModel(List<ModelType> models);
 

@@ -1,10 +1,12 @@
 package com.alex.baking.app.ui.view.fragment;
 
-public interface SimpleFragment<ModelType> {
+public interface SimpleFragment<ModelType, PresenterType> {
 
 	void startView(ModelType model) throws IllegalArgumentException;
 
 	ModelType destroyView(ModelType model);
+
+	void setPresenter(PresenterType presenter);
 
 	/**
 	 * Mostra uma barra de progresso

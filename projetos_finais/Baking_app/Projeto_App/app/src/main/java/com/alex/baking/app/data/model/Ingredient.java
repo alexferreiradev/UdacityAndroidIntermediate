@@ -1,10 +1,20 @@
 package com.alex.baking.app.data.model;
 
+@SuppressWarnings("SimplifiableIfStatement")
 public class Ingredient extends BaseModel {
 
 	private Double quantity;
 	private MeasureType measure;
 	private String ingredient;
+	private Long recipeId;
+
+	public Long getRecipeId() {
+		return recipeId;
+	}
+
+	public void setRecipeId(Long recipeId) {
+		this.recipeId = recipeId;
+	}
 
 	public Double getQuantity() {
 		return quantity;
@@ -32,15 +42,15 @@ public class Ingredient extends BaseModel {
 
 	@Override
 	public boolean equals(Object o) {
-
 		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (!(o instanceof Ingredient)) return false;
 
 		Ingredient that = (Ingredient) o;
 
 		if (quantity != null ? !quantity.equals(that.quantity) : that.quantity != null) return false;
 		if (measure != that.measure) return false;
-		return ingredient != null ? ingredient.equals(that.ingredient) : that.ingredient == null;
+		if (ingredient != null ? !ingredient.equals(that.ingredient) : that.ingredient != null) return false;
+		return recipeId != null ? recipeId.equals(that.recipeId) : that.recipeId == null;
 	}
 
 	@Override
@@ -48,6 +58,7 @@ public class Ingredient extends BaseModel {
 		int result = quantity != null ? quantity.hashCode() : 0;
 		result = 31 * result + (measure != null ? measure.hashCode() : 0);
 		result = 31 * result + (ingredient != null ? ingredient.hashCode() : 0);
+		result = 31 * result + (recipeId != null ? recipeId.hashCode() : 0);
 		return result;
 	}
 
@@ -57,6 +68,7 @@ public class Ingredient extends BaseModel {
 				"quantity=" + quantity +
 				", measure=" + measure +
 				", ingredient='" + ingredient + '\'' +
+				", recipeId=" + recipeId +
 				", id=" + id +
 				'}';
 	}

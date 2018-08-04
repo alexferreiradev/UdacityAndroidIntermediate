@@ -21,16 +21,16 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 		ViewType extends BasePresenter.View,
 		PresenterType extends IPresenter>
 		extends AppCompatActivity
-		implements BasePresenter.View<ModelType> {
+		implements BasePresenter.View {
 
 	protected ModelType mData;
 	protected PresenterType mPresenter;
-	protected ProgressBar mProgressBar;
-	protected Toolbar mToolbar;
 	protected String mTitle;
 
-	public BaseActivity(String mTitle) {
-		this.mTitle = mTitle;
+	protected ProgressBar mProgressBar;
+	protected Toolbar mToolbar;
+
+	public BaseActivity() {
 	}
 
 	@Override

@@ -42,6 +42,11 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 		return mRemoteStepSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
 	}
 
+	@Override
+	public Step recoverStep(Long stepId) throws ConnectionException {
+		return mRemoteStepSource.recover(stepId);
+	}
+
 	public void setRemoteIngredientSource(DefaultSource<Ingredient, URL> remoteIngredientSource) {
 		this.mRemoteIngredientSource = remoteIngredientSource;
 	}

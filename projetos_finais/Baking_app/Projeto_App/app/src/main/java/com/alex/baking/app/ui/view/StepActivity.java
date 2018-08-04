@@ -1,96 +1,56 @@
 package com.alex.baking.app.ui.view;
 
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ListAdapter;
+import android.support.v4.app.FragmentManager;
+import android.widget.FrameLayout;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Step;
+import com.alex.baking.app.data.repository.recipe.RecipeRepository;
+import com.alex.baking.app.data.repository.recipe.RecipeRepositoryContract;
+import com.alex.baking.app.data.source.cache.RecipeCache;
+import com.alex.baking.app.data.source.remote.RecipeSource;
+import com.alex.baking.app.data.source.remote.StepSource;
+import com.alex.baking.app.data.source.remote.network.NetworkResourceManager;
+import com.alex.baking.app.data.source.sql.RecipeSqlSource;
+import com.alex.baking.app.ui.presenter.StepPresenter;
 import com.alex.baking.app.ui.view.contract.StepContract;
-
-import java.util.List;
+import com.alex.baking.app.ui.view.fragment.StepFragment;
 
 public class StepActivity extends BaseActivity<Step, StepContract.View, StepContract.Presenter> implements StepContract.View {
 
-	public StepActivity() {
-		super("");
-		setTitle(getString(R.string.recipe_steps_label));
-	}
+	public static final String STEP_ID_EXTRA_PARAM_KEY = "step_id";
+	public static final String STEP_POSITION_EXTRA_PARAM_KEY = "step_pos";
 
-	public StepActivity(String mTitle) {
-		super(mTitle);
-	}
+	@BindView(R.id.flStepContainer)
+	FrameLayout stepContainerFL;
+	private StepFragment stepFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_step);
+
+		NetworkResourceManager networkResource = new NetworkResourceManager();
+		RecipeRepositoryContract repo = new RecipeRepository(
+				RecipeCache.getInstance(),
+				new RecipeSqlSource(this),
+				new RecipeSource(networkResource)
+		);
+		repo.setRemoteStepSource(new StepSource(networkResource));
+		mPresenter = new StepPresenter(this, this, savedInstanceState, repo);
 	}
 
 	@Override
-	public void createListAdapter(List<Step> results) {
+	public void initializeWidgets(Bundle savedInstanceState) {
+		super.initializeWidgets(savedInstanceState);
+		ButterKnife.bind(this);
 
-	}
-
-	@Override
-	public void addAdapterData(List<Step> result) {
-
-	}
-
-	@Override
-	public void removeAdapterData(List<Step> result) {
-
-	}
-
-	@Override
-	public ListAdapter getAdapter() {
-		return null;
-	}
-
-	@Override
-	public void destroyListAdapter() {
-
-	}
-
-	@Override
-	public void showAddOrEditDataView(Step data) {
-
-	}
-
-	@Override
-	public void showDataView(Step data) {
-
-	}
-
-	@Override
-	public void setEmptyView(String text) {
-
-	}
-
-	@Override
-	public void setGridScroolPosition(int position) {
-
-	}
-
-	@Override
-	public int getFirstVisibleItemPosition() {
-		return 0;
-	}
-
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+		stepFragment = new StepFragment();
+		stepFragment.setPresenter(mPresenter);
+		FragmentManager fm = getSupportFragmentManager();
+		fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
 	}
 
 	@Override

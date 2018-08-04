@@ -26,8 +26,9 @@ import android.provider.BaseColumns;
  */
 public class BakingContract {
 
-	public static final String CONTENT_AUTHORITY = "com.alex.popularmovies.app";
+	public static final String CONTENT_AUTHORITY = "com.alex.baking.app";
 
+	@SuppressWarnings("WeakerAccess")
 	protected static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
 
 	public static final class RecipeEntry implements BaseColumns {
@@ -55,7 +56,7 @@ public class BakingContract {
 					COLUMN_ID_FROM_API + " integer unique, " +
 					COLUMN_NAME + " text, " +
 					COLUMN_SERVING + " text, " +
-					COLUMN_IMAGE + " text, " +
+					COLUMN_IMAGE + " text" +
 					")";
 		}
 
@@ -90,7 +91,7 @@ public class BakingContract {
 					COLUMN_FK_RECIPE + " integer, " +
 					COLUMN_QUANTITY + " real, " +
 					COLUMN_MEASURE + " text, " +
-					COLUMN_INGREDIENT + " text, " +
+					COLUMN_INGREDIENT + " text" +
 					")";
 		}
 
@@ -128,7 +129,7 @@ public class BakingContract {
 					COLUMN_SHORT_DESCRIPTION + " real, " +
 					COLUMN_DESCRIPTION + " text, " +
 					COLUMN_VIDEO_URL + " text, " +
-					COLUMN_THUMBNAIL_URL + " text, " +
+					COLUMN_THUMBNAIL_URL + " text" +
 					")";
 		}
 
