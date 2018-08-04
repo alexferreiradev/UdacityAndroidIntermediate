@@ -27,12 +27,30 @@
 		<activity android:name=".ui.view.MainActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
+
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
 		<activity android:name=".ui.view.RecipeActivity">
 		</activity>
 		<activity android:name=".ui.view.StepActivity">
+		</activity>
+
+		<receiver android:name=".debug.BakingWidget">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+			</intent-filter>
+
+			<meta-data
+					android:name="android.appwidget.provider"
+					android:resource="@xml/baking_widget_info"
+					/>
+		</receiver>
+
+		<activity android:name=".debug.BakingWidgetConfigureActivity">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+			</intent-filter>
 		</activity>
 	</application>
 

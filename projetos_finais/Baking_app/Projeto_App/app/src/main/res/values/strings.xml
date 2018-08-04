@@ -30,4 +30,8 @@
 	<string name="text_not_loaded">Carregando…</string>
 	<string name="step_description_label">Instruções</string>
 	<string name="none_recipe_loaded">Nenhum prato encontrado</string>
+	<string name="appwidget_text">EXAMPLE</string>
+	<string name="configure">Configure</string>
+	<string name="add_widget">Add widget</string>
+	<string name="hint_to_edittext">Insira um texto valido</string>
 </resources>
