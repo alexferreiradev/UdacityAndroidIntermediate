@@ -10,7 +10,7 @@
 
 	<include
 			android:id="@+id/includedLayout"
-			layout="@layout/default_layout"
+			layout="@layout/default_activity_layout"
 			android:layout_height="wrap_content"
 			tools:visibility="visible"
 			tools:background="@color/colorAccent"

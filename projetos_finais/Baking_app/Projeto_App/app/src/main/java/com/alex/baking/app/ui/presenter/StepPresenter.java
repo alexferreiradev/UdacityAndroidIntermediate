@@ -27,7 +27,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	}
 
 	@Override
-	protected void backgroudFinished(@NonNull Object o) {
+	protected void backgroundFinished(@NonNull Object o) {
 		if (o instanceof Step) {
 			step = (Step) o;
 			fragmentView.bindViewModel(step);
@@ -35,7 +35,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	}
 
 	@Override
-	protected Object loadInBackgroud(String[] strings) {
+	protected Object loadInBackground(String[] strings) {
 		try {
 			return mRepository.recoverStep(stepId);
 		} catch (ConnectionException e) {

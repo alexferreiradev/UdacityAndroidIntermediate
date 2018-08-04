@@ -22,12 +22,13 @@ import com.alex.baking.app.ui.presenter.RecipePresenter;
 import com.alex.baking.app.ui.presenter.StepPresenter;
 import com.alex.baking.app.ui.view.contract.RecipeContract;
 import com.alex.baking.app.ui.view.contract.StepContract;
-import com.alex.baking.app.ui.view.fragment.BaseFragment;
 import com.alex.baking.app.ui.view.fragment.RecipeFragment;
 import com.alex.baking.app.ui.view.fragment.StepFragment;
 
 @SuppressWarnings("ConstantConditions")
 public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, RecipeContract.Presenter> implements RecipeContract.View, StepContract.View {
+
+	private static final String TAG = RecipeActivity.class.getSimpleName();
 
 	public final static String RECIPE_ID_EXTRA_PARAM_KEY = "recipe_id";
 
@@ -43,23 +44,6 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	public void initializeWidgets(Bundle savedInstanceState) {
 		super.initializeWidgets(savedInstanceState);
 		ButterKnife.bind(this);
-
-		FragmentManager fm = getSupportFragmentManager();
-		BaseFragment recipeFragment = new RecipeFragment();
-		// TODO: 01/08/18 add param com bundle
-		fm.beginTransaction().add(R.id.flRecipeContainer, recipeFragment).commit();
-		if (isDualPanel()) {
-			stepFragment = new StepFragment();
-			RecipeRepository mRepository = new RecipeRepository(
-					RecipeCache.getInstance(),
-					new RecipeSqlSource(this),
-					new RecipeSource(new NetworkResourceManager())
-			);
-			mRepository.setRemoteStepSource(new StepSource(new NetworkResourceManager()));
-			stepFragment.setPresenter(new StepPresenter(this, this, null, mRepository));
-			// TODO: 01/08/18 add param com bundle
-			fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
-		}
 	}
 
 	@Override
@@ -84,9 +68,28 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 		Intent intent = getIntent();
 		if (intent != null && intent.hasExtra(RECIPE_ID_EXTRA_PARAM_KEY)) {
 			long recipeId = intent.getExtras().getLong(RECIPE_ID_EXTRA_PARAM_KEY, -1);
+			Log.i(TAG, String.format("Iniciando com recipeId=%x", recipeId));
+
 			mPresenter.setRecipeId(recipeId);
 		} else {
 			throw new IllegalArgumentException("Não foi passado ID de recipe");
+		}
+
+		FragmentManager fm = getSupportFragmentManager();
+		RecipeFragment recipeFragment = new RecipeFragment();
+		mPresenter.setFragmentView(recipeFragment);
+		fm.beginTransaction().add(R.id.flRecipeContainer, recipeFragment).commit();
+
+		if (isDualPanel()) {
+			stepFragment = new StepFragment();
+			RecipeRepository mRepository = new RecipeRepository(
+					RecipeCache.getInstance(),
+					new RecipeSqlSource(this),
+					new RecipeSource(new NetworkResourceManager())
+			);
+			mRepository.setRemoteStepSource(new StepSource(new NetworkResourceManager()));
+			stepFragment.setPresenter(new StepPresenter(this, this, null, mRepository));
+			fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
 		}
 	}
 
@@ -101,7 +104,7 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 		if (stepFragment != null) {
 			fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
 		} else {
-			Log.e("recipe Act", "Erro de step fragment nulo"); // TODO: 01/08/18 - Não comitar, dont push this
+			Log.e("recipe Act", "Erro de step fragment nulo");
 		}
 	}
 }

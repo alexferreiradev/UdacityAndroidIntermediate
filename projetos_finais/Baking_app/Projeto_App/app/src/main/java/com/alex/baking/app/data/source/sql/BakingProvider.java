@@ -27,9 +27,9 @@ public class BakingProvider extends ContentProvider {
 	private static UriMatcher buildMacher() {
 		UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
-		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.RecipeEntry.TABLE_NAME, ALL_RECIPES);
-		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.TABLE_NAME, ALL_INGREDIENTS);
-		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.StepEntry.TABLE_NAME, ALL_STEPS);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.RecipeEntry.CONTENT_URI.getPath(), ALL_RECIPES);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.CONTENT_URI.getPath(), ALL_INGREDIENTS);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.StepEntry.CONTENT_URI.getPath(), ALL_STEPS);
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.RecipeEntry.CONTENT_URI_BY_ID.getPath(), RECIPE_BY_ID);
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.CONTENT_URI_BY_ID.getPath(), INGREDIENT_BY_ID);
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.CONTENT_URI_BY_RECIPE_ID.getPath(), INGREDIENT_BY_RECIPE_ID);
@@ -109,7 +109,7 @@ public class BakingProvider extends ContentProvider {
 
 	@Override
 	public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-		Cursor cursor = null;
+		Cursor cursor;
 		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
 		String tableName = "";
 		String limitParam = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
@@ -134,18 +134,6 @@ public class BakingProvider extends ContentProvider {
 	@Override
 	public int update(@NonNull Uri uri, ContentValues values, String selection,
 					  String[] selectionArgs) {
-//		SQLiteDatabase writerDb = mSqlHelper.getWritableDatabase();
-//
-//		switch (sUriMacher.match(uri)) {
-//			case RECIPE_BY_ID:
-//				long movieId = ContentUris.parseId(uri);
-//				selectionArgs = new String[]{String.valueOf(movieId)};
-//				int rowsUpdated = writerDb.update(BakingContract.RecipeEntry.TABLE_NAME, values, "_id = ?", selectionArgs);
-//				writerDb.close();
-//				return rowsUpdated;
-//			default:
-//				throw new UnknownError("URI not known + " + uri);
-//		}
 		throw new RuntimeException("Não implementado");
 	}
 

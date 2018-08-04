@@ -22,7 +22,7 @@ public class MainPresenter extends BaseListPresenter<MainContract.View, Recipe, 
 	}
 
 	@Override
-	protected void backgroudFinished(@NonNull List<Recipe> recipes) {
+	protected void backgroundFinished(@NonNull List<Recipe> recipes) {
 		if (recipes.isEmpty()) {
 			Log.w(TAG, "Lista vazia de repo");
 			return;
@@ -32,7 +32,7 @@ public class MainPresenter extends BaseListPresenter<MainContract.View, Recipe, 
 	}
 
 	@Override
-	protected List<Recipe> loadInBackgroud(String... strings) {
+	protected List<Recipe> loadInBackground(String... strings) {
 		try {
 			return mRepository.getRecipeList(mLoadItemsLimit, mOffset);
 		} catch (Exception e) {
