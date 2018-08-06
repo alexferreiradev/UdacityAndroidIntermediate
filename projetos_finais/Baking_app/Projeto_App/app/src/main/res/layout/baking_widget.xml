@@ -1,24 +1,38 @@
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:padding="@dimen/widget_margin"
-		android:background="#09C"
+		android:background="@color/colorPrimary"
+		android:id="@+id/widgetRoot"
 		>
 
 	<TextView
-			android:id="@+id/appwidget_text"
+			tools:text="Ingredientes para o prato torta de maçã:"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
-			android:layout_centerVertical="true"
-			android:text="@string/appwidget_text"
-			android:textColor="#ffffff"
-			android:textSize="24sp"
-			android:textStyle="bold|italic"
-			android:layout_margin="8dp"
-			android:contentDescription="@string/appwidget_text"
-			android:background="#09C"
+			style="@style/main.recipeName"
+			android:id="@+id/tvRecipeTitle"
 			/>
 
+	<ListView
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_centerHorizontal="true"
+			android:layout_below="@+id/tvRecipeTitle"
+			android:id="@+id/lvIngredient"
+			/>
+
+	<TextView
+			android:id="@+id/tvEmpty"
+			android:text="@string/text_not_loaded"
+			tools:text="Carregando"
+			android:layout_below="@+id/tvRecipeTitle"
+			android:layout_centerHorizontal="true"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			/>
 </RelativeLayout>

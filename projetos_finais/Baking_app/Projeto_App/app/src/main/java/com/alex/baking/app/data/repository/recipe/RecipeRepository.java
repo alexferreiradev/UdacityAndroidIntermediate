@@ -24,6 +24,7 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 	private static final String TAG = RecipeRepository.class.getSimpleName();
 	private DefaultSource<Ingredient, URL> mRemoteIngredientSource;
 	private DefaultSource<Step, URL> mRemoteStepSource;
+	private DefaultSource<Ingredient, SqlQuery> ingredientLocalSource;
 
 	public RecipeRepository(MemoryCache<Recipe> cacheSource, DefaultSource<Recipe, SqlQuery> localSource, DefaultSource<Recipe, URL> remoteSource) {
 		super(cacheSource, localSource, remoteSource);
@@ -62,9 +63,23 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 		}
 	}
 
+	private void saveIngredientInLocalSource(List<Ingredient> ingredientList) {
+		ingredientLocalSource.delete(null); // Realiza truncate
+
+		for (Ingredient ingredient : ingredientList) {
+			Ingredient ingredientWithId = ingredientLocalSource.create(ingredient);
+			ingredient.setId(ingredientWithId.getId());
+		}
+	}
+
 	@Override
 	public List<Ingredient> getIngredientListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException {
-		return mRemoteIngredientSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
+		List<Ingredient> ingredientList = mRemoteIngredientSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
+		if (!ingredientList.isEmpty()) {
+			saveIngredientInLocalSource(ingredientList); // Sera usado
+		}
+
+		return ingredientList;
 	}
 
 	@Override
@@ -83,5 +98,9 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 
 	public void setRemoteStepSource(DefaultSource<Step, URL> remoteStepSource) {
 		this.mRemoteStepSource = remoteStepSource;
+	}
+
+	public void setIngredientLocalSource(DefaultSource<Ingredient, SqlQuery> ingredientLocalSource) {
+		this.ingredientLocalSource = ingredientLocalSource;
 	}
 }

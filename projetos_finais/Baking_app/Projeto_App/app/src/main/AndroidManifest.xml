@@ -47,11 +47,16 @@
 					/>
 		</receiver>
 
-		<activity android:name=".debug.BakingWidgetConfigureActivity">
+		<activity android:name=".debug.config.BakingWidgetConfigureActivity">
 			<intent-filter>
 				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
 			</intent-filter>
 		</activity>
+
+		<service
+				android:name=".debug.BakingWidgetService"
+				android:permission="android.permission.BIND_REMOTEVIEWS"
+				/>
 	</application>
 
 </manifest>
