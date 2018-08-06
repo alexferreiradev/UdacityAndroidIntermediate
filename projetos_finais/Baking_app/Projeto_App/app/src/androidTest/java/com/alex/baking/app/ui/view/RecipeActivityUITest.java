@@ -30,8 +30,8 @@ public class RecipeActivityUITest {
 		onView(withId(R.id.rvRecipeList)).perform(RecyclerViewActions.actionOnItemAtPosition(
 				2, ViewActions.click()
 		));
-		onView(withId(R.id.tvIngredient)).check(ViewAssertions.matches(isDisplayed()));
-		onView(withId(R.id.tvShortDescription)).check(ViewAssertions.matches(isDisplayed()));
+		onView(withId(R.id.rvIngredient)).check(ViewAssertions.matches(isDisplayed()));
+		onView(withId(R.id.rvStep)).check(ViewAssertions.matches(isDisplayed()));
 	}
 
 	@Ignore // Não esta carregando steps e ingredients no repo

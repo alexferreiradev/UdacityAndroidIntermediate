@@ -3,11 +3,11 @@ package com.alex.baking.app.data.source.queryspec.remote;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class RecipeRelationsQuery extends RemoteQuery {
+public class RecipeRelationsRemoteQuery extends RemoteQuery {
 
 	private Long recipeId;
 
-	public RecipeRelationsQuery(int mLimit, int mOffset, Long recipeId) {
+	public RecipeRelationsRemoteQuery(int mLimit, int mOffset, Long recipeId) {
 		super(mLimit, mOffset);
 		this.recipeId = recipeId;
 	}
