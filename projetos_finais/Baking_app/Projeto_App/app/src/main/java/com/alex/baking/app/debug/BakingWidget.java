@@ -3,6 +3,7 @@ package com.alex.baking.app.debug;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,11 +21,16 @@ import com.alex.baking.app.ui.view.RecipeActivity;
 public class BakingWidget extends AppWidgetProvider {
 	private static final String TAG = BakingWidget.class.getSimpleName();
 
+	public static void sendUpdateBroadcastToAllWidgets(Context context) {
+		int allWidgetIds[] = AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, BakingWidget.class));
+		Intent intent = new Intent(context, BakingWidget.class);
+		intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+		intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, allWidgetIds);
 
-	public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-									   int appWidgetId) {
-		Log.v(TAG, "Atualizando widget: " + appWidgetId);
+		context.sendBroadcast(intent);
+	}
 
+	public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 		RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_widget);
 
 		Long recipeId = WidgetConfigurationUtil.loadRecipeId(context, appWidgetId);
@@ -38,7 +44,6 @@ public class BakingWidget extends AppWidgetProvider {
 			intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
 			intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
 			views.setRemoteAdapter(appWidgetId, R.id.lvIngredient, intent);
-			appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lvIngredient);
 
 			Intent intentToRecipeAct = new Intent(context, RecipeActivity.class);
 			intentToRecipeAct.putExtra(RecipeActivity.RECIPE_ID_EXTRA_PARAM_KEY, recipeId);
@@ -47,11 +52,13 @@ public class BakingWidget extends AppWidgetProvider {
 		}
 
 		appWidgetManager.updateAppWidget(appWidgetId, views);
+		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lvIngredient);
 	}
 
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
 		for (int appWidgetId : appWidgetIds) {
+			Log.v(TAG, "Atualizando widget: " + appWidgetId);
 			updateAppWidget(context, appWidgetManager, appWidgetId);
 		}
 

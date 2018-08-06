@@ -1,19 +1,15 @@
 package com.alex.baking.app.ui.presenter;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.Recipe;
 import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.data.repository.recipe.RecipeRepositoryContract;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
-import com.alex.baking.app.debug.BakingWidget;
 import com.alex.baking.app.ui.view.StepActivity;
 import com.alex.baking.app.ui.view.contract.RecipeContract;
 
@@ -61,10 +57,6 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 			if (resultList.get(0) instanceof Ingredient) {
 				List<Ingredient> ingredientList = ((List<Ingredient>) resultList);
 				fragmentView.addIngredientToAdapter(ingredientList);
-				AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(mContext);
-				ComponentName thisWidget = new ComponentName(mContext, BakingWidget.class);
-				int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisWidget);
-				appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.lvIngredient);
 			} else {
 				List<Step> stepList = ((List<Step>) resultList);
 				fragmentView.addStepToAdapter(stepList);

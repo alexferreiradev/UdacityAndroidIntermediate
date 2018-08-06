@@ -91,7 +91,7 @@ public class BakingProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
-		SQLiteDatabase readDb = mSqlHelper.getWritableDatabase();
+		SQLiteDatabase db = mSqlHelper.getWritableDatabase();
 		String tableName = "";
 
 		switch (sUriMacher.match(uri)) {
@@ -106,13 +106,13 @@ public class BakingProvider extends ContentProvider {
 				break;
 		}
 
-		long id = readDb.insert(tableName, null, values);
+		long id = db.insert(tableName, null, values);
 		if (id > 0) {
 			uri = ContentUris.withAppendedId(uri, id);
 		} else {
 			uri = null;
 		}
-		readDb.close();
+		db.close();
 
 		return uri;
 	}

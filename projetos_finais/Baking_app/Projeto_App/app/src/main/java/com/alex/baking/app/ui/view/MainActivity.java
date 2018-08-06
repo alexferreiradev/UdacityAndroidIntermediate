@@ -42,7 +42,7 @@ public class MainActivity extends BaseActivity<Recipe, MainContract.View, MainCo
 		setContentView(R.layout.activity_main);
 
 		RecipeRepositoryContract repo = new RecipeRepository(
-				RecipeCache.getInstance(),
+				this, RecipeCache.getInstance(),
 				new RecipeSqlSource(this),
 				new RecipeSource(new NetworkResourceManager())
 		);

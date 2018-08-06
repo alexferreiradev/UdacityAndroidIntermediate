@@ -1,5 +1,6 @@
 package com.alex.baking.app.data.repository.recipe;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.Recipe;
@@ -50,7 +51,8 @@ public class RecipeRepositoryTest {
 	@Before
 	public void setUp() throws ConnectionException {
 		MockitoAnnotations.initMocks(this);
-		repo = new RecipeRepository(mCacheSource, mLocalSource, mRemoteSource); // Workaround to params with same type
+
+		repo = new RecipeRepository(InstrumentationRegistry.getTargetContext(), mCacheSource, mLocalSource, mRemoteSource); // Workaround to params with same type
 
 		validList = new ArrayList<>();
 		validList.add(model);

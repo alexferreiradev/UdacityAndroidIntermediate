@@ -34,7 +34,7 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 
 		NetworkResourceManager networkResource = new NetworkResourceManager();
 		RecipeRepositoryContract repo = new RecipeRepository(
-				RecipeCache.getInstance(),
+				this, RecipeCache.getInstance(),
 				new RecipeSqlSource(this),
 				new RecipeSource(networkResource)
 		);

@@ -54,7 +54,7 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 
 		NetworkResourceManager networkResource = new NetworkResourceManager();
 		RecipeRepositoryContract repo = new RecipeRepository(
-				RecipeCache.getInstance(),
+				this, RecipeCache.getInstance(),
 				new RecipeSqlSource(this),
 				new RecipeSource(networkResource)
 		);
@@ -85,7 +85,7 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 		if (isDualPanel()) {
 			stepFragment = new StepFragment();
 			RecipeRepository mRepository = new RecipeRepository(
-					RecipeCache.getInstance(),
+					this, RecipeCache.getInstance(),
 					new RecipeSqlSource(this),
 					new RecipeSource(new NetworkResourceManager())
 			);
