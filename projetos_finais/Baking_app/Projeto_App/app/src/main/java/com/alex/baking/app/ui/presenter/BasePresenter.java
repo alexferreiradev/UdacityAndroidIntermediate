@@ -69,7 +69,7 @@ public abstract class BasePresenter<ViewType extends BasePresenter.View,
 	}
 
 	@SuppressLint("StaticFieldLeak")
-	class BackgroundTask extends AsyncTask<TaskParamType, TaskProgressType, TaskResultType> {
+	public class BackgroundTask extends AsyncTask<TaskParamType, TaskProgressType, TaskResultType> {
 
 		@Override
 		protected void onPreExecute() {

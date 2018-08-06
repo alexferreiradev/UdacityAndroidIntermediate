@@ -55,7 +55,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.In
 		notifyDataSetChanged();
 	}
 
-	class IngredientViewHolder extends RecyclerView.ViewHolder {
+	static class IngredientViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.tvIngredient)
 		TextView ingredientTV;
 		@BindView(R.id.tvQuantity)

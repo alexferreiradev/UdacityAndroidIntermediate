@@ -15,7 +15,7 @@ public class RecipeRelationsQuery extends RemoteQuery {
 	@Override
 	public URL getQuery() {
 		try {
-			String baseUrl = "http://go.udacity.com/android-baking-app-json?id=";
+			String baseUrl = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json?id=";
 			return new URL(baseUrl + String.valueOf(recipeId));
 		} catch (MalformedURLException ignored) {
 		}

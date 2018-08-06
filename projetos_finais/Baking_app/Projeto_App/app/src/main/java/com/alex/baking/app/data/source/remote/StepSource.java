@@ -65,6 +65,7 @@ public class StepSource extends BaseRemoteSource<Step> {
 		step.setThumbnailURL(jsonObject.getString("shortDescription"));
 		step.setThumbnailURL(jsonObject.getString("thumbnailURL"));
 		step.setVideoURL(jsonObject.getString("videoURL"));
+		step.setRecipeId(recipeId);
 
 		return step;
 	}

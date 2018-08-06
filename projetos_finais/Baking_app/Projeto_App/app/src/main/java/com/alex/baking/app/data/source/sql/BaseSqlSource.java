@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
+import android.util.Log;
 import com.alex.baking.app.data.model.BaseModel;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.queryspec.QuerySpecification;
@@ -20,6 +21,8 @@ import java.util.List;
  */
 
 abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSource<ModelType, SqlQuery> {
+
+	private static final String TAG = BaseSqlSource.class.getSimpleName();
 
 	@SuppressWarnings("WeakerAccess")
 	protected ContentResolver mResolver;
@@ -123,7 +126,10 @@ abstract class BaseSqlSource<ModelType extends BaseModel> implements DefaultSour
 	@Override
 	public ModelType delete(ModelType model) {
 		if (model == null || model.getId() == null) {
-			return null;
+			Log.w(TAG, "Realizando truncate pois nao foi passado ID");
+			mResolver.delete(getContentUri(), null, null);
+
+			return model;
 		}
 
 		String where = BaseColumns._ID + "=?";

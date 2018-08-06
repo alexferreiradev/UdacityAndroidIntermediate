@@ -20,5 +20,11 @@ public interface DefaultSource<ModelType extends BaseModel, QueryReturnType> {
 
 	ModelType update(ModelType model);
 
+	/**
+	 * Remove um model do banco.
+	 *
+	 * @param model caso null, irá ser feito <b>truncate</b>.
+	 * @return null ou model passado a ser deletado
+	 */
 	ModelType delete(ModelType model);
 }

@@ -17,6 +17,7 @@ import com.alex.baking.app.data.source.remote.IngredientSource;
 import com.alex.baking.app.data.source.remote.RecipeSource;
 import com.alex.baking.app.data.source.remote.StepSource;
 import com.alex.baking.app.data.source.remote.network.NetworkResourceManager;
+import com.alex.baking.app.data.source.sql.IngredientSqlSource;
 import com.alex.baking.app.data.source.sql.RecipeSqlSource;
 import com.alex.baking.app.ui.presenter.RecipePresenter;
 import com.alex.baking.app.ui.presenter.StepPresenter;
@@ -59,6 +60,7 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 		);
 		repo.setRemoteIngredientSource(new IngredientSource(networkResource));
 		repo.setRemoteStepSource(new StepSource(networkResource));
+		repo.setIngredientLocalSource(new IngredientSqlSource(this));
 		mPresenter = new RecipePresenter(this, this, savedInstanceState, repo);
 		mTitle = getString(R.string.app_name);
 	}

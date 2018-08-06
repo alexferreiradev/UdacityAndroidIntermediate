@@ -9,17 +9,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
+import android.util.Log;
+
+import java.util.Arrays;
 
 public class BakingProvider extends ContentProvider {
+	protected static final int STEP_BY_RECIPE_ID = 302;
 
 	protected static final int ALL_RECIPES = 100;
 	protected static final int RECIPE_BY_ID = 101;
+
 	protected static final int ALL_INGREDIENTS = 200;
 	protected static final int INGREDIENT_BY_ID = 201;
 	protected static final int INGREDIENT_BY_RECIPE_ID = 202;
+
 	protected static final int ALL_STEPS = 300;
 	protected static final int STEP_BY_ID = 301;
+	private static final String TAG = BakingProvider.class.getSimpleName();
 
 	protected static final UriMatcher sUriMacher = buildMacher();
 	private SQLiteOpenHelper mSqlHelper;
@@ -34,28 +42,37 @@ public class BakingProvider extends ContentProvider {
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.CONTENT_URI_BY_ID.getPath(), INGREDIENT_BY_ID);
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.IngredientEntry.CONTENT_URI_BY_RECIPE_ID.getPath(), INGREDIENT_BY_RECIPE_ID);
 		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.StepEntry.CONTENT_URI_BY_ID.getPath(), STEP_BY_ID);
+		uriMatcher.addURI(BakingContract.CONTENT_AUTHORITY, BakingContract.StepEntry.CONTENT_URI_BY_RECIPE_ID.getPath(), STEP_BY_RECIPE_ID);
 
 		return uriMatcher;
 	}
 
 	@Override
 	public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
-		// Implement this to handle requests to delete one or more rows.
-//		SQLiteDatabase readDb = mSqlHelper.getWritableDatabase();
-//
-//		switch (sUriMacher.match(uri)) {
-//			case RECIPE_BY_ID:
-//				long movieId = ContentUris.parseId(uri);
-//				selectionArgs = new String[]{String.valueOf(movieId)};
-//				int rowsUpdated = readDb.delete(BakingContract.RecipeEntry.TABLE_NAME, "_id = ?", selectionArgs);
-//				readDb.close();
-//
-////                getContext().getContentResolver().notifyChange(mUri, );
-//				return rowsUpdated;
-//			default:
-//				throw new UnknownError("URI not known + " + uri);
-//		}
-		throw new RuntimeException("Não implementado");
+		SQLiteDatabase db = mSqlHelper.getWritableDatabase();
+
+		String tableName;
+		switch (sUriMacher.match(uri)) {
+			case RECIPE_BY_ID:
+				long recipeId = ContentUris.parseId(uri);
+				selectionArgs = new String[]{String.valueOf(recipeId)};
+				selection = BaseColumns._ID + "=?";
+				tableName = BakingContract.RecipeEntry.TABLE_NAME;
+				break;
+			case ALL_INGREDIENTS:
+				tableName = BakingContract.IngredientEntry.TABLE_NAME;
+				break;
+			default:
+				throw new UnknownError("URI not known + " + uri);
+		}
+
+		int rowsUpdated = db.delete(tableName, selection, selectionArgs);
+		if (selection == null) {
+			Log.w(TAG, "Realizado truncate em Ingredient. Total de linhas apagadas: " + rowsUpdated);
+		}
+		db.close();
+
+		return rowsUpdated;
 	}
 
 	@Override
@@ -113,6 +130,9 @@ public class BakingProvider extends ContentProvider {
 		SQLiteDatabase readDb = mSqlHelper.getReadableDatabase();
 		String tableName = "";
 		String limitParam = uri.getQueryParameter(SearchManager.SUGGEST_PARAMETER_LIMIT);
+		String sqlSelection = null;
+		long recipeId;
+		String[] sqlSelecArgs = new String[0];
 
 		switch (sUriMacher.match(uri)) {
 			case RECIPE_BY_ID:
@@ -120,10 +140,27 @@ public class BakingProvider extends ContentProvider {
 				tableName = BakingContract.RecipeEntry.TABLE_NAME;
 				break;
 			case INGREDIENT_BY_RECIPE_ID:
-			case INGREDIENT_BY_ID:
+				tableName = BakingContract.IngredientEntry.TABLE_NAME;
+				recipeId = Long.parseLong(uri.getPathSegments().get(1));
+
+				sqlSelection = BakingContract.IngredientEntry.COLUMN_FK_RECIPE + "=?";
+				sqlSelecArgs = new String[]{String.valueOf(recipeId)};
+				break;
 			case ALL_INGREDIENTS:
 				tableName = BakingContract.IngredientEntry.TABLE_NAME;
 				break;
+		}
+		if (sqlSelection != null) {
+			selection = selection == null ? sqlSelection : String.format("%s and %s", selection, sqlSelection);
+			int selecArgsOriginalSize = 0;
+			if (selectionArgs != null) {
+				selecArgsOriginalSize = selectionArgs.length;
+			}
+
+			selectionArgs = selectionArgs == null ? new String[sqlSelecArgs.length] : Arrays.copyOf(selectionArgs, selecArgsOriginalSize + sqlSelecArgs.length);
+			for (String sqlSelecArg : sqlSelecArgs) {
+				selectionArgs[selecArgsOriginalSize++] = sqlSelecArg;
+			}
 		}
 
 		cursor = readDb.query(tableName, projection, selection, selectionArgs, null, null, sortOrder, limitParam);
