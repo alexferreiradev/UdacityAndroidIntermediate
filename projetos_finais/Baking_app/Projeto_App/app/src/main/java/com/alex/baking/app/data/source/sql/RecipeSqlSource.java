@@ -12,8 +12,8 @@ public class RecipeSqlSource extends BaseSqlSource<Recipe> {
 		super(context);
 	}
 
-	@Override
-	protected ContentValues wrapperContent(Recipe data) {
+	@SuppressWarnings("WeakerAccess")
+	public static ContentValues recipeToContentValues(Recipe data) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(BakingContract.RecipeEntry._ID, data.getId());
 		contentValues.put(BakingContract.RecipeEntry.COLUMN_ID_FROM_API, data.getIdFromAPI());
@@ -24,8 +24,8 @@ public class RecipeSqlSource extends BaseSqlSource<Recipe> {
 		return contentValues;
 	}
 
-	@Override
-	protected Recipe wrapperModel(ContentValues values) {
+	@SuppressWarnings("WeakerAccess")
+	public static Recipe valuesToRecipe(ContentValues values) {
 		Recipe recipe = new Recipe();
 		recipe.setId(values.getAsLong(BakingContract.RecipeEntry._ID));
 		recipe.setIdFromAPI(values.getAsString(BakingContract.RecipeEntry.COLUMN_ID_FROM_API));
@@ -36,8 +36,8 @@ public class RecipeSqlSource extends BaseSqlSource<Recipe> {
 		return recipe;
 	}
 
-	@Override
-	protected Recipe createModelFromCursor(Cursor cursor) {
+	@SuppressWarnings("WeakerAccess")
+	public static Recipe cursorToRecipe(Cursor cursor) {
 		Recipe recipe = new Recipe();
 		int columnIndex = cursor.getColumnIndex(BakingContract.RecipeEntry._ID);
 		recipe.setId(cursor.getLong(columnIndex));
@@ -51,6 +51,21 @@ public class RecipeSqlSource extends BaseSqlSource<Recipe> {
 		recipe.setServing(cursor.getString(columnIndex));
 
 		return recipe;
+	}
+
+	@Override
+	protected ContentValues wrapperContent(Recipe data) {
+		return recipeToContentValues(data);
+	}
+
+	@Override
+	protected Recipe wrapperModel(ContentValues values) {
+		return valuesToRecipe(values);
+	}
+
+	@Override
+	protected Recipe createModelFromCursor(Cursor cursor) {
+		return cursorToRecipe(cursor);
 	}
 
 	@Override

@@ -76,7 +76,7 @@ public class BakingContract {
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
-		public static final Uri CONTENT_URI_BY_RECIPE_ID = RecipeEntry.CONTENT_URI.buildUpon().appendPath(RecipeEntry.TABLE_NAME).appendPath("#").appendPath(TABLE_NAME).build();
+		public static final Uri CONTENT_URI_BY_RECIPE_ID = RecipeEntry.CONTENT_URI_BY_ID.buildUpon().appendPath(TABLE_NAME).build();
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
@@ -98,6 +98,10 @@ public class BakingContract {
 		public static String dropTableSql() {
 			return "drop table if exists " + TABLE_NAME;
 		}
+
+		public static Uri buildIngredientByRecipeIdUri(Long recipeId) {
+			return RecipeEntry.buildRecipeUri(recipeId).buildUpon().appendPath(TABLE_NAME).build();
+		}
 	}
 
 	public static final class StepEntry implements BaseColumns {
@@ -113,11 +117,12 @@ public class BakingContract {
 
 		public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(TABLE_NAME).build();
 		public static final Uri CONTENT_URI_BY_ID = CONTENT_URI.buildUpon().appendPath("#").build();
+		public static final Uri CONTENT_URI_BY_RECIPE_ID = RecipeEntry.CONTENT_URI_BY_ID.buildUpon().appendPath(TABLE_NAME).build();
 		public static final String CONTENT_TYPE = ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 		public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + TABLE_NAME;
 
 
-		public static Uri buildMovieUri(long id) {
+		public static Uri buildStepUri(long id) {
 			return ContentUris.withAppendedId(CONTENT_URI, id);
 		}
 

@@ -6,8 +6,9 @@ import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.data.repository.BaseRepository;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
+import com.alex.baking.app.data.source.queryspec.QuerySpecification;
 import com.alex.baking.app.data.source.queryspec.remote.RecipeQuery;
-import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsQuery;
+import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsRemoteQuery;
 import com.alex.baking.app.data.source.queryspec.sql.BaseSqlSpecification;
 import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
@@ -24,6 +25,7 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 	private static final String TAG = RecipeRepository.class.getSimpleName();
 	private DefaultSource<Ingredient, URL> mRemoteIngredientSource;
 	private DefaultSource<Step, URL> mRemoteStepSource;
+	private DefaultSource<Ingredient, SqlQuery> ingredientLocalSource;
 
 	public RecipeRepository(MemoryCache<Recipe> cacheSource, DefaultSource<Recipe, SqlQuery> localSource, DefaultSource<Recipe, URL> remoteSource) {
 		super(cacheSource, localSource, remoteSource);
@@ -51,25 +53,48 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 			BaseSqlSpecification sqlSpecification = new BaseSqlSpecification(sqlQuery, limit, offset);
 			List<Recipe> recipeListByIdFromAPI = mLocalSource.recover(sqlSpecification);
 
-			boolean recipeByIdWasFound = recipeListByIdFromAPI.isEmpty();
+			boolean recipeByIdWasFound = !recipeListByIdFromAPI.isEmpty();
 			if (recipeByIdWasFound) {
-				Recipe recipeWithId = mLocalSource.create(recipe);
+				Recipe recipeWithId = recipeListByIdFromAPI.get(0);
 				recipe.setId(recipeWithId.getId());
 			} else {
-				Recipe recipeWithId = recipeListByIdFromAPI.get(0);
+				Recipe recipeWithId = mLocalSource.create(recipe);
 				recipe.setId(recipeWithId.getId());
 			}
 		}
 	}
 
+	private void saveIngredientInLocalSource(List<Ingredient> ingredientList) {
+		for (Ingredient ingredient : ingredientList) {
+			Ingredient ingredientWithId = ingredientLocalSource.create(ingredient);
+			ingredient.setId(ingredientWithId.getId());
+		}
+	}
+
 	@Override
 	public List<Ingredient> getIngredientListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException {
-		return mRemoteIngredientSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
+		List<Ingredient> ingredientList = mRemoteIngredientSource.recover(new RecipeRelationsRemoteQuery(limit, offset, recipeId));
+		if (!ingredientList.isEmpty()) {
+			SqlQuery sqlQuery = SqlQuery.builder()
+					.setUri(BakingContract.IngredientEntry.buildIngredientByRecipeIdUri(recipeId))
+					.build();
+			QuerySpecification<SqlQuery> querySpec = new BaseSqlSpecification(sqlQuery, limit, offset);
+			List<Ingredient> ingredientListWithID = ingredientLocalSource.recover(querySpec);
+
+			boolean ingredientsByRecipeNotFound = ingredientListWithID.isEmpty();
+			if (ingredientsByRecipeNotFound) {
+				saveIngredientInLocalSource(ingredientList); // Sera usado em widget
+			} else {
+				ingredientList = ingredientListWithID;
+			}
+		}
+
+		return ingredientList;
 	}
 
 	@Override
 	public List<Step> getStepListByRecipe(Long recipeId, int limit, int offset) throws ConnectionException {
-		return mRemoteStepSource.recover(new RecipeRelationsQuery(limit, offset, recipeId));
+		return mRemoteStepSource.recover(new RecipeRelationsRemoteQuery(limit, offset, recipeId));
 	}
 
 	@Override
@@ -83,5 +108,9 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 
 	public void setRemoteStepSource(DefaultSource<Step, URL> remoteStepSource) {
 		this.mRemoteStepSource = remoteStepSource;
+	}
+
+	public void setIngredientLocalSource(DefaultSource<Ingredient, SqlQuery> ingredientLocalSource) {
+		this.ingredientLocalSource = ingredientLocalSource;
 	}
 }

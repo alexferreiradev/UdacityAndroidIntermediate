@@ -3,6 +3,7 @@ package com.alex.baking.app.data.source.sql;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.MeasureType;
@@ -13,8 +14,8 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		super(context);
 	}
 
-	@Override
-	protected ContentValues wrapperContent(Ingredient data) {
+	@SuppressWarnings("WeakerAccess")
+	public static ContentValues ingredientToContentValues(Ingredient data) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(BakingContract.IngredientEntry._ID, data.getId());
 		contentValues.put(BakingContract.IngredientEntry.COLUMN_INGREDIENT, data.getIngredient());
@@ -25,8 +26,8 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		return contentValues;
 	}
 
-	@Override
-	protected Ingredient wrapperModel(ContentValues values) {
+	@SuppressWarnings("WeakerAccess")
+	public static Ingredient contentValuesToIngredient(ContentValues values) {
 		Ingredient recipe = new Ingredient();
 		recipe.setId(values.getAsLong(BakingContract.IngredientEntry._ID));
 		recipe.setIngredient(values.getAsString(BakingContract.IngredientEntry.COLUMN_INGREDIENT));
@@ -38,8 +39,8 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		return recipe;
 	}
 
-	@Override
-	protected Ingredient createModelFromCursor(Cursor cursor) {
+	@SuppressWarnings("WeakerAccess")
+	public static Ingredient cursorToIngredient(Cursor cursor) {
 		Ingredient recipe = new Ingredient();
 		int columnIndex = cursor.getColumnIndex(BakingContract.IngredientEntry._ID);
 		recipe.setId(cursor.getLong(columnIndex));
@@ -56,6 +57,23 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 		return recipe;
 	}
 
+	public static void truncateTable(Context context) {
+		BakingSqlHelper sqlHelper = new BakingSqlHelper(context);
+		SQLiteDatabase db = sqlHelper.getWritableDatabase();
+		db.beginTransaction();
+		db.execSQL(String.format("truncate %s;", BakingContract.IngredientEntry.TABLE_NAME));
+	}
+
+	@Override
+	protected ContentValues wrapperContent(Ingredient data) {
+		return ingredientToContentValues(data);
+	}
+
+	@Override
+	protected Ingredient wrapperModel(ContentValues values) {
+		return contentValuesToIngredient(values);
+	}
+
 	@Override
 	protected Uri getContentUri() {
 		return BakingContract.IngredientEntry.CONTENT_URI;
@@ -64,5 +82,10 @@ public class IngredientSqlSource extends BaseSqlSource<Ingredient> {
 	@Override
 	protected Uri getContentUriByID() {
 		return BakingContract.IngredientEntry.CONTENT_URI_BY_ID;
+	}
+
+	@Override
+	protected Ingredient createModelFromCursor(Cursor cursor) {
+		return cursorToIngredient(cursor);
 	}
 }

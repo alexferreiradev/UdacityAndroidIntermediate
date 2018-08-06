@@ -65,6 +65,7 @@ public class IngredientSource extends BaseRemoteSource<Ingredient> {
 		String measure = jsonObject.getString("measure");
 		ingredient.setMeasure(MeasureType.valueOf(measure.toUpperCase()));
 		ingredient.setQuantity(jsonObject.getDouble("quantity"));
+		ingredient.setRecipeId(recipeId);
 
 		return ingredient;
 	}

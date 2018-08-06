@@ -1,5 +1,6 @@
 package com.alex.baking.app.data.source.sql;
 
+import android.net.Uri;
 import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -7,7 +8,7 @@ import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class) // Necessita de Uri do Android
-public class BakingSqlContractTest {
+public class BakingContractTest {
 
 	@Test
 	public void test_create_table_sql() {
@@ -31,4 +32,10 @@ public class BakingSqlContractTest {
 		assertEquals("drop table if exists step", dropStepSql);
 	}
 
+	@Test
+	public void test_create_uri_to_ingredient_by_recipe() {
+		Uri uri = BakingContract.IngredientEntry.buildIngredientByRecipeIdUri(3L);
+
+		assertEquals("content://com.alex.baking.app/recipe/3/ingredient", uri.toString());
+	}
 }

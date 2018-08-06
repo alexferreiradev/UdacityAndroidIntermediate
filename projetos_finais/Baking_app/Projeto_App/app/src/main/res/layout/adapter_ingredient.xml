@@ -3,28 +3,28 @@
 		xmlns:android="http://schemas.android.com/apk/res/android"
 		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
+		android:layout_height="wrap_content"
 		>
+
+	<TextView
+			tools:text="10 copos"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentLeft="true"
+			android:layout_alignParentTop="true"
+			android:id="@+id/tvQuantity"
+			style="@style/RecipeTheme"
+			android:layout_alignParentStart="true"
+			/>
 
 	<TextView
 			tools:text="Nome do ingredient"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_alignParentTop="true"
-			android:layout_alignParentLeft="true"
+			android:layout_toRightOf="@+id/tvQuantity"
 			android:id="@+id/tvIngredient"
 			style="@style/recipe.itemList.text"
-			android:layout_alignParentStart="true"
-			/>
-
-	<TextView
-			tools:text="10 copos"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_alignParentTop="true"
-			android:layout_toRightOf="@+id/tvIngredient"
-			android:id="@+id/tvQuantity"
-			style="@style/RecipeTheme"
-			android:layout_toEndOf="@+id/tvIngredient"
+			android:layout_toEndOf="@+id/tvQuantity"
 			/>
 </RelativeLayout>

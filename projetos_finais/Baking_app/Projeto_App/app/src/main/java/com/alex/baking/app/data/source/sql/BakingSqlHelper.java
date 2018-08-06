@@ -8,7 +8,7 @@ import android.util.Log;
 @SuppressWarnings("WeakerAccess")
 public class BakingSqlHelper extends SQLiteOpenHelper {
 	public static final String DB_NAME = "baking.db";
-	public static final int DB_VERSION = 2;
+	public static final int DB_VERSION = 3;
 
 	static final String TAG = BakingSqlHelper.class.getSimpleName();
 

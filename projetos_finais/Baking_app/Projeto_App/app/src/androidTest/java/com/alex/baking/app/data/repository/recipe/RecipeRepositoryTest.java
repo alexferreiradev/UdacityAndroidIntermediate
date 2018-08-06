@@ -1,19 +1,21 @@
 package com.alex.baking.app.data.repository.recipe;
 
+import android.support.test.runner.AndroidJUnit4;
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.Recipe;
-import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
 import com.alex.baking.app.data.source.queryspec.QuerySpecification;
 import com.alex.baking.app.data.source.queryspec.remote.RecipeQuery;
-import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsQuery;
+import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsRemoteQuery;
+import com.alex.baking.app.data.source.queryspec.sql.BaseSqlSpecification;
 import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.IngredientSource;
-import com.alex.baking.app.data.source.remote.StepSource;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
+import com.alex.baking.app.data.source.sql.IngredientSqlSource;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -26,6 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
 
+@RunWith(AndroidJUnit4.class) // Necessita de Uri do Android
 public class RecipeRepositoryTest {
 
 	@Mock
@@ -56,7 +59,11 @@ public class RecipeRepositoryTest {
 	}
 
 	@Test
-	public void getRecipeList() throws ConnectionException {
+	public void get_recipe_list() throws ConnectionException {
+		when(model.getIdFromAPI()).thenReturn("1");
+		when(model.getId()).thenReturn(2L);
+		doReturn(model).when(mLocalSource).create(any(Recipe.class));
+
 		List<Recipe> recipeList = repo.getRecipeList(0, 0);
 
 		assertNotNull(recipeList);
@@ -64,33 +71,30 @@ public class RecipeRepositoryTest {
 		verify(mRemoteSource).recover(any(RecipeQuery.class));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void getIngredientListByRecipe() throws ConnectionException {
 		DefaultSource<Ingredient, URL> sourceMock = mock(IngredientSource.class);
 		List<Ingredient> validIngredientList = new ArrayList<>();
 		Ingredient validIngredient = new Ingredient();
 		validIngredientList.add(validIngredient);
-		when(sourceMock.recover(any(RecipeRelationsQuery.class))).thenReturn(validIngredientList);
+		when(sourceMock.recover(any(RecipeRelationsRemoteQuery.class))).thenReturn(validIngredientList);
 		repo.setRemoteIngredientSource(sourceMock);
+		Ingredient ingredientMock = mock(Ingredient.class);
+		when(ingredientMock.getId()).thenReturn(2L);
+		IngredientSqlSource ingredientSqlSource = mock(IngredientSqlSource.class);
+		doReturn(ingredientMock).when(ingredientSqlSource).delete(null);
+		QuerySpecification<SqlQuery> querySpecification = new BaseSqlSpecification(null, 0, 0);
+		List<Ingredient> ingredientListWithId = new ArrayList<>();
+		ingredientListWithId.add(ingredientMock);
+		doReturn(ingredientListWithId).when(ingredientSqlSource).recover(any(querySpecification.getClass()));
+		repo.setIngredientLocalSource(ingredientSqlSource);
+
 		List<Ingredient> ingredientList = repo.getIngredientListByRecipe(1L, 0, 0);
 
 		assertNotNull(ingredientList);
 		assertEquals(validIngredientList.size(), ingredientList.size());
-		verify(sourceMock).recover(any(RecipeRelationsQuery.class));
-	}
-
-	@Test
-	public void getStepListByRecipe() throws ConnectionException {
-		DefaultSource<Step, URL> sourceMock = mock(StepSource.class);
-		List<Step> validStepList = new ArrayList<>();
-		Step validStep = new Step();
-		validStepList.add(validStep);
-		when(sourceMock.recover(any(RecipeRelationsQuery.class))).thenReturn(validStepList);
-		repo.setRemoteStepSource(sourceMock);
-		List<Step> stepList = repo.getStepListByRecipe(1L, 0, 0);
-
-		assertNotNull(stepList);
-		assertEquals(validStepList.size(), stepList.size());
-		verify(sourceMock).recover(any(RecipeRelationsQuery.class));
+		assertEquals(Long.valueOf(2L), ingredientList.get(0).getId());
+		verify(sourceMock).recover(any(RecipeRelationsRemoteQuery.class));
 	}
 }

@@ -53,7 +53,7 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 		notifyDataSetChanged();
 	}
 
-	class StepViewHolder extends RecyclerView.ViewHolder {
+	static class StepViewHolder extends RecyclerView.ViewHolder {
 		@BindView(R.id.tvShortDescription)
 		TextView shorDescriptionTV;
 

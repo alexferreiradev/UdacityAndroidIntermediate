@@ -8,4 +8,5 @@ public enum MeasureType {
 	OZ,
 	K,
 	G,
+	UNIT,
 }

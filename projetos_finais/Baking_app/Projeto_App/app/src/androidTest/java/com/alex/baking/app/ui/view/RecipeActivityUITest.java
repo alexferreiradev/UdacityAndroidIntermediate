@@ -24,6 +24,16 @@ public class RecipeActivityUITest {
 	@Rule
 	public IntentsTestRule<RecipeActivity> intent = new IntentsTestRule<>(RecipeActivity.class, true, false); // Nao inicia a activity pois precisa criar intent antes
 
+	@Test
+	public void onloadActivity_showIngredientListAndStepList() {
+		intentMain.launchActivity(new Intent());
+		onView(withId(R.id.rvRecipeList)).perform(RecyclerViewActions.actionOnItemAtPosition(
+				2, ViewActions.click()
+		));
+		onView(withId(R.id.rvIngredient)).check(ViewAssertions.matches(isDisplayed()));
+		onView(withId(R.id.rvStep)).check(ViewAssertions.matches(isDisplayed()));
+	}
+
 	@Ignore // Não esta carregando steps e ingredients no repo
 	@Test
 	public void onRecipeActivity_selectStep2_showStep2() {
