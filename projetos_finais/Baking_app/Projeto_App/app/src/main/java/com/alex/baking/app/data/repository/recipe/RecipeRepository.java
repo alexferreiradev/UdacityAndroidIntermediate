@@ -52,16 +52,6 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 		Log.d(TAG, "Disparado update para widgets: " + Arrays.toString(appWidgetIds));
 	}
 
-	@Override
-	public List<Recipe> getRecipeList(int limit, int offset) throws ConnectionException {
-		List<Recipe> recipeList = mRemoteSource.recover(new RecipeQuery(limit, offset));
-		if (!recipeList.isEmpty()) {
-			saveRecipeOrRecoverIdFromLocalSource(limit, offset, recipeList);
-		}
-
-		return recipeList;
-	}
-
 	private void saveRecipeOrRecoverIdFromLocalSource(int limit, int offset, List<Recipe> recipeList) throws ConnectionException {
 		for (Recipe recipe : recipeList) {
 			String idFromAPI = recipe.getIdFromAPI();
@@ -91,6 +81,24 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 			ingredient.setId(ingredientWithId.getId());
 		}
 		notifyWidgetToUpdate(context);
+	}
+
+	private void saveStepInLocalSource(List<Step> stepList) {
+		for (Step step : stepList) {
+			Step stepWithId = stepLocalSource.create(step);
+			step.setId(stepWithId.getId());
+		}
+		notifyWidgetToUpdate(context);
+	}
+
+	@Override
+	public List<Recipe> getRecipeList(int limit, int offset) throws ConnectionException {
+		List<Recipe> recipeList = mRemoteSource.recover(new RecipeQuery(limit, offset));
+		if (!recipeList.isEmpty()) {
+			saveRecipeOrRecoverIdFromLocalSource(limit, offset, recipeList);
+		}
+
+		return recipeList;
 	}
 
 	@Override
@@ -133,14 +141,6 @@ public class RecipeRepository extends BaseRepository<Recipe> implements RecipeRe
 		}
 
 		return stepList;
-	}
-
-	private void saveStepInLocalSource(List<Step> stepList) {
-		for (Step step : stepList) {
-			Step stepWithId = stepLocalSource.create(step);
-			step.setId(stepWithId.getId());
-		}
-		notifyWidgetToUpdate(context);
 	}
 
 	@Override

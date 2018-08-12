@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 		extends AppCompatActivity
 		implements BasePresenter.View {
 
+	private static final String TAG = BaseActivity.class.getSimpleName();
 	protected ModelType mData;
 	protected PresenterType mPresenter;
 	protected String mTitle;
@@ -97,6 +99,8 @@ public abstract class BaseActivity<ModelType extends BaseModel,
 		ActionBar supportActionBar = getSupportActionBar();
 		if (supportActionBar != null) {
 			supportActionBar.setTitle(mTitle);
+		} else {
+			Log.w(TAG, "Não foi possivel recuperar a actionBar");
 		}
 	}
 }

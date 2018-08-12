@@ -41,6 +41,7 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	@BindView(R.id.flStepContainer)
 	@Nullable
 	FrameLayout stepContainerFL;
+	@Nullable
 	@BindView(R.id.tvEmptyStep)
 	TextView emptyStepTV;
 
@@ -114,12 +115,15 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	public void selectStepItem(Long selectedStepId, int position) {
 		FragmentManager fm = getSupportFragmentManager();
 		fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
-		emptyStepTV.setVisibility(View.GONE);
 		stepPresenter.changeToStep(selectedStepId, position);
 	}
 
 	@Override
-	public void setStepInListToSelected(int position) {
-		// TODO: 07/08/18
+	public void setEmptyStepSelectVisibility(boolean visible) {
+		if (visible) {
+			emptyStepTV.setVisibility(View.VISIBLE);
+		} else {
+			emptyStepTV.setVisibility(View.GONE);
+		}
 	}
 }

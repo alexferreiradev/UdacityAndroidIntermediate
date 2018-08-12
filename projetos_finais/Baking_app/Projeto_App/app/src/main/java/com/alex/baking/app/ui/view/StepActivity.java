@@ -70,11 +70,6 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 	}
 
 	@Override
-	public void setStepInListToSelected(int position) {
-
-	}
-
-	@Override
 	public boolean isDualPanel() {
 		return false;
 	}

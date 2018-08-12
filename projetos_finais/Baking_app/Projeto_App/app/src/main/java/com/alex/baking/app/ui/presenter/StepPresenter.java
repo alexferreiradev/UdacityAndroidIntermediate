@@ -17,7 +17,6 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	private static final String LOAD_STEP = "task_load_step";
 	private static final String LOAD_NEXT_STEP = "task_load_next_step";
 	private Long stepId;
-	private Step step;
 	private StepContract.FragmentView fragmentView;
 	private int currentPosition;
 
@@ -34,15 +33,14 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	@Override
 	protected void backgroundFinished(@NonNull Object o) {
 		if (o instanceof Step) {
-			step = (Step) o;
-			fragmentView.bindViewModel(step);
-		}
-		if (mView.isDualPanel()) {
-			return; // nao dual panel
+			Step step = (Step) o;
+			fragmentView.startView(step);
+			fragmentView.setNextBtVisility(true);
 		}
 
-		this.currentPosition = currentPosition + 1;
-		mView.setStepInListToSelected(currentPosition);
+		if (mView.isDualPanel()) {
+			fragmentView.setNextBtVisility(false);
+		}
 	}
 
 	@Override
@@ -69,13 +67,8 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	}
 
 	@Override
-	public void selectNextStep(int currentPosition) {
-		if (currentPosition < 0) {
-			return; // nao dual panel
-		}
-
-		BackgroundTask task = new BackgroundTask();
-		task.execute(LOAD_NEXT_STEP);
+	public void selectNextStep() {
+		changeToStep(stepId + 1, currentPosition + 1);
 	}
 
 	@Override
@@ -86,8 +79,8 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	@Override
 	public void changeToStep(Long selectedStepId, int position) {
 		this.currentPosition = position;
-		BackgroundTask task = new BackgroundTask();
 		stepId = selectedStepId;
+		BackgroundTask task = new BackgroundTask();
 		task.execute(LOAD_STEP);
 	}
 

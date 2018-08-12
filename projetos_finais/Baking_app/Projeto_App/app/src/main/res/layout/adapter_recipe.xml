@@ -41,7 +41,7 @@
 
 			<TextView
 					android:id="@+id/tvServing"
-					tools:text="10"
+					tools:text="Serve 10 pesssoas"
 					style="@style/main.Item"
 					android:layout_below="@+id/tvName"
 					android:layout_toRightOf="@+id/ivRecipe"

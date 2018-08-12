@@ -24,7 +24,7 @@
 		<item name="android:textColor">@android:color/black</item>
 		<item name="android:background">@android:color/white</item>
 		<item name="android:layout_width">match_parent</item>
-		<item name="android:layout_height">150dp</item>
+		<item name="android:layout_height">10dp</item>
 		<item name="android:scaleType">fitCenter</item>
 	</style>
 
@@ -50,6 +50,7 @@
 	<style name="recipe.servingLabel" parent="recipe.label">
 		<item name="android:layout_marginLeft">28dp</item>
 		<item name="android:layout_marginRight">16dp</item>
+		<item name="android:textColor">@color/colorAccent</item>
 	</style>
 
 	<style name="recipe.master" parent="RecipeTheme">

@@ -25,7 +25,6 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	private static final int LIMIT = 100;
 
 	private Long recipeId;
-	private Recipe recipe;
 	private RecipeContract.FragmentView fragmentView;
 
 	public RecipePresenter(RecipeContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
@@ -46,8 +45,12 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	@Override
 	protected void backgroundFinished(@NonNull Object result) {
 		if (result instanceof Recipe) {
-			recipe = (Recipe) result;
+			Recipe recipe = (Recipe) result;
 			fragmentView.bindViewModel(recipe);
+			mView.setActionBarTitle(recipe.getNome());
+			if (mView.isDualPanel()) {
+				mView.setEmptyStepSelectVisibility(true);
+			}
 		} else if (result instanceof List) {
 			List resultList = (List) result;
 			if (resultList.isEmpty()) {
@@ -93,6 +96,7 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	public void selectStep(Long selectedStepId, int position) {
 		if (mView.isDualPanel()) {
 			mView.selectStepItem(selectedStepId, position);
+			mView.setEmptyStepSelectVisibility(false);
 		} else {
 			Intent intent = new Intent(mContext, StepActivity.class);
 			intent.putExtra(StepActivity.STEP_ID_EXTRA_PARAM_KEY, selectedStepId);
