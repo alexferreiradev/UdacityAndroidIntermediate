@@ -27,9 +27,8 @@ public class BakingProvider extends ContentProvider {
 
 	protected static final int ALL_STEPS = 300;
 	protected static final int STEP_BY_ID = 301;
-	private static final String TAG = BakingProvider.class.getSimpleName();
-
 	protected static final UriMatcher sUriMacher = buildMacher();
+	private static final String TAG = BakingProvider.class.getSimpleName();
 	private SQLiteOpenHelper mSqlHelper;
 
 	private static UriMatcher buildMacher() {
@@ -91,7 +90,7 @@ public class BakingProvider extends ContentProvider {
 
 	@Override
 	public Uri insert(@NonNull Uri uri, ContentValues values) {
-		SQLiteDatabase readDb = mSqlHelper.getWritableDatabase();
+		SQLiteDatabase db = mSqlHelper.getWritableDatabase();
 		String tableName = "";
 
 		switch (sUriMacher.match(uri)) {
@@ -106,13 +105,13 @@ public class BakingProvider extends ContentProvider {
 				break;
 		}
 
-		long id = readDb.insert(tableName, null, values);
+		long id = db.insert(tableName, null, values);
 		if (id > 0) {
 			uri = ContentUris.withAppendedId(uri, id);
 		} else {
 			uri = null;
 		}
-		readDb.close();
+		db.close();
 
 		return uri;
 	}
@@ -145,6 +144,16 @@ public class BakingProvider extends ContentProvider {
 
 				sqlSelection = BakingContract.IngredientEntry.COLUMN_FK_RECIPE + "=?";
 				sqlSelecArgs = new String[]{String.valueOf(recipeId)};
+				break;
+			case STEP_BY_RECIPE_ID:
+				tableName = BakingContract.StepEntry.TABLE_NAME;
+				recipeId = Long.parseLong(uri.getPathSegments().get(1));
+
+				sqlSelection = BakingContract.StepEntry.COLUMN_FK_RECIPE + "=?";
+				sqlSelecArgs = new String[]{String.valueOf(recipeId)};
+				break;
+			case ALL_STEPS:
+				tableName = BakingContract.StepEntry.TABLE_NAME;
 				break;
 			case ALL_INGREDIENTS:
 				tableName = BakingContract.IngredientEntry.TABLE_NAME;

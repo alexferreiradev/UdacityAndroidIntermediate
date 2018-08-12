@@ -16,9 +16,11 @@ import java.util.List;
 public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder> implements RecycleViewAdaper<Step> {
 
 	private List<Step> stepList;
+	private StepAdapterListener listener;
 
-	public StepAdapter(List<Step> stepList) {
+	public StepAdapter(List<Step> stepList, StepAdapterListener listener) {
 		this.stepList = stepList;
+		this.listener = listener;
 	}
 
 	@NonNull
@@ -30,10 +32,17 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 		return new StepViewHolder(view);
 	}
 
+	@SuppressWarnings("Convert2Lambda")
 	@Override
 	public void onBindViewHolder(@NonNull StepViewHolder holder, int position) {
 		Step step = stepList.get(position);
 		holder.shorDescriptionTV.setText(step.getShortDescription());
+		holder.itemView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				listener.selectStepItem(step.getId(), holder.getAdapterPosition());
+			}
+		});
 	}
 
 	@Override
@@ -61,5 +70,9 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
+	}
+
+	public interface StepAdapterListener {
+		void selectStepItem(Long stepId, int position);
 	}
 }

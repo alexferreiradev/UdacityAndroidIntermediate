@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alex.baking.app.R;
@@ -19,6 +21,7 @@ import com.alex.baking.app.data.source.remote.StepSource;
 import com.alex.baking.app.data.source.remote.network.NetworkResourceManager;
 import com.alex.baking.app.data.source.sql.IngredientSqlSource;
 import com.alex.baking.app.data.source.sql.RecipeSqlSource;
+import com.alex.baking.app.data.source.sql.StepSqlSource;
 import com.alex.baking.app.ui.presenter.RecipePresenter;
 import com.alex.baking.app.ui.presenter.StepPresenter;
 import com.alex.baking.app.ui.view.contract.RecipeContract;
@@ -38,8 +41,11 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	@BindView(R.id.flStepContainer)
 	@Nullable
 	FrameLayout stepContainerFL;
+	@BindView(R.id.tvEmptyStep)
+	TextView emptyStepTV;
 
 	private StepFragment stepFragment;
+	private StepContract.Presenter stepPresenter;
 
 	@Override
 	public void initializeWidgets(Bundle savedInstanceState) {
@@ -54,13 +60,14 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 
 		NetworkResourceManager networkResource = new NetworkResourceManager();
 		RecipeRepositoryContract repo = new RecipeRepository(
-				RecipeCache.getInstance(),
+				this, RecipeCache.getInstance(),
 				new RecipeSqlSource(this),
 				new RecipeSource(networkResource)
 		);
 		repo.setRemoteIngredientSource(new IngredientSource(networkResource));
 		repo.setRemoteStepSource(new StepSource(networkResource));
 		repo.setIngredientLocalSource(new IngredientSqlSource(this));
+		repo.setStepLocalSource(new StepSqlSource(this));
 		mPresenter = new RecipePresenter(this, this, savedInstanceState, repo);
 		mTitle = getString(R.string.app_name);
 	}
@@ -79,19 +86,22 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 
 		FragmentManager fm = getSupportFragmentManager();
 		RecipeFragment recipeFragment = new RecipeFragment();
+		recipeFragment.setPresenter(mPresenter);
 		mPresenter.setFragmentView(recipeFragment);
-		fm.beginTransaction().add(R.id.flRecipeContainer, recipeFragment).commit();
+		fm.beginTransaction().replace(R.id.flRecipeContainer, recipeFragment).commit();
 
 		if (isDualPanel()) {
 			stepFragment = new StepFragment();
 			RecipeRepository mRepository = new RecipeRepository(
-					RecipeCache.getInstance(),
+					this, RecipeCache.getInstance(),
 					new RecipeSqlSource(this),
 					new RecipeSource(new NetworkResourceManager())
 			);
 			mRepository.setRemoteStepSource(new StepSource(new NetworkResourceManager()));
-			stepFragment.setPresenter(new StepPresenter(this, this, null, mRepository));
-			fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
+			mRepository.setStepLocalSource(new StepSqlSource(this));
+			stepPresenter = new StepPresenter(this, this, null, mRepository);
+			stepFragment.setPresenter(stepPresenter);
+			stepPresenter.setFragmentView(stepFragment);
 		}
 	}
 
@@ -101,12 +111,15 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 	}
 
 	@Override
-	public void replaceStepFragment(Long selectedStepId) {
+	public void selectStepItem(Long selectedStepId, int position) {
 		FragmentManager fm = getSupportFragmentManager();
-		if (stepFragment != null) {
-			fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
-		} else {
-			Log.e("recipe Act", "Erro de step fragment nulo");
-		}
+		fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
+		emptyStepTV.setVisibility(View.GONE);
+		stepPresenter.changeToStep(selectedStepId, position);
+	}
+
+	@Override
+	public void setStepInListToSelected(int position) {
+		// TODO: 07/08/18
 	}
 }

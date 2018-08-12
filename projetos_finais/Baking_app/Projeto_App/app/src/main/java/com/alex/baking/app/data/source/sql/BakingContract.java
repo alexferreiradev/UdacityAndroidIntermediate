@@ -126,10 +126,14 @@ public class BakingContract {
 			return ContentUris.withAppendedId(CONTENT_URI, id);
 		}
 
+		public static Uri buildUriStepWithRecipeId(long recipeId) {
+			return RecipeEntry.buildRecipeUri(recipeId).buildUpon().appendPath(TABLE_NAME).build();
+		}
+
 		public static String createTableSql() {
 			return "create table " + TABLE_NAME + "(" +
 					_ID + " integer primary key autoincrement, " +
-					COLUMN_ID_FROM_API + " integer unique, " +
+					COLUMN_ID_FROM_API + " integer, " +
 					COLUMN_FK_RECIPE + " integer, " +
 					COLUMN_SHORT_DESCRIPTION + " real, " +
 					COLUMN_DESCRIPTION + " text, " +

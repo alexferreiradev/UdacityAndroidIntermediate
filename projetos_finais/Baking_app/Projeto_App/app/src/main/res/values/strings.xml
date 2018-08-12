@@ -35,4 +35,6 @@
 	<string name="add_widget">Selecionar</string>
 	<string name="hint_to_edittext">Insira um texto valido</string>
 	<string name="title_prefix_recipe_widget">Ingredientes para o prato </string>
+	<string name="player_error">Não foi possível reproduzir</string>
+	<string name="step_not_selected">Selecione um modo de preparo</string>
 </resources>

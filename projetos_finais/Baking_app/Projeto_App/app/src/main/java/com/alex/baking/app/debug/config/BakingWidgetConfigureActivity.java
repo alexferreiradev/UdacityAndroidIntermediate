@@ -50,7 +50,7 @@ public class BakingWidgetConfigureActivity extends Activity implements WidgetCon
 		}
 
 		RecipeRepositoryContract repo = new RecipeRepository(
-				RecipeCache.getInstance(),
+				this, RecipeCache.getInstance(),
 				new RecipeSqlSource(this),
 				new RecipeSource(new NetworkResourceManager())
 		);
