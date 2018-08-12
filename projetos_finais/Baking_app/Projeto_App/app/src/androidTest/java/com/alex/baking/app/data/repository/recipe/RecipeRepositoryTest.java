@@ -4,6 +4,7 @@ import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import com.alex.baking.app.data.model.Ingredient;
 import com.alex.baking.app.data.model.Recipe;
+import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.data.source.DefaultSource;
 import com.alex.baking.app.data.source.cache.MemoryCache;
 import com.alex.baking.app.data.source.queryspec.QuerySpecification;
@@ -12,8 +13,10 @@ import com.alex.baking.app.data.source.queryspec.remote.RecipeRelationsRemoteQue
 import com.alex.baking.app.data.source.queryspec.sql.BaseSqlSpecification;
 import com.alex.baking.app.data.source.queryspec.sql.SqlQuery;
 import com.alex.baking.app.data.source.remote.IngredientSource;
+import com.alex.baking.app.data.source.remote.StepSource;
 import com.alex.baking.app.data.source.remote.network.exception.ConnectionException;
 import com.alex.baking.app.data.source.sql.IngredientSqlSource;
+import com.alex.baking.app.data.source.sql.StepSqlSource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -97,6 +100,29 @@ public class RecipeRepositoryTest {
 		assertNotNull(ingredientList);
 		assertEquals(validIngredientList.size(), ingredientList.size());
 		assertEquals(Long.valueOf(2L), ingredientList.get(0).getId());
+		verify(sourceMock).recover(any(RecipeRelationsRemoteQuery.class));
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void getStepListByRecipe() throws ConnectionException {
+		DefaultSource<Step, URL> sourceMock = mock(StepSource.class);
+		StepSqlSource stepSqlSource = mock(StepSqlSource.class);
+		QuerySpecification<SqlQuery> querySpecification = new BaseSqlSpecification(null, 0, 0);
+		List<Step> validStepList = new ArrayList<>();
+		Step validStep = new Step();
+		validStep.setId(2L);
+		validStepList.add(validStep);
+
+		when(sourceMock.recover(any(RecipeRelationsRemoteQuery.class))).thenReturn(validStepList);
+		doReturn(validStepList).when(stepSqlSource).recover(any(querySpecification.getClass()));
+		repo.setRemoteStepSource(sourceMock);
+		repo.setStepLocalSource(stepSqlSource);
+
+		List<Step> stepList = repo.getStepListByRecipe(1L, 0, 0);
+
+		assertNotNull(stepList);
+		assertEquals(validStepList.size(), stepList.size());
 		verify(sourceMock).recover(any(RecipeRelationsRemoteQuery.class));
 	}
 }

@@ -61,20 +61,6 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	protected void startWithArguments(Bundle arguments) {
 	}
 
-	@Override
-	public void bindViewModel(Step step) {
-		shortDescriptionTV.setText(step.getShortDescription());
-		descriptionTV.setText(step.getDescription());
-		nextBt.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				presenter.selectNextStep(-1);
-			}
-		});
-
-		stepPV.setPlayer(createPlayer(step));
-	}
-
 	@NonNull
 	private ExoPlayer createPlayer(Step step) {
 		TrackSelector trackSelector = new DefaultTrackSelector();
@@ -112,18 +98,33 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@Override
-	public void startView(Step model) throws IllegalArgumentException {
+	public void setNextBtVisility(boolean visible) {
+		if (visible) {
+			nextBt.setVisibility(View.VISIBLE);
+		} else {
+			nextBt.setVisibility(View.GONE);
+		}
+	}
+
+	@Override
+	public void startView(Step step) throws IllegalArgumentException {
+		shortDescriptionTV.setText(step.getShortDescription());
+		descriptionTV.setText(step.getDescription());
+		nextBt.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				presenter.selectNextStep();
+			}
+		});
+
+		stepPV.setPlayer(createPlayer(step));
 	}
 
 	@Override
 	public Step destroyView(Step model) {
-		return null;
-	}
-
-	@Override
-	public void onDestroy() {
 		mediaSession.setActive(false);
 		player.setPlayWhenReady(false);
-		super.onDestroy();
+
+		return null;
 	}
 }

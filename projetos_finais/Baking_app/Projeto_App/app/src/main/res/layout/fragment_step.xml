@@ -45,14 +45,13 @@
 
 	<Button
 			android:text="@string/step_bt_next"
-			style="@style/step.btNext"
 			tools:visibility="visible"
-			android:layout_width="121dp"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:id="@+id/btNextStep"
 			android:layout_alignParentBottom="true"
 			android:layout_centerHorizontal="true"
+			style="@style/step.btNext"
 			/>
-
 
 </RelativeLayout>

@@ -61,6 +61,12 @@ public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> 
 	}
 
 	@Override
+	public void onDestroyView() {
+		destroyView(null);
+		super.onDestroyView();
+	}
+
+	@Override
 	public void hideProgressBar() {
 		mProgressBar.setVisibility(View.GONE);
 	}

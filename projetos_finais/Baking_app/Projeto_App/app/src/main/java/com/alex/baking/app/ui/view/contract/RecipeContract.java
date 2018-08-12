@@ -15,6 +15,8 @@ public interface RecipeContract {
 		boolean isDualPanel();
 
 		void selectStepItem(Long selectedStepId, int position);
+
+		void setEmptyStepSelectVisibility(boolean visible);
 	}
 
 	interface FragmentView {

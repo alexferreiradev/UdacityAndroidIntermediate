@@ -37,4 +37,6 @@
 	<string name="title_prefix_recipe_widget">Ingredientes para o prato </string>
 	<string name="player_error">Não foi possível reproduzir</string>
 	<string name="step_not_selected">Selecione um modo de preparo</string>
+	<string name="serving_suffix">pessoas</string>
+	<string name="serving_preffix">Serve</string>
 </resources>

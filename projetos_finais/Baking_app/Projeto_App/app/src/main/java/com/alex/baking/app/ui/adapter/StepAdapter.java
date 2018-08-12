@@ -1,5 +1,6 @@
 package com.alex.baking.app.ui.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,10 +18,13 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 
 	private List<Step> stepList;
 	private StepAdapterListener listener;
+	private Context context;
+	private int lastSelected = -1;
 
-	public StepAdapter(List<Step> stepList, StepAdapterListener listener) {
+	public StepAdapter(List<Step> stepList, StepAdapterListener listener, Context context) {
 		this.stepList = stepList;
 		this.listener = listener;
+		this.context = context;
 	}
 
 	@NonNull
@@ -36,13 +40,22 @@ public class StepAdapter extends RecyclerView.Adapter<StepAdapter.StepViewHolder
 	@Override
 	public void onBindViewHolder(@NonNull StepViewHolder holder, int position) {
 		Step step = stepList.get(position);
+		if (position == lastSelected) {
+			setItemToSelected(holder);
+		}
 		holder.shorDescriptionTV.setText(step.getShortDescription());
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				lastSelected = holder.getAdapterPosition();
+				setItemToSelected(holder);
 				listener.selectStepItem(step.getId(), holder.getAdapterPosition());
 			}
 		});
+	}
+
+	private void setItemToSelected(@NonNull StepViewHolder holder) {
+		holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.colorPrimary));
 	}
 
 	@Override

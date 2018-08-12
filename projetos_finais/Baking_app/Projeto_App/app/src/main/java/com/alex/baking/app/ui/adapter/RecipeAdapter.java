@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.alex.baking.app.R;
 import com.alex.baking.app.data.model.Recipe;
+import com.alex.baking.app.ui.util.RecipeUtils;
 import com.alex.baking.app.ui.view.contract.MainContract;
 
 import java.util.List;
@@ -43,7 +44,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.RecipeView
 	public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
 		Recipe recipe = recipeList.get(position);
 		holder.nameTV.setText(recipe.getNome());
-		holder.servingTV.setText(recipe.getServing());
+		holder.servingTV.setText(RecipeUtils.getServing(recipe, context));
 		holder.itemView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
