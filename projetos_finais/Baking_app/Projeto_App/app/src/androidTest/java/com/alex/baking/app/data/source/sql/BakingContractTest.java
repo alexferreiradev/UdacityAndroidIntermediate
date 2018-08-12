@@ -18,7 +18,7 @@ public class BakingContractTest {
 
 		assertEquals("create table recipe(_id integer primary key autoincrement, id_from_api integer unique, nome text, serving text, image text)", createRecipeSql);
 		assertEquals("create table ingredient(_id integer primary key autoincrement, recipe_id integer, quantity real, measure text, ingredient text)", createIngredientSql);
-		assertEquals("create table step(_id integer primary key autoincrement, id_from_api integer unique, recipe_id integer, short_description real, description text, video_url text, thumbnail_url text)", createStepSql);
+		assertEquals("create table step(_id integer primary key autoincrement, id_from_api integer, recipe_id integer, short_description real, description text, video_url text, thumbnail_url text)", createStepSql);
 	}
 
 	@Test

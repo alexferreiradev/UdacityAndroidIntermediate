@@ -1,5 +1,6 @@
 package com.alex.baking.app.ui.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.widget.FrameLayout;
@@ -14,6 +15,7 @@ import com.alex.baking.app.data.source.remote.RecipeSource;
 import com.alex.baking.app.data.source.remote.StepSource;
 import com.alex.baking.app.data.source.remote.network.NetworkResourceManager;
 import com.alex.baking.app.data.source.sql.RecipeSqlSource;
+import com.alex.baking.app.data.source.sql.StepSqlSource;
 import com.alex.baking.app.ui.presenter.StepPresenter;
 import com.alex.baking.app.ui.view.contract.StepContract;
 import com.alex.baking.app.ui.view.fragment.StepFragment;
@@ -39,6 +41,8 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 				new RecipeSource(networkResource)
 		);
 		repo.setRemoteStepSource(new StepSource(networkResource));
+		repo.setStepLocalSource(new StepSqlSource(this));
+		repo.setRemoteStepSource(new StepSource(new NetworkResourceManager()));
 		mPresenter = new StepPresenter(this, this, savedInstanceState, repo);
 	}
 
@@ -46,15 +50,32 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 	public void initializeWidgets(Bundle savedInstanceState) {
 		super.initializeWidgets(savedInstanceState);
 		ButterKnife.bind(this);
-
-		stepFragment = new StepFragment();
-		stepFragment.setPresenter(mPresenter);
-		FragmentManager fm = getSupportFragmentManager();
-		fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
 	}
 
 	@Override
 	public void initializeArgumentsFromIntent() {
+		Intent intent = getIntent();
+		if (intent != null && intent.hasExtra(STEP_ID_EXTRA_PARAM_KEY)) {
+			Long stepId = intent.getLongExtra(STEP_ID_EXTRA_PARAM_KEY, -1);
+			mPresenter.setStepId(stepId);
 
+			stepFragment = new StepFragment();
+			stepFragment.setPresenter(mPresenter);
+			FragmentManager fm = getSupportFragmentManager();
+			mPresenter.setFragmentView(stepFragment);
+			fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
+		} else {
+			throw new IllegalArgumentException("Não foi passado ID de step");
+		}
+	}
+
+	@Override
+	public void setStepInListToSelected(int position) {
+
+	}
+
+	@Override
+	public boolean isDualPanel() {
+		return false;
 	}
 }

@@ -15,7 +15,8 @@
 	/>
 
 	<FrameLayout android:layout_width="match_parent" android:layout_height="match_parent"
-				 android:id="@+id/flStepContainer"
+	             android:layout_below="@+id/includedLayout"
+	             android:id="@+id/flStepContainer"
 	/>
 
 </RelativeLayout>

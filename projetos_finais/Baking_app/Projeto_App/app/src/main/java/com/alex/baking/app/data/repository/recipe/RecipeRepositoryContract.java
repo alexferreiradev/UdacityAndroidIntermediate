@@ -30,4 +30,6 @@ public interface RecipeRepositoryContract extends DefaultRepository<Recipe> {
 	void setRemoteStepSource(DefaultSource<Step, URL> remoteStepSource);
 
 	void setIngredientLocalSource(DefaultSource<Ingredient, SqlQuery> ingredientLocalSource);
+
+	void setStepLocalSource(DefaultSource<Step, SqlQuery> stepLocalSource);
 }

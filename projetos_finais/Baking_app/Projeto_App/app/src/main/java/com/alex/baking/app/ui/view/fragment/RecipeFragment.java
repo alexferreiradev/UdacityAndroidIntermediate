@@ -79,10 +79,16 @@ public class RecipeFragment extends BaseFragment<Recipe, RecipeContract.Presente
 		}
 	}
 
+	@SuppressWarnings("Convert2Lambda")
 	@Override
 	public void addStepToAdapter(List<Step> stepList) {
 		if (stepAdapter == null) {
-			stepAdapter = new StepAdapter(stepList);
+			stepAdapter = new StepAdapter(stepList, new StepAdapter.StepAdapterListener() {
+				@Override
+				public void selectStepItem(Long stepId, int position) {
+					presenter.selectStep(stepId, position);
+				}
+			});
 			stepRV.setAdapter(stepAdapter);
 		} else {
 			stepAdapter.addAllModel(stepList);

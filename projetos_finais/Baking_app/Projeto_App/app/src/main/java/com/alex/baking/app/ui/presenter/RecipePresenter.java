@@ -92,7 +92,7 @@ public class RecipePresenter extends BasePresenter<RecipeContract.View, Recipe, 
 	@Override
 	public void selectStep(Long selectedStepId, int position) {
 		if (mView.isDualPanel()) {
-			// TODO: 02/08/18
+			mView.selectStepItem(selectedStepId, position);
 		} else {
 			Intent intent = new Intent(mContext, StepActivity.class);
 			intent.putExtra(StepActivity.STEP_ID_EXTRA_PARAM_KEY, selectedStepId);
