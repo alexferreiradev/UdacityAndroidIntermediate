@@ -22,10 +22,6 @@ android {
 		}
 	}
 
-	buildTypes.each {
-		it.buildConfigField 'String', 'OPEN_RECIPES_API_KEY', OpenRecipesApiKey
-	}
-
 	compileOptions {
 		sourceCompatibility JavaVersion.VERSION_1_8
 		targetCompatibility JavaVersion.VERSION_1_8
