@@ -29,7 +29,7 @@
 **/*.jks
 
 # ignore nos submodules
-projetos_aulas/ud851-Exercises/
+#projetos_aulas/ud851-Exercises/
 projetos_aulas/ud851-Sunshine/
 projetos_aulas/Android_Me/
-projetos_aulas/AdvancedAndroid_ClassicalMusicQuiz
+#projetos_aulas/AdvancedAndroid_ClassicalMusicQuiz
