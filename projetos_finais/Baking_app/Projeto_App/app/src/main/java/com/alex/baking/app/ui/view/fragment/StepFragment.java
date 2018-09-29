@@ -122,8 +122,12 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 
 	@Override
 	public Step destroyView(Step model) {
-		mediaSession.setActive(false);
-		player.setPlayWhenReady(false);
+		if (mediaSession != null) {
+			mediaSession.setActive(false);
+		}
+		if (player != null) {
+			player.setPlayWhenReady(false);
+		}
 
 		return null;
 	}
