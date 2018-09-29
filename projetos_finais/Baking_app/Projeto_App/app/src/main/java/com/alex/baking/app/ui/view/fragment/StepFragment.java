@@ -118,6 +118,7 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 		});
 
 		stepPV.setPlayer(createPlayer(step));
+		stepPV.setKeepContentOnPlayerReset(true);
 	}
 
 	@Override
@@ -126,7 +127,10 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 			mediaSession.setActive(false);
 		}
 		if (player != null) {
+			showErroMsgInPlayer(null); // remove view de texto
 			player.setPlayWhenReady(false);
+			player.release();
+			stepPV.setPlayer(null);
 		}
 
 		return null;
