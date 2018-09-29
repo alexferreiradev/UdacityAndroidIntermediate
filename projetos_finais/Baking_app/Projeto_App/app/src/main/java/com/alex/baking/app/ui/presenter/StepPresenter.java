@@ -68,6 +68,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 
 	@Override
 	public void selectNextStep() {
+		fragmentView.destroyView(null); // Para qualquer video que esteja executando
 		changeToStep(stepId + 1, currentPosition + 1);
 	}
 
