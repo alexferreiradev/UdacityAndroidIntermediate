@@ -47,12 +47,15 @@ public class BakingWidget extends AppWidgetProvider {
 
 			Intent intentToRecipeAct = new Intent(context, RecipeActivity.class);
 			intentToRecipeAct.putExtra(RecipeActivity.RECIPE_ID_EXTRA_PARAM_KEY, recipeId);
-			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentToRecipeAct, 0);
+			intentToRecipeAct.setAction(String.valueOf(appWidgetId));
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intentToRecipeAct, PendingIntent.FLAG_UPDATE_CURRENT);
 			views.setOnClickPendingIntent(R.id.widgetRoot, pendingIntent);
-		}
 
-		appWidgetManager.updateAppWidget(appWidgetId, views);
-		appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lvIngredient);
+			appWidgetManager.updateAppWidget(appWidgetId, views);
+			appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.lvIngredient);
+		} else {
+			Log.w(TAG, "ID de recipe nao foi encontrado para este widget: " + appWidgetId);
+		}
 	}
 
 	@Override
