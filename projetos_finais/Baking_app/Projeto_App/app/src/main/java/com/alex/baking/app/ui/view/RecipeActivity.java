@@ -85,12 +85,12 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 			throw new IllegalArgumentException("Não foi passado ID de recipe");
 		}
 
-		FragmentManager fm = getSupportFragmentManager();
 		RecipeFragment recipeFragment = new RecipeFragment();
 		recipeFragment.setPresenter(mPresenter);
 		mPresenter.setFragmentView(recipeFragment);
-		fm.beginTransaction().replace(R.id.flRecipeContainer, recipeFragment).commit();
 
+		FragmentManager fm = getSupportFragmentManager();
+		fm.beginTransaction().replace(R.id.flRecipeContainer, recipeFragment).commit();
 		if (isDualPanel()) {
 			stepFragment = new StepFragment();
 			RecipeRepository mRepository = new RecipeRepository(
@@ -103,6 +103,18 @@ public class RecipeActivity extends BaseActivity<Recipe, RecipeContract.View, Re
 			stepPresenter = new StepPresenter(this, this, null, mRepository);
 			stepFragment.setPresenter(stepPresenter);
 			stepPresenter.setFragmentView(stepFragment);
+
+			addSelectOneText();
+		}
+	}
+
+	/**
+	 * Remove os fragments e deixa somente o texto de emptyView
+	 */
+	private void addSelectOneText() {
+		int childCount = stepContainerFL.getChildCount();
+		if (childCount > 1) {
+			stepContainerFL.removeViews(1, childCount - 1);
 		}
 	}
 

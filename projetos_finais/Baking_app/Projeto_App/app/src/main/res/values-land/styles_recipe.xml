@@ -13,11 +13,11 @@
 		<item name="android:paddingTop">24dp</item>
 		<item name="android:paddingBottom">76dp</item>
 		<item name="android:paddingLeft">16dp</item>
-		<item name="android:layout_margin">0dp</item>
+		<item name="android:paddingRight">16dp</item>
+		<item name="android:layout_margin">8dp</item>
 		<item name="android:layout_marginTop">24dp</item>
 		<item name="android:layout_marginBottom">16dp</item>
-		<item name="android:textColor">@android:color/white</item>
-		<item name="android:background">@android:color/holo_blue_dark</item>
+		<item name="android:textColor">@android:color/black</item>
 	</style>
 
 	<style name="recipe.RecipeImage" parent="RecipeTheme">
