@@ -12,10 +12,9 @@ import java.util.List;
  * Created by Alex on 02/04/2017.
  */
 
+@SuppressWarnings("WeakerAccess")
 public abstract class BaseRemoteSource<ModelType extends BaseModel> implements DefaultSource<ModelType, URL> {
 
-	protected static final String JSON_KEY_RESULTS = "results";
-	protected static final String JSON_KEY_ID = "id";
 	protected NetworkResource mNetworkResource;
 
 	public BaseRemoteSource(NetworkResource networkResource) {
