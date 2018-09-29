@@ -27,7 +27,6 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 
 	@BindView(R.id.flStepContainer)
 	FrameLayout stepContainerFL;
-	private StepFragment stepFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +58,12 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 			Long stepId = intent.getLongExtra(STEP_ID_EXTRA_PARAM_KEY, -1);
 			mPresenter.setStepId(stepId);
 
-			stepFragment = new StepFragment();
+			StepFragment stepFragment = new StepFragment();
 			stepFragment.setPresenter(mPresenter);
-			FragmentManager fm = getSupportFragmentManager();
 			mPresenter.setFragmentView(stepFragment);
-			fm.beginTransaction().add(R.id.flStepContainer, stepFragment).commit();
+
+			FragmentManager fm = getSupportFragmentManager();
+			fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
 		} else {
 			throw new IllegalArgumentException("Não foi passado ID de step");
 		}
