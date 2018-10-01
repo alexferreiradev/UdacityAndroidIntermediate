@@ -47,7 +47,6 @@
 	<style name="recipe.recycleView" parent="RecipeTheme">
 		<item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
 		<item name="android:layout_height">150dp</item>
-		<item name="android:background">@color/white</item>
 	</style>
 
 	<style name="recipe.itemList.text" parent="RecipeTheme">
