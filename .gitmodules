@@ -10,3 +10,6 @@
 [submodule "projetos_aulas/AdvancedAndroid_ClassicalMusicQuiz"]
         path = projetos_aulas/AdvancedAndroid_ClassicalMusicQuiz
         url = git@github.com:alexferreiradev/AdvancedAndroid_ClassicalMusicQuiz.git
+[submodule "projetos_aulas/ud867"]
+	path = projetos_aulas/ud867
+	url = git@github.com:alexferreiradev/ud867.git
