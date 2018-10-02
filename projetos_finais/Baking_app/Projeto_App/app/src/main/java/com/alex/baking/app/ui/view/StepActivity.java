@@ -58,12 +58,16 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 			Long stepId = intent.getLongExtra(STEP_ID_EXTRA_PARAM_KEY, -1);
 			mPresenter.setStepId(stepId);
 
-			StepFragment stepFragment = new StepFragment();
+			FragmentManager fm = getSupportFragmentManager();
+			StepFragment stepFragment = (StepFragment) fm.findFragmentById(R.id.flStepContainer);
+			if (stepFragment == null) {
+				stepFragment = new StepFragment();
+
+				fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
+			}
+
 			stepFragment.setPresenter(mPresenter);
 			mPresenter.setFragmentView(stepFragment);
-
-			FragmentManager fm = getSupportFragmentManager();
-			fm.beginTransaction().replace(R.id.flStepContainer, stepFragment).commit();
 		} else {
 			throw new IllegalArgumentException("Não foi passado ID de step");
 		}
@@ -72,5 +76,13 @@ public class StepActivity extends BaseActivity<Step, StepContract.View, StepCont
 	@Override
 	public boolean isDualPanel() {
 		return false;
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (mPresenter != null) {
+			mPresenter.saveDataState(outState);
+		}
 	}
 }

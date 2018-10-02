@@ -18,6 +18,7 @@ import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.ui.listener.StepMediaSessionCallbacks;
 import com.alex.baking.app.ui.listener.StepPlayerListener;
 import com.alex.baking.app.ui.view.contract.StepContract;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Player;
@@ -34,8 +35,10 @@ import com.google.android.exoplayer2.util.Util;
 import java.util.Objects;
 
 @SuppressWarnings("Convert2Lambda")
-public class StepFragment extends BaseFragment<Step, StepContract.Presenter> implements StepContract.FragmentView {
+public class StepFragment extends BaseFragment<Step, StepContract.Presenter> implements StepContract.FragmentView, StepPlayerListener.DispatchError {
 
+	public static final String PLAYER_CURRENT_POS_SAVED_KEY = "PLAYER_CURRENT_POS_SAVED_KEY";
+	public static final String PLAYER_STATE_SAVED_KEY = "PLAYER_STATE_SAVED_KEY";
 	private static final String TAG = StepFragment.class.getSimpleName();
 	@BindView(R.id.tvDescription)
 	TextView descriptionTV;
@@ -47,12 +50,19 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	PlayerView stepPV;
 	private MediaSessionCompat mediaSession;
 	private ExoPlayer player;
+	private long savedPlayerPos = -1;
+	private Boolean savedPlayerState;
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_step, container, false);
 		ButterKnife.bind(this, view);
+
+		player = createPlayer();
+		player.setPlayWhenReady(true);
+		stepPV.setPlayer(player);
+		stepPV.setKeepContentOnPlayerReset(false);
 
 		return view;
 	}
@@ -62,38 +72,49 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@NonNull
-	private ExoPlayer createPlayer(Step step) {
+	private ExoPlayer createPlayer() {
 		TrackSelector trackSelector = new DefaultTrackSelector();
-		player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
-		player.setPlayWhenReady(true);
-		DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Objects.requireNonNull(getContext()), Util.getUserAgent(getContext(), getString(R.string.app_name)), new DefaultBandwidthMeter());
-		MediaSource media = new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(step.getVideoURL()));
-		player.prepare(media);
-		mediaSession = new MediaSessionCompat(getContext(), "stepSession");
-		mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
-		mediaSession.setMediaButtonReceiver(null);
+		ExoPlayer player = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector);
 		PlaybackStateCompat.Builder playbackBuilder = new PlaybackStateCompat.Builder();
 		playbackBuilder.setActions(PlaybackStateCompat.ACTION_PLAY |
 				PlaybackStateCompat.ACTION_PAUSE |
 				PlaybackStateCompat.ACTION_PLAY_PAUSE |
 				PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
 		);
-		mediaSession.setPlaybackState(playbackBuilder.build());
-		mediaSession.setActive(true);
-		mediaSession.setCallback(new StepMediaSessionCallbacks(player));
-		Player.EventListener playerListeners = new StepPlayerListener(mediaSession, player, presenter);
+
+		mediaSession = createMediaSession(player, playbackBuilder);
+		Player.EventListener playerListeners = new StepPlayerListener(mediaSession, player, this);
 		player.addListener(playerListeners);
 
 		return player;
 	}
 
-	@Override
-	public void setPresenter(StepContract.Presenter presenter) {
-		this.presenter = presenter;
+	private MediaSessionCompat createMediaSession(ExoPlayer player, PlaybackStateCompat.Builder playbackBuilder) {
+		MediaSessionCompat mediaSession = new MediaSessionCompat(requireActivity(), "stepSession");
+
+		mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+		mediaSession.setMediaButtonReceiver(null);
+		mediaSession.setPlaybackState(playbackBuilder.build());
+		mediaSession.setActive(true);
+		mediaSession.setCallback(new StepMediaSessionCallbacks(player));
+
+		return mediaSession;
 	}
 
 	@Override
-	public void showErroMsgInPlayer(String msg) {
+	public void setPresenter(StepContract.Presenter presenter) {
+		this.presenter = presenter;
+		if (savedPlayerPos > -1) {
+			presenter.restorePlayerState(savedPlayerPos, savedPlayerState);
+		}
+	}
+
+	@Override
+	public void showMsgInPlayer(String msg) {
+		stepPV.setControllerAutoShow(false);
+		stepPV.hideController();
+		stepPV.setPlayer(null);
+		stepPV.setShutterBackgroundColor(getResources().getColor(R.color.white));
 		stepPV.setCustomErrorMessage(msg);
 	}
 
@@ -107,6 +128,16 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@Override
+	public void setPlayerState(boolean pause) {
+		player.setPlayWhenReady(pause);
+	}
+
+	@Override
+	public void stopPlayer() {
+		player.setPlayWhenReady(false);
+	}
+
+	@Override
 	public void startView(Step step) throws IllegalArgumentException {
 		shortDescriptionTV.setText(step.getShortDescription());
 		descriptionTV.setText(step.getDescription());
@@ -117,8 +148,14 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 			}
 		});
 
-		stepPV.setPlayer(createPlayer(step));
-		stepPV.setKeepContentOnPlayerReset(true);
+		MediaSource media = createMediaSource(step);
+		player.prepare(media, false, false);
+	}
+
+	@NonNull
+	private MediaSource createMediaSource(Step step) {
+		DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(Objects.requireNonNull(getContext()), Util.getUserAgent(getContext(), getString(R.string.app_name)), new DefaultBandwidthMeter());
+		return new ExtractorMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(step.getVideoURL()));
 	}
 
 	@Override
@@ -127,12 +164,57 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 			mediaSession.setActive(false);
 		}
 		if (player != null) {
-			showErroMsgInPlayer(null); // remove view de texto
 			player.setPlayWhenReady(false);
 			player.release();
-			stepPV.setPlayer(null);
 		}
 
 		return null;
+	}
+
+	@Override
+	public void onSaveInstanceState(@NonNull Bundle outState) {
+		super.onSaveInstanceState(outState);
+		if (player != null && presenter != null) {
+			long currentPosition = player.getCurrentPosition();
+			boolean state = player.getPlayWhenReady();
+
+			outState.putLong(PLAYER_CURRENT_POS_SAVED_KEY, currentPosition);
+			outState.putBoolean(PLAYER_STATE_SAVED_KEY, state);
+		}
+	}
+
+	@Override
+	public void setPlayerPosition(long currentPlayerPos) {
+		player.seekTo(currentPlayerPos);
+	}
+
+	@Override
+	public void setPlayerInView() {
+		showMsgInPlayer(null);
+		stepPV.setShutterBackgroundColor(getResources().getColor(R.color.black));
+		stepPV.showController();
+		stepPV.setControllerAutoShow(true);
+		stepPV.setPlayer(player);
+	}
+
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		if (savedInstanceState != null) {
+			long savedPos = savedInstanceState.getLong(PLAYER_CURRENT_POS_SAVED_KEY, -1);
+			Object savedState = savedInstanceState.get(PLAYER_STATE_SAVED_KEY);
+
+			if (savedPos > -1 && savedState != null) {
+				Boolean savedStateBol = (Boolean) savedState;
+
+				this.savedPlayerPos = savedPos;
+				this.savedPlayerState = savedStateBol;
+			}
+		}
+	}
+
+	@Override
+	public void playerFoundError(Exception e, Long currentPos) {
+		presenter.playerFoundError((ExoPlaybackException) e, currentPos);
 	}
 }
