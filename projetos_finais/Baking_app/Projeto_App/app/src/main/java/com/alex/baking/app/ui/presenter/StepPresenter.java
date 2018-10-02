@@ -15,13 +15,23 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 
 	private static final String TAG = StepPresenter.class.getSimpleName();
 	private static final String LOAD_STEP = "task_load_step";
-	private static final String LOAD_NEXT_STEP = "task_load_next_step";
+
+	private static final String STEPID_SAVED_KEY = "stepId_saved_key";
 	private Long stepId;
 	private StepContract.FragmentView fragmentView;
 	private int currentPosition;
+	private long currentPlayerPos = 0;
+	private Boolean currentPlayerState = true;
 
 	public StepPresenter(StepContract.View mView, Context mContext, Bundle savedInstanceState, RecipeRepositoryContract mRepository) {
 		super(mView, mContext, savedInstanceState, mRepository);
+
+		if (savedInstanceState != null) {
+			long stepIdSaved = savedInstanceState.getLong(STEPID_SAVED_KEY, -1);
+			if (stepIdSaved > 0) {
+				stepId = stepIdSaved;
+			}
+		}
 	}
 
 	@Override
@@ -34,6 +44,9 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	protected void backgroundFinished(@NonNull Object o) {
 		if (o instanceof Step) {
 			Step step = (Step) o;
+			fragmentView.setPlayerState(currentPlayerState);
+			fragmentView.setPlayerPosition(currentPlayerPos);
+			fragmentView.setPlayerInView();
 			fragmentView.startView(step);
 			fragmentView.setNextBtVisility(true);
 		}
@@ -46,12 +59,7 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	@Override
 	protected Object loadInBackground(String[] strings) {
 		try {
-			switch (strings[0]) {
-				case LOAD_NEXT_STEP:
-					return mRepository.recoverStep(stepId + 1);
-				default:
-					return mRepository.recoverStep(stepId);
-			}
+			return mRepository.recoverStep(stepId);
 		} catch (ConnectionException e) {
 			Log.e(TAG, "Erro de conexão", e);
 		} catch (Exception e) {
@@ -63,13 +71,22 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 
 	@Override
 	public void setStepId(Long stepId) {
-		this.stepId = stepId;
+		if (this.stepId == null) { // Quando tiver sido restaurado por savedInstance, estará diferente de null.
+			this.stepId = stepId; // Utiliza argumentos de activity para setar
+		}
 	}
 
 	@Override
 	public void selectNextStep() {
-		fragmentView.destroyView(null); // Para qualquer video que esteja executando
+		fragmentView.stopPlayer();
+		fragmentView.showMsgInPlayer(mContext.getString(R.string.video_empty_text));
+		preparePlayerToNewVideo();
 		changeToStep(stepId + 1, currentPosition + 1);
+	}
+
+	private void preparePlayerToNewVideo() {
+		currentPlayerPos = 0;
+		currentPlayerState = true;
 	}
 
 	@Override
@@ -81,13 +98,26 @@ public class StepPresenter extends BasePresenter<StepContract.View, Step, Recipe
 	public void changeToStep(Long selectedStepId, int position) {
 		this.currentPosition = position;
 		stepId = selectedStepId;
+
 		BackgroundTask task = new BackgroundTask();
 		task.execute(LOAD_STEP);
 	}
 
 	@Override
 	public void playerFoundError(ExoPlaybackException error, long currentPosition) {
-		fragmentView.showErroMsgInPlayer(mContext.getString(R.string.player_error));
+		Log.e(TAG, "Erro encontrado no player: " + error.getMessage());
+		fragmentView.showMsgInPlayer(mContext.getString(R.string.player_error));
 		mView.showErrorMsg(mContext.getString(R.string.player_error));
+	}
+
+	@Override
+	public void saveDataState(Bundle bundle) {
+		bundle.putLong(STEPID_SAVED_KEY, stepId);
+	}
+
+	@Override
+	public void restorePlayerState(long savedPos, Boolean savedStateBol) {
+		currentPlayerPos = savedPos;
+		currentPlayerState = savedStateBol;
 	}
 }

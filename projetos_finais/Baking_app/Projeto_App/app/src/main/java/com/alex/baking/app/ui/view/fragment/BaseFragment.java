@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import com.alex.baking.app.ui.presenter.IPresenter;
+import com.google.android.exoplayer2.util.Util;
 
 public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> extends Fragment implements SimpleFragment<ModelType, PresenterType> {
 	private static final String TAG = BaseFragment.class.getSimpleName();
@@ -61,9 +62,20 @@ public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> 
 	}
 
 	@Override
-	public void onDestroyView() {
-		destroyView(null);
-		super.onDestroyView();
+	public void onPause() {
+		super.onPause();
+		Log.d(TAG, "Pausando Fragment");
+		if (Util.SDK_INT <= 23) {
+			destroyView(null);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (Util.SDK_INT > 23) {
+			destroyView(null);
+		}
 	}
 
 	@Override

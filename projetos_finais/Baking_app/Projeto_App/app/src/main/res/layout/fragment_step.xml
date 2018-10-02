@@ -27,15 +27,18 @@
 			/>
 
 	<ScrollView
+			android:id="@+id/svDescription"
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_below="@+id/tvShortDescription"
-			android:layout_alignParentBottom="true"
 			android:layout_above="@+id/btNextStep"
+			android:fillViewport="true"
 			>
 
 		<TextView
 				style="@style/step.description"
+				android:layout_marginTop="0dp"
+				android:layout_marginBottom="0dp"
 				tools:text="Description da etapa adsfasd fads fads \n asdfadsfasdf \n a adf adsf "
 				android:layout_width="match_parent"
 				android:layout_height="wrap_content"
