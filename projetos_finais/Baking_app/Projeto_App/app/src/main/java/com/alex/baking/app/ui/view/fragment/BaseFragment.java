@@ -64,7 +64,8 @@ public abstract class BaseFragment<ModelType, PresenterType extends IPresenter> 
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (Util.SDK_INT < 23) {
+		Log.d(TAG, "Pausando Fragment");
+		if (Util.SDK_INT <= 23) {
 			destroyView(null);
 		}
 	}

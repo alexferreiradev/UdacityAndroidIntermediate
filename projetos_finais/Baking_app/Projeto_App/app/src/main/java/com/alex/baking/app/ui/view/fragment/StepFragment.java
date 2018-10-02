@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -128,8 +129,8 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@Override
-	public void setPlayerState(boolean pause) {
-		player.setPlayWhenReady(pause);
+	public void setPlayerState(boolean playWhenReady) {
+		player.setPlayWhenReady(playWhenReady);
 	}
 
 	@Override
@@ -159,12 +160,19 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	}
 
 	@Override
+	public void onPause() {
+		savedPlayerState = player.getPlayWhenReady();
+		savedPlayerPos = player.getCurrentPosition();
+
+		super.onPause();// irá destruir o player, portanto, temos que salvar os estados antes
+	}
+
+	@Override
 	public Step destroyView(Step model) {
 		if (mediaSession != null) {
 			mediaSession.setActive(false);
 		}
 		if (player != null) {
-			player.setPlayWhenReady(false);
 			player.release();
 		}
 
@@ -174,13 +182,10 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
 		super.onSaveInstanceState(outState);
-		if (player != null && presenter != null) {
-			long currentPosition = player.getCurrentPosition();
-			boolean state = player.getPlayWhenReady();
+		outState.putLong(PLAYER_CURRENT_POS_SAVED_KEY, savedPlayerPos);
+		outState.putBoolean(PLAYER_STATE_SAVED_KEY, savedPlayerState);
 
-			outState.putLong(PLAYER_CURRENT_POS_SAVED_KEY, currentPosition);
-			outState.putBoolean(PLAYER_STATE_SAVED_KEY, state);
-		}
+		Log.d(TAG, "salvando estado de fragment Step: " + savedPlayerPos + savedPlayerState);
 	}
 
 	@Override
@@ -209,6 +214,7 @@ public class StepFragment extends BaseFragment<Step, StepContract.Presenter> imp
 
 				this.savedPlayerPos = savedPos;
 				this.savedPlayerState = savedStateBol;
+				Log.d(TAG, "Restaurando estado de fragment Step: " + savedPlayerPos + savedPlayerState);
 			}
 		}
 	}
