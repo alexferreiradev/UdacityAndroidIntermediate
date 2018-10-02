@@ -1,5 +1,7 @@
 package com.alex.baking.app.ui.view.contract;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
 import com.alex.baking.app.data.model.Step;
 import com.alex.baking.app.ui.presenter.BasePresenter;
 import com.alex.baking.app.ui.presenter.IPresenter;
@@ -14,9 +16,19 @@ public interface StepContract {
 
 	interface FragmentView extends SimpleFragment<Step, Presenter> {
 
-		void showErroMsgInPlayer(String msg);
+		void showMsgInPlayer(String msg);
 
 		void setNextBtVisility(boolean visible);
+
+		void setPlayerState(boolean pause);
+
+		void stopPlayer();
+
+		void onSaveInstanceState(@NonNull Bundle outState);
+
+		void setPlayerPosition(long currentPlayerPos);
+
+		void setPlayerInView();
 	}
 
 	interface Presenter extends IPresenter {
@@ -30,5 +42,9 @@ public interface StepContract {
 		void changeToStep(Long selectedStepId, int position);
 
 		void playerFoundError(ExoPlaybackException error, long currentPosition);
+
+		void saveDataState(Bundle bundle);
+
+		void restorePlayerState(long savedPos, Boolean savedStateBol);
 	}
 }

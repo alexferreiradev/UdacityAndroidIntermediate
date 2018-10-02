@@ -2,7 +2,6 @@ package com.alex.baking.app.ui.listener;
 
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
-import com.alex.baking.app.ui.view.contract.StepContract;
 import com.google.android.exoplayer2.*;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
@@ -11,12 +10,12 @@ public class StepPlayerListener implements Player.EventListener {
 
 	private MediaSessionCompat md;
 	private ExoPlayer player;
-	private StepContract.Presenter presenter;
+	private DispatchError dispatchError;
 
-	public StepPlayerListener(MediaSessionCompat session, ExoPlayer player, StepContract.Presenter presenter) {
+	public StepPlayerListener(MediaSessionCompat session, ExoPlayer player, DispatchError dispatchError) {
 		this.md = session;
 		this.player = player;
-		this.presenter = presenter;
+		this.dispatchError = dispatchError;
 	}
 
 	@Override
@@ -67,7 +66,7 @@ public class StepPlayerListener implements Player.EventListener {
 		playbackBuilder.setState(PlaybackStateCompat.STATE_ERROR, player.getCurrentPosition(), 1f);
 		md.setPlaybackState(playbackBuilder.build());
 
-		presenter.playerFoundError(error, player.getCurrentPosition());
+		dispatchError.playerFoundError(error, player.getCurrentPosition());
 	}
 
 	@Override
@@ -83,5 +82,9 @@ public class StepPlayerListener implements Player.EventListener {
 	@Override
 	public void onSeekProcessed() {
 
+	}
+
+	public interface DispatchError {
+		void playerFoundError(Exception e, Long currentPos);
 	}
 }

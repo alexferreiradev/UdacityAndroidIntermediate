@@ -28,11 +28,6 @@
 		<item name="android:scaleType">fitCenter</item>
 	</style>
 
-	<style name="recipe.movieFavoriteButton" parent="RecipeTheme">
-		<item name="android:textColor">@android:color/black</item>
-		<item name="android:text">@string/detail_action_fav</item>
-	</style>
-
 	<style name="recipe.recycleView" parent="RecipeTheme">
 		<item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
 		<item name="android:layout_height">150dp</item>
