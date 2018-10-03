@@ -1,4 +1,4 @@
-package com.udacity.gradletool.builditbigger;
+package com.udacity.gradletool.builditbigger.ui.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,8 +6,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.udacity.gradletool.builditbigger.R;
+import com.udacity.gradletool.builditbigger.ui.task.LoadJokeTask;
 
 
 /**
@@ -30,5 +33,10 @@ public class MainActivityFragment extends Fragment {
 		mAdView.loadAd(adRequest);
 
 		return root;
+	}
+
+	public void tellJoke(View view) {
+		Toast.makeText(requireContext(), getString(R.string.solicitation_jake_msg), Toast.LENGTH_SHORT).show();
+		new LoadJokeTask(requireContext()).execute();
 	}
 }

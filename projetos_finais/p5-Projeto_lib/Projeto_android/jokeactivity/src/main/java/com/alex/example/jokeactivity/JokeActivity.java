@@ -1,6 +1,7 @@
 package com.alex.example.jokeactivity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -8,10 +9,16 @@ import android.view.MenuItem;
 
 public class JokeActivity extends AppCompatActivity {
 
+	public static final String JOKE_EXTRA_KEY = "joke extra key";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_joke);
+
+		Fragment fragmentById = getSupportFragmentManager().findFragmentById(R.id.fragment);
+		assert fragmentById != null;
+		fragmentById.setArguments(getIntent().getExtras());
 	}
 
 
