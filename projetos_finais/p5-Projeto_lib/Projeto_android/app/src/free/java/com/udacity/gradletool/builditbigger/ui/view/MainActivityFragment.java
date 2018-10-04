@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -25,6 +26,14 @@ public class MainActivityFragment extends Fragment {
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
 		View root = inflater.inflate(R.layout.fragment_main, container, false);
+
+		Button tellJokeBT = root.findViewById(R.id.btTellJoke);
+		tellJokeBT.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				tellJoke(v);
+			}
+		});
 
 		AdView mAdView = root.findViewById(R.id.adView);
 		AdRequest adRequest = new AdRequest.Builder()
