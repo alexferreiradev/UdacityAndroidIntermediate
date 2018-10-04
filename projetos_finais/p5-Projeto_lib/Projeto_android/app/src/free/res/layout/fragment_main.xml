@@ -17,7 +17,6 @@
 			android:text="@string/instructions"
 			/>
 
-	<!--suppress AndroidMissingOnClickHandler -->
 	<Button
 			android:id="@+id/btTellJoke"
 			android:layout_width="wrap_content"
