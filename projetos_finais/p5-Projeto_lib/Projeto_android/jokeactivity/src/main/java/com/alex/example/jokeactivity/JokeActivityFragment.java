@@ -3,9 +3,11 @@ package com.alex.example.jokeactivity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -13,12 +15,28 @@ import android.view.ViewGroup;
  */
 public class JokeActivityFragment extends Fragment {
 
-	public JokeActivityFragment() {
-	}
+	TextView jokeText;
 
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_joke, container, false);
+		View view = inflater.inflate(R.layout.fragment_joke, container, false);
+
+		jokeText = view.findViewById(R.id.tvJokeText);
+
+		String jokeByArgument = readJokeFromArguments();
+
+		jokeText.setText(jokeByArgument);
+
+		return view;
+	}
+
+	private String readJokeFromArguments() {
+		FragmentActivity activity = getActivity();
+		assert activity != null;
+		Bundle arguments = activity.getIntent().getExtras();
+		assert arguments != null;
+
+		return arguments.getString(JokeActivity.JOKE_EXTRA_KEY, getString(R.string.joke_error_found));
 	}
 }

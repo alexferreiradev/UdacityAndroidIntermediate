@@ -10,11 +10,11 @@
         >
 
     <TextView
-            android:id="@+id/libraryWelcomeTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/empty_joke"
+			android:id="@+id/tvJokeText"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:text="@string/empty_joke"
             />
 
 </RelativeLayout>
